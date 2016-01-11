@@ -25,9 +25,11 @@ BCFTOOLS="/NAS/nas100-5/tools/samtools-0.1.19/bcftools/bcftools"
 
 REF="/NAS/nas33-2/mpileup/hg19.fasta" or REF="/NAS/nas33-2/mpileup/GRCh37-lite.fa"
 
--BAM files in bam_dir
+- BAM files in bam_dir
+
  python ncm.py -B -d bam_dir -O output_Dir -N outputfileName -bed bed_file
--Bam files in bam_list_file
+- Bam files in bam_list_file
+
  python ncm.py -B -d bam_list_file -O output_Dir -N outputfileName -bed bed_file
  
 -
