@@ -6,7 +6,9 @@ change your configruration
 please open ncm.py, find run_mpileup() function, modifying below lists as your configurations
 
 SAMTOOLS="/NAS/nas100-5/tools/samtools-0.1.19/samtools"
+
 BCFTOOLS="/NAS/nas100-5/tools/samtools-0.1.19/bcftools/bcftools"
+
 REF="/NAS/nas33-2/mpileup/hg19.fasta" or REF="/NAS/nas33-2/mpileup/GRCh37-lite.fa"
 
 -BAM files in bam_dir
