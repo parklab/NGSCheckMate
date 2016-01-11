@@ -11,6 +11,8 @@ python ncm.py -V -d vcf_dir -O output_Dir -N outputfileName -bed bed_file
 - 
 python ncm.py -V -l vcf_list_file -O output_Dir -N outputfileName -bed bed_file
 
+
+
 2) input BAM
 
 change your configruration
