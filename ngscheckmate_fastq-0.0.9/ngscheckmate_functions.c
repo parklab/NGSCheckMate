@@ -379,7 +379,7 @@ void print_count_array(long*** count_arrays){
 
 void printusage(char* program)
 {
-   printf("Usage : %s <options> -1 fastqfile1 [-2 fastqfile2]  patternfile\n\n",program);
+   printf("Usage : %s <options> -1 fastqfile1 [-2 fastqfile2]  patternfile(.pt)\n\n",program);
 
    printf("\tInput arguments (required)\n");
    printf("\t  patternfile : a binary file containing sequences flanking representative snv sites, along with markers indicating the snv index and whether the sequence represents reference or alternative allele.\n");
