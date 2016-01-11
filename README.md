@@ -2,7 +2,9 @@
 Software program for checking sample matching for NGS data
 
 1) input BAM
+
 change your configruration
+
 please open ncm.py, find run_mpileup() function, modifying below lists as your configurations
 
 SAMTOOLS="/NAS/nas100-5/tools/samtools-0.1.19/samtools"
