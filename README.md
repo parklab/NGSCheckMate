@@ -4,10 +4,12 @@ Software program for checking sample matching for NGS data
 
 1) input VCF
 - VCF files in vcf_dir
--- python ncm.py -V -d vcf_dir -O output_Dir -N outputfileName -bed bed_file
+- 
+python ncm.py -V -d vcf_dir -O output_Dir -N outputfileName -bed bed_file
 
 - VCF lists in bam_list_file
--- python ncm.py -V -l vcf_list_file -O output_Dir -N outputfileName -bed bed_file
+- 
+python ncm.py -V -l vcf_list_file -O output_Dir -N outputfileName -bed bed_file
 
 2) input BAM
 
