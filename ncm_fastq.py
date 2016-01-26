@@ -7,7 +7,6 @@ from argparse import RawTextHelpFormatter
 
 global fastq1
 global fastq2
-global bait
 global sub_rate
 global desire_depth
 global reference_length
@@ -296,8 +295,6 @@ def plotROC(predStrengths, classLabels):
 
 def run_fastq_version():
     command = "./ngscheckmate_fastq "
-    if bait!= "":
-            command = command + "-b " + bait + " "
     if sub_rate!= "":
             command = command + "-s " + sub_rate  + " "
     if desired_depth !="":
@@ -586,7 +583,6 @@ def remove_internal_files():
     return_code = proc.wait()
 
 if __name__ == '__main__':
-    bait = ""
     sub_rate = ""
     desired_depth = ""
     reference_length =""
@@ -606,7 +602,6 @@ if __name__ == '__main__':
           fastqfile1 : see below 'Options'.
 
         Options
-          -b, --bait <bait_file> : An optional a text file with decoy bait sequences (one per line). The sequences must be of the same length as the pattern length (default 21bp, or specified by -L) and located far enough from the pattern sequences in the genome that the presence of a bait in a read indicates the absence of a pattern in the read. Using a decoy bait file can improve speed. Not recommended for spliced reads (e.g. RNA-seq) unless the bait file is splice-aware (currently unsupported).
           -s, --ss <subsampling_rate> : subsampling rate (default 1.0)
           -d, --depth <desired_depth> : as an alternative to a user-defined subsampling rate, let the program compute the subsampling rate given a user-defined desired_depth and the data.
           -R, --reference_length <reference_length> : The reference length (default : 3E9) to be used for computing subsampling rate. If the data is NOT WGS from human, and if you're using the -d option, it is highly recommended to specify the reference length. For instance, if your data is human RNA-seq, the total reference length could be about 3% of the human genome, which can be set as 1E8.
@@ -634,7 +629,6 @@ if __name__ == '__main__':
 
     parser.add_argument('-f','--family_cutoff',dest='family_cutoff',action='store_true', help='apply strict correlation threshold to remove family cases')
     parser.add_argument('-bed','--bed',metavar='feature bed file',required=True,dest='bed_file',action='store', help='bed file')
-    parser.add_argument('-b','--bait',metavar='bait',dest='bait',action='store', help='An optional a text file with decoy bait sequences (one per line). The sequences must be of the same length as the pattern length (default 21bp, or specified by -L) and located far enough from the pattern sequences in the genome that the presence of a bait in a read indicates the absence of a pattern in the read. Using a decoy bait file can improve speed. Not recommended for spliced reads (e.g. RNA-seq) unless the bait file is splice-aware (currently unsupported).')
     parser.add_argument('-s','--ss',metavar='subsampling_rate',dest='sub_rate',action='store', help='subsampling rate (default 1.0)')
     parser.add_argument('-d','--depth',metavar='desired_depth',dest='desired_depth',action='store', help='as an alternative to a user-defined subsampling rate, let the program compute the subsampling rate given a user-defined desired_depth and the data')
     parser.add_argument('-R','--reference_length',metavar='reference_length',dest='reference_length',action='store', help="The reference length (default : 3E9) to be used for computing subsampling rate. If the data is NOT WGS from human, and if you aree using the -d option, it is highly recommended to specify the reference length. For instance, if your data is human RNA-seq, the total reference length could be about 3percent of the human genome, which can be set as 1E8.")
@@ -654,8 +648,6 @@ if __name__ == '__main__':
     outdir = args.outdir
     outfilename = args.outfilename
 
-    if args.bait != None:
-        bait = args.bait
     if args.sub_rate != None:
         sub_rate = args.sub_rate
     if args.desired_depth != None:
