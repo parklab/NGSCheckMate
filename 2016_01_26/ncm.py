@@ -1,0 +1,1031 @@
+import os
+import math
+import subprocess, time
+import argparse
+from argparse import RawTextHelpFormatter
+from subprocess import call
+
+global bed_file
+global outdir
+global outfilename
+global temp_out
+global testsamplename
+global SAMTOOLS
+global BCFTOOLS
+global REF
+global bam_list
+
+glob_scores = dict()    #Whole score
+feature_list = dict()   #Each Feature List
+label = []              #Samples
+features = []           #dbSNP features
+mean_depth = dict()
+sum_file = dict()
+out_tag = ""
+pdf_tag = ""
+Family_flag = False
+
+
+#Calculation of AVerages
+def average(x):
+    assert len(x) > 0
+    return float(sum(x)) / len(x)
+
+#Calulation of Pearson Correlation
+def pearson_def(x, y):
+    assert len(x) == len(y)
+    n = len(x)
+
+## Need to be checked , n==0 case
+    if n == 0 :
+        return 0
+
+    assert n > 0
+    avg_x = average(x)
+    avg_y = average(y)
+    diffprod = 0
+    xdiff2 = 0
+    ydiff2 = 0
+    for idx in range(n):
+        xdiff = x[idx] - avg_x
+        ydiff = y[idx] - avg_y
+        diffprod += xdiff * ydiff
+        xdiff2 += xdiff * xdiff
+        ydiff2 += ydiff * ydiff
+
+    return diffprod / math.sqrt(xdiff2 * ydiff2)
+
+# createDataSet
+# base_dir : directory of files, bedFile: name of the bedFile
+def createDataSetFromDir(base_dir, bedFile):
+    for root, dirs, files in os.walk(base_dir):
+        for file in files:
+    	    if not file.endswith(".vcf"):
+                continue
+
+            link = root + '/' +  file
+            f = open(link, "r")
+            dbsnpf= open(bedFile,"r")
+            depth = 0
+            count = 0
+
+            sum = 0
+
+            scores = dict()     # Scores of B-allel Frequencies
+            #DBSNP ID collecting system
+            for i in dbsnpf.readlines():
+                temp = i.split('\t')
+                ID = str(temp[0])+"_"+str(temp[2])
+                scores[ID] = 0
+                count = count + 1
+
+            feature_list[file] = []
+            #VCF file PROCESSING  and Generation of features
+            for i in f.readlines():
+                if i.startswith("#"):
+                    continue
+
+                temp = i.split('\t')
+                values = temp[7].split(';')
+
+                if values[0].startswith("INDEL"):
+                    continue
+
+                for j in values:
+                    if j.startswith("DP4"):
+                        readcounts = j.split(',')
+                        readcounts[0] = readcounts[0][4:]
+                        score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+                        depth = depth + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+
+                        ID = str(temp[0]) + "_" + str(temp[1])
+                        feature_list[file].append(ID)
+                        scores[ID]= score
+                        sum = sum + float(readcounts[2]) + float(readcounts[3])
+
+            mean_depth[file] = depth / count
+            sum_file[file] = sum
+
+            for key in features:
+                if glob_scores.has_key(file):
+                    glob_scores[file].append(scores[key])
+                else:
+                    glob_scores[file] = [scores[key]]
+
+            dbsnpf.close()
+            f.close()
+
+    for key in sorted(glob_scores):
+        label.append(key)
+
+#create dataset from the VCF list files
+def createDataSetFromList(base_list, bedFile):
+    base_F = open(base_list,'r')
+    for line in base_F.readlines():
+        link = line.strip()
+        f = open(link, "r")
+        dbsnpf= open(bedFile,"r")
+        file = link[link.rindex("/")+1:]
+        depth = 0
+        count = 0
+
+        sum = 0
+
+        scores = dict()     # Scores of B-allel Frequencies
+        #DBSNP ID collecting system
+        for i in dbsnpf.readlines():
+            temp = i.split('\t')
+            ID = str(temp[0])+"_"+str(temp[2])
+            scores[ID] = 0
+            count = count + 1
+
+        feature_list[file] = []
+        #VCF file PROCESSING  and Generation of features
+        for i in f.readlines():
+            if i.startswith("#"):
+                continue
+
+            temp = i.split('\t')
+            values = temp[7].split(';')
+
+            if values[0].startswith("INDEL"):
+                continue
+
+            for j in values:
+                if j.startswith("DP4"):
+                    readcounts = j.split(',')
+                    readcounts[0] = readcounts[0][4:]
+                    score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+                    depth = depth + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+
+                    ID = str(temp[0]) + "_" + str(temp[1])
+                    feature_list[file].append(ID)
+                    scores[ID]= score
+                    sum = sum + float(readcounts[2]) + float(readcounts[3])
+
+        mean_depth[file] = depth / count
+        sum_file[file] = sum
+
+        for key in features:
+            if glob_scores.has_key(file):
+                glob_scores[file].append(scores[key])
+            else:
+                glob_scores[file] = [scores[key]]
+
+        dbsnpf.close()
+        f.close()
+
+    for key in sorted(glob_scores):
+        label.append(key)
+
+
+def createDataSetFromDir_TEST(base_dir, bedFile,order):
+    for root, dirs, files in os.walk(base_dir):
+        for file in files:
+            if not file.endswith(".vcf"):
+                continue
+
+            link = root + '/' +  file
+            f = open(link, "r")
+            dbsnpf= open(bedFile,"r")
+            depth = 0
+            count = 0
+
+            sum = 0
+
+            scores = dict()     # Scores of B-allel Frequencies
+            #DBSNP ID collecting system
+            for i in dbsnpf.readlines():
+                temp = i.split('\t')
+                ID = str(temp[0])+"_"+str(temp[2])
+                scores[ID] = 0
+                count = count + 1
+
+            file = file + "_" + order
+            feature_list[file] = []
+            #VCF file PROCESSING  and Generation of features
+            for i in f.readlines():
+                if i.startswith("#"):
+                    continue
+
+                temp = i.split('\t')
+                values = temp[7].split(';')
+
+                if values[0].startswith("INDEL"):
+                    continue
+
+                for j in values:
+                    if j.startswith("DP4"):
+                        readcounts = j.split(',')
+                        readcounts[0] = readcounts[0][4:]
+                        score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+                        depth = depth + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+
+                        ID = str(temp[0]) + "_" + str(temp[1])
+                        feature_list[file].append(ID)
+                        scores[ID]= score
+                        sum = sum + float(readcounts[2]) + float(readcounts[3])
+
+            mean_depth[file] = depth / count
+            sum_file[file] = sum
+
+            for key in features:
+                if glob_scores.has_key(file):
+                    glob_scores[file].append(scores[key])
+                else:
+                    glob_scores[file] = [scores[key]]
+
+            dbsnpf.close()
+            f.close()
+
+    for key in sorted(glob_scores):
+        label.append(key)
+
+#create dataset from the VCF list files
+def createDataSetFromList_TEST(base_list, bedFile,order):
+    base_F = open(base_list,'r')
+    for line in base_F.readlines():
+        link = line.strip()
+        f = open(link, "r")
+        dbsnpf= open(bedFile,"r")
+        file = link[link.rindex("/")+1:]
+        depth = 0
+        count = 0
+
+        sum = 0
+
+        scores = dict()     # Scores of B-allel Frequencies
+        #DBSNP ID collecting system
+        for i in dbsnpf.readlines():
+            temp = i.split('\t')
+            ID = str(temp[0])+"_"+str(temp[2])
+            scores[ID] = 0
+            count = count + 1
+
+        file = file + "_" + order 
+        feature_list[file] = []
+        #VCF file PROCESSING  and Generation of features
+        for i in f.readlines():
+            if i.startswith("#"):
+                continue
+
+            temp = i.split('\t')
+            values = temp[7].split(';')
+
+            if values[0].startswith("INDEL"):
+                continue
+
+            for j in values:
+                if j.startswith("DP4"):
+                    readcounts = j.split(',')
+                    readcounts[0] = readcounts[0][4:]
+                    score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+                    depth = depth + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+
+                    ID = str(temp[0]) + "_" + str(temp[1])
+                    feature_list[file].append(ID)
+                    scores[ID]= score
+                    sum = sum + float(readcounts[2]) + float(readcounts[3])
+
+        mean_depth[file] = depth / count
+        sum_file[file] = sum
+
+        for key in features:
+            if glob_scores.has_key(file):
+                glob_scores[file].append(scores[key])
+            else:
+                glob_scores[file] = [scores[key]]
+
+        dbsnpf.close()
+        f.close()
+
+    for key in sorted(glob_scores):
+        label.append(key)
+
+
+# kNN based classification
+def clustering(K):
+    altFreqList = []
+    keyList = []
+    Pos_count = 0
+
+    for key in sorted(glob_scores):
+        altFreqList.append(glob_scores[key])
+        keyList.append(key)
+
+    dataSetSize = len(altFreqList)
+
+    sum = 0
+    othersum = 0
+    for target in range(0,dataSetSize):
+        dist = []
+        pheno = []
+        # comparison to the other samples based on BASE sample
+        base = altFreqList[target]
+        tempA = set(feature_list[keyList[target]])
+
+        # calculate eucladian distance between two samples
+        for i in range(0, dataSetSize):
+
+#            IsdiffPhenotype = 0.0
+            comparison = altFreqList[i]
+
+            tempB = set(feature_list[keyList[i]])
+
+            selected_feature = tempA.intersection(tempB)
+
+#            IsdiffPhenotype = (2*len(selected_feature))/(len(tempA) + len(tempB))
+
+            vecA = []
+            vecB = []
+
+            idx = 0
+            for k in features:
+                if k in selected_feature:
+                    vecA.append(base[idx])
+                    vecB.append(comparison[idx])
+                idx = idx + 1
+
+            distance = pearson_def(vecA, vecB)
+            dist.append(distance)
+#            pheno.append(IsdiffPhenotype)
+
+        orderCount = 0
+        while (orderCount < K):
+            max_value = sorted(dist)[-2-orderCount]
+            max_indice = dist.index(max_value)
+            sum = sum + max_value
+            Pos_count =  Pos_count + 1
+            outPOS=str(label[target]) +  "\tmatched to\t" + str(label[max_indice])+ "\tscore=\t" + str(max_value)
+            print outPOS
+            #POS_F.write(outPOS + "\n")
+            orderCount = orderCount + 1
+
+#    print sum/Pos_count
+
+#OLD version
+def classify(T):
+    altFreqList = []
+    keyList = []
+    Pos_count = 0
+    Neg_count = 0
+
+    POS_F = open("/data/users/sjlee/valid_qc/WGS/SNP/results/TEST2_POS_SNP.txt",'w')
+    NEG_F = open("/data/users/sjlee/valid_qc/WGS/SNP/results/TEST2_NEG_SNP.txt",'w')
+
+    for key in sorted(glob_scores):
+        altFreqList.append(glob_scores[key])
+        keyList.append(key)
+
+    dataSetSize = len(altFreqList)
+
+    sum = 0
+    othersum = 0
+    for target in range(0,dataSetSize):
+        dist = []
+        pheno = []
+        # comparison to the other samples based on BASE sample
+        base = altFreqList[target]
+        tempA = set(feature_list[keyList[target]])
+
+        # calculate eucladian distance between two samples
+        for i in range(0, dataSetSize):
+
+            IsdiffPhenotype = 0.0
+            comparison = altFreqList[i]
+
+            tempB = set(feature_list[keyList[i]])
+
+            selected_feature = tempA.intersection(tempB)
+
+            IsdiffPhenotype = (2*len(selected_feature))/(len(tempA) + len(tempB))
+
+            vecA = []
+            vecB = []
+
+            idx = 0
+            for k in features:
+                if k in selected_feature:
+                    vecA.append(base[idx])
+                    vecB.append(comparison[idx])
+                idx = idx + 1
+
+            distance = pearson_def(vecA, vecB)
+            dist.append(distance)
+            pheno.append(IsdiffPhenotype)
+
+        for value in sorted(dist)[0:-2]:
+            if abs((Tmean-value)/Tstd) < abs((Fmean-value)/Fstd):
+                max_value = value
+                max_indice = dist.index(max_value)
+                td = array(dist)
+                sum = sum + max_value
+                Pos_count =  Pos_count + 1
+                outPOS=str(label[target]) +  "\tmatched to\t" + str(label[max_indice])+ "\tscore=\t" + str(max_value) + "\tdiff=\t" + str(pheno[max_indice])
+                POS_F.write(outPOS + "\n")
+            else:
+                max_value = value
+                max_indice = dist.index(max_value)
+                othersum = othersum + max_value
+                Neg_count = Neg_count + 1
+                outNEG=str(label[target]) +  "\tmatched to\t" + str(label[max_indice])+ "\tscore=\t" + str(max_value) + "\tdiff=\t" + str(pheno[max_indice])
+                NEG_F.write(outNEG + "\n")
+
+
+    print sum/Pos_count
+    print othersum/Neg_count
+
+    POS_F.close()
+    NEG_F.close()
+
+
+def classifyNV(vec2Classify, p0Vec, p0S, p1Vec, p1S):
+    if abs(p0Vec - vec2Classify) + p0S > abs(p1Vec - vec2Classify) - p1S:
+        return abs((abs(p0Vec - vec2Classify) +  p0S )/ (abs(p1Vec - vec2Classify) -  p1S )), 1
+    else: 
+        return abs((abs(p0Vec - vec2Classify) + p0S) / (abs(p1Vec - vec2Classify)  -  p1S)), 0  
+
+#    if depth < 5:
+#        if (vec2Classify >= (p1Vec - p1S)):
+#            return (abs(p0Vec - vec2Classify) / p0S )/ (abs(p1Vec - vec2Classify)/ p1S ), 1
+#        else:
+#            return (abs(p0Vec - vec2Classify) / p0S) / (abs(p1Vec - vec2Classify)/ p1S), 0
+#    else:
+#        if (abs(p0Vec - vec2Classify) / p0S > abs(p1Vec - vec2Classify)/ p1S):
+#            return (abs(p0Vec - vec2Classify) / p0S )/ (abs(p1Vec - vec2Classify)/ p1S ), 1
+#        else:
+#            return (abs(p0Vec - vec2Classify) / p0S) / (abs(p1Vec - vec2Classify)/ p1S), 0
+
+
+def trainNV(trainMatrix,trainCategory):
+    numTrainDocs = len(trainMatrix)    # #of traning samples
+
+    p1List = []
+    p0List = []
+
+    for i in range(numTrainDocs):
+        if trainCategory[i] == 1:
+            p1List.append(trainMatrix[i])
+        else:
+            p0List.append(trainMatrix[i])
+
+    return mean(p1List),std(p1List), mean(p0List),std(p0List)
+
+
+def calAUC(predStrengths, classLabels):
+    ySum = 0.0 #variable to calculate AUC
+    cur = (1.0,1.0) #cursor
+    numPosClas = sum(array(classLabels)==1.0)
+    yStep = 1/float(numPosClas); xStep = 1/float(len(classLabels)-numPosClas)
+    sortedIndicies = predStrengths.argsort()#get sorted index, it's reverse
+    #loop through all the values, drawing a line segment at each point
+    for index in sortedIndicies.tolist()[0]:
+        if classLabels[index] == 1:
+            delX = 0; delY = yStep;
+        else:
+            delX = xStep; delY = 0;
+            ySum += cur[1]
+        cur = (cur[0]-delX,cur[1]-delY)
+    return ySum*xStep
+
+#def plotROC(predStrengths, classLabels):
+#    import matplotlib.pyplot as plt
+#    cur = (1.0,1.0) #cursor
+#    ySum = 0.0 #variable to calculate AUC
+#    numPosClas = sum(array(classLabels)==1.0)
+#    yStep = 1/float(numPosClas); xStep = 1/float(len(classLabels)-numPosClas)
+#    sortedIndicies = predStrengths.argsort()#get sorted index, it's reverse
+#    fig = plt.figure()
+#    fig.clf()
+#    ax = plt.subplot(111)
+#    #loop through all the values, drawing a line segment at each point
+#    for index in sortedIndicies.tolist()[0]:
+#        if classLabels[index] == 1:
+#            delX = 0; delY = yStep;
+#        else:
+#            delX = xStep; delY = 0;
+#            ySum += cur[1]
+#        #draw line from cur to (cur[0]-delX,cur[1]-delY)
+#        ax.plot([cur[0],cur[0]-delX],[cur[1],cur[1]-delY], c='b')
+#        cur = (cur[0]-delX,cur[1]-delY)
+#    ax.plot([0,1],[0,1],'b--')
+#    plt.xlabel('False positive rate'); plt.ylabel('True positive rate')
+#    plt.title('ROC curves')
+#    ax.axis([0,1,0,1])
+#    plt.show()
+#    print "the Area Under the Curve is: ",ySum*xStep
+
+def getPredefinedModel(depth):
+     if Family_flag:
+         if depth > 10:
+             return 0.874546, 0.022211, 0.646256175, 0.021336239
+         elif depth > 5:
+             return 0.785249,0.021017, 0.598277053, 0.02253561
+         elif depth > 2:
+             return 0.650573, 0.018699,0.536020197, 0.020461932
+         elif depth > 1:
+             return 0.578386,0.018526, 0.49497342, 0.022346597
+         elif depth > 0.5:
+             return 0.529327,0.025785, 0.465275173, 0.028221203
+         else:
+    #         print "Warning: Sample region depth is too low < 1"
+             return 0.529327,0.025785, 0.465275173, 0.028221203
+     else:
+         if depth > 10:
+             return 0.874546, 0.022211, 0.310549, 0.060058
+         elif depth > 5:
+             return 0.785249,0.021017, 0.279778, 0.054104
+         elif depth > 2:
+             return 0.650573, 0.018699,0.238972, 0.047196
+         elif depth > 1:
+             return 0.578386,0.018526, 0.222322, 0.041186
+         elif depth > 0.5:
+             return 0.529327,0.025785, 0.217839, 0.040334
+         else:
+    #         print "Warning: Sample region depth is too low < 1"
+             return 0.529327,0.025785, 0.217839, 0.040334
+#     if depth > 30:
+#         return 0.874546, 0.022211, 0.310549, 0.060058
+#     elif depth > 10:
+#         return 0.785249,0.021017, 0.279778, 0.054104
+#     elif depth > 5:
+#         return 0.650573, 0.018699,0.238972, 0.047196
+#     elif depth > 2:
+#         return 0.578386,0.018526, 0.222322, 0.041186
+#     elif depth > 1:
+#         return 0.529327,0.025785, 0.217839, 0.040334
+#     else:
+#         print "Warning: Sample region depth is too low < 1"
+#         return 0.529327,0.025785, 0.217839, 0.040334
+#     if depth > 0.1:
+#        return 0.0351* depth + 0.5538, 0.02, 0.009977*depth + 0.216978, 0.045
+#     else:
+#        print "too low depth"
+#        return 0.529327,0.025785, 0.217839, 0.040334
+#     if depth > 0.5:
+#        return 0.06315* (math.log(depth)) + 0.64903, 0.046154, 0.0005007*depth + 0.3311504,0.12216
+#     else:
+#        return 0.62036, 0.046154, 0.31785, 0.12216
+
+def getPredefinedModel_F(depth):
+     if depth > 10:
+         return 0.874546, 0.022211, 0.620549, 0.060058
+     elif depth > 5:
+         return 0.785249,0.021017, 0.609778, 0.054104
+     elif depth > 2:
+         return 0.650573, 0.018699,0.548972, 0.047196
+     elif depth > 1:
+         return 0.578386,0.018526, 0.502322, 0.041186
+     elif depth > 0.5:
+         return 0.529327,0.025785, 0.457839, 0.040334
+     else:
+#         print "Warning: Sample region depth is too low < 1"
+         return 0.529327,0.025785, 0.457839, 0.040334
+#     if depth > 30:
+#         return 0.874546, 0.022211, 0.310549, 0.060058
+#     elif depth > 10:
+#         return 0.785249,0.021017, 0.279778, 0.054104
+#     elif depth > 5:
+#         return 0.650573, 0.018699,0.238972, 0.047196
+#     elif depth > 2:
+#         return 0.578386,0.018526, 0.222322, 0.041186
+#     elif depth > 1:
+#         return 0.529327,0.025785, 0.217839, 0.040334
+#     else:
+#         print "Warning: Sample region depth is too low < 1"
+#         return 0.529327,0.025785, 0.217839, 0.040334
+#     if depth > 0.1:
+#        return 0.0351* depth + 0.5538, 0.02, 0.009977*depth + 0.216978, 0.045
+#     else:
+#        print "too low depth"
+#        return 0.529327,0.025785, 0.217839, 0.040334
+#     if depth > 0.5:
+#        return 0.06315* (math.log(depth)) + 0.64903, 0.046154, 0.0005007*depth + 0.3311504,0.12216
+#     else:
+#        return 0.62036, 0.046154, 0.31785, 0.12216
+
+
+def classifying():
+    AUCs =[]
+
+    wholeFeatures = 50
+
+    temp =[]
+
+    altFreqList = []
+    keyList = []
+
+    for key in sorted(glob_scores):
+        altFreqList.append(glob_scores[key])
+        keyList.append(key)
+
+    dataSetSize = len(altFreqList)
+
+    for i in range(0, dataSetSize):
+        for j in range(0, dataSetSize):
+            if i!=j:
+                temp.append([keyList[i],keyList[j]])
+
+    for iterations in range(49,wholeFeatures):
+
+        samples = []
+        numFeatures = iterations
+
+        count = 0
+
+        for i in range(0,len(temp)):
+            tempA = set(feature_list[temp[i][0].strip()])
+            tempB = set(feature_list[temp[i][1].strip()])
+
+            selected_feature = tempA.intersection(tempB)
+
+            vecA = []
+            vecB = []
+
+            idx = 0
+            for k in features:
+                if k in selected_feature:
+                    vecA.append(glob_scores[temp[i][0].strip()][idx])
+                    vecB.append(glob_scores[temp[i][1].strip()][idx])
+                idx = idx + 1
+
+            distance = pearson_def(vecA, vecB)
+            samples.append(distance)
+
+        predStrength = []
+        training_flag =0
+    ####0715 Append
+
+        output_matrix_f = open(outdir + "/output_corr_matrix.txt","w")
+        output_matrix = dict()
+        
+        if out_tag!="stdout":
+        	out_f = open(outdir + "/" + out_tag + ".txt","w")
+
+        for i in range(0, len(samples)):
+            output_matrix[temp[i][0]] = dict()
+            for j in range(0,len(samples)):
+                output_matrix[temp[i][0]][temp[j][0]] = 0
+
+        if training_flag == 1:
+            #make training set
+            for i in range(0,len(samples)):
+                trainMatrix= []
+                trainCategory = []
+                for j in range(0, len(samples)):
+                    if i==j:
+                        continue
+                    else:
+                        trainMatrix.append(samples[j])
+                        trainCategory.append(classLabel[j])
+                #training samples in temp
+                #p0V, p1V, pAb = trainNB0(array(trainMatrix),array(trainCategory))
+                p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
+                result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
+                if result[1] == 1:
+                    print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
+                predStrength.append(result[0])
+    #            AUCs.append(calAUC(mat(predStrength),classLabel))
+    #            plotROC(mat(predStrength),classLabel)
+    #            print AUCs
+        else :
+            for i in range(0,len(samples)):
+                depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
+                p1V,p1S, p0V, p0S = getPredefinedModel(depth)
+                result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
+                if result[1] ==1:
+                    output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
+                    if out_tag=="stdout":
+                        print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                    else :
+                        out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
+                predStrength.append(result[0])
+    #            AUCs.append(calAUC(mat(predStrength),classLabel))
+    #            plotROC(mat(predStrength),classLabel)
+    #            print AUCs
+            #testing sample is samples
+        output_matrix_f.write("sample_ID")
+        for key in output_matrix.keys():
+            output_matrix_f.write("\t" + key[0:key.index('.')])
+        output_matrix_f.write("\n")
+
+        for key in output_matrix.keys():
+            output_matrix_f.write(key[0:key.index('.')])
+            for otherkey in output_matrix.keys():
+                output_matrix_f.write("\t" + str(output_matrix[key][otherkey]))
+            output_matrix_f.write("\n")   
+            
+        output_matrix_f.close()         
+        if out_tag!="stdout":
+        	out_f.close()   
+
+
+
+def classifying_test():
+    AUCs =[]
+
+    wholeFeatures = 50
+
+    temp = []
+
+    keyF = open(testsamplename,'r')
+    temp =[]
+
+    for k in keyF.readlines():
+        keyfile = k.split(":")
+        keyfile[0] = keyfile[0].strip() + "_1"
+        keyfile[1] = keyfile[1].strip() + "_2"
+        temp.append(keyfile)
+    keyF.close()
+
+    for iterations in range(49,wholeFeatures):
+
+        samples = []
+        numFeatures = iterations
+
+        count = 0
+
+        for i in range(0,len(temp)):
+            tempA = set(feature_list[temp[i][0].strip()])
+            tempB = set(feature_list[temp[i][1].strip()])
+
+            selected_feature = tempA.intersection(tempB)
+            
+            vecA = []
+            vecB = []
+            
+            idx = 0
+            for k in features:
+                if k in selected_feature:
+                    vecA.append(glob_scores[temp[i][0].strip()][idx])
+                    vecB.append(glob_scores[temp[i][1].strip()][idx])
+                idx = idx + 1
+            
+            distance = pearson_def(vecA, vecB)
+            samples.append(distance)
+            
+        predStrength = []
+        training_flag =0
+    ####0715 Append
+
+        output_matrix_f = open(outdir + "/output_corr_matrix.txt","w")
+        output_matrix = dict()
+        
+        if out_tag!="stdout":
+            out_f = open(outdir + "/" + out_tag + ".txt","w")
+
+        for i in range(0, len(samples)):
+            output_matrix[temp[i][0]] = dict()
+            for j in range(0,len(samples)):
+                output_matrix[temp[i][0]][temp[j][0]] = 0
+
+        if training_flag == 1:
+            #make training set
+            for i in range(0,len(samples)):
+                trainMatrix= []
+                trainCategory = []
+                for j in range(0, len(samples)):
+                    if i==j:
+                        continue
+                    else:
+                        trainMatrix.append(samples[j])
+                        trainCategory.append(classLabel[j])
+                #training samples in temp
+                #p0V, p1V, pAb = trainNB0(array(trainMatrix),array(trainCategory))
+                p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
+                result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
+                if result[1] == 1:
+                    print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
+                predStrength.append(result[0])
+    #            AUCs.append(calAUC(mat(predStrength),classLabel))
+    #            plotROC(mat(predStrength),classLabel)
+    #            print AUCs
+        else :
+            for i in range(0,len(samples)):
+                depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
+                p1V,p1S, p0V, p0S = getPredefinedModel(depth)
+                result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
+                if result[1] ==1:
+                    output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
+            	    if out_tag=="stdout":
+                        print str(temp[i][0][:-6]) + '\tmatched\t',str(temp[i][1][:-6]),'\t', round(samples[i],4),'\t',round(depth,2)
+            	    else :
+                	    out_f.write(str(temp[i][0][:-6]) + '\tmatched\t' + str(temp[i][1][:-6])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
+                predStrength.append(result[0])
+    #            AUCs.append(calAUC(mat(predStrength),classLabel))
+    #            plotROC(mat(predStrength),classLabel)
+    #            print AUCs
+            #testing sample is samples
+        output_matrix_f.write("sample_ID")
+        for key in output_matrix.keys():
+            output_matrix_f.write("\t" + key[0:key.index('.')])
+        output_matrix_f.write("\n")
+
+        for key in output_matrix.keys():
+            output_matrix_f.write(key[0:key.index('.')])
+            for otherkey in output_matrix.keys():
+                output_matrix_f.write("\t" + str(output_matrix[key][otherkey]))
+            output_matrix_f.write("\n")   
+            
+        output_matrix_f.close()         
+        if out_tag!="stdout":
+            out_f.close()   
+
+
+
+
+def generate_R_scripts():
+    r_file = open(outdir + "/r_script.r","w")
+    cmd = "output_corr_matrix <- read.delim(\"" + outdir +  "/output_corr_matrix.txt\")\n"
+    cmd = cmd + "data = output_corr_matrix\n"
+    cmd = cmd + "d3 <- as.dist((1 - data[,-1]))\n"
+    cmd = cmd + "clust3 <- hclust(d3, method = \"average\")\n"
+    cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width=10, height=7)\n"
+    cmd = cmd + "op = par(bg = \"gray85\")\n"
+    cmd = cmd + "par(plt=c(0.05, 0.95, 0.5, 0.9))\n"
+    cmd = cmd + "plot(clust3, lwd = 2, lty = 1,cex=0.8, xlab=\"Samples\", sub = \"\",  ylab=\"Distance (1-Pearson correlation)\",hang = -1, axes = FALSE)\n"
+    cmd = cmd + "axis(side = 2, at = seq(0, 1, 0.2), labels = FALSE, lwd = 2)\n"
+    cmd = cmd + "mtext(seq(0, 1, 0.2), side = 2, at = seq(0, 1, 0.2), line = 1,   las = 2)\n"
+    cmd = cmd + "dev.off()\n"
+    r_file.write(cmd)
+    r_file.close()
+
+
+
+def run_R_scripts():
+    command = "R CMD BATCH " + outdir + "/r_script.r"
+    proc = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    return_code = proc.wait()
+
+
+def remove_internal_files():
+    if outdir.find("*"):
+        sys.exit()
+
+
+    command = "rm -rf " + outdir + "/output_corr_matrix.txt"
+    proc = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    return_code = proc.wait()
+    command = "rm -rf " + outdir + "/r_script.r"
+    proc = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    return_code = proc.wait()
+    command = "rm -rf " + outdir + "/r_script.r.Rout"
+    proc = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    return_code = proc.wait()
+
+
+def run_mpileup():
+    
+
+    SAMTOOLS=""
+    BCFTOOLS=""
+    REF=""
+    with open("./ncm.conf",'r') as F:
+        for line in F.readlines():
+            temp = line.split('\"')
+	    if temp[0].startswith("SAMTOOLS"):
+                SAMTOOLS = temp[1].strip()
+            elif temp[0].startswith("BCFTOOLS"):
+                BCFTOOLS = temp[1].strip()
+            elif temp[0].startswith("REF"):
+                REF = temp[1].strip()
+#    REF="/NAS/nas33-2/mpileup/hg19.fasta"
+
+    for sample in bam_list:
+        filename = sample.split("/")
+        tag = filename[-1][0:filename[-1].rindex(".")]
+        command = SAMTOOLS + " mpileup -I -uf " + REF + " -l " + bedFile + " " + sample + " | "  + BCFTOOLS + " view -cg - > " + outdir + "/" + tag  + ".vcf"
+
+        print command
+        call(command,shell=True)
+ #       proc = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+#        return_code = proc.wait()
+
+def find_bam_list():
+    for root, dirs, files in os.walk(base_dir):
+        for file in files:
+             if not file.endswith(".bam"):
+                continue
+             bam_list.append(root + "/" + file)
+
+def get_bam_list():
+    with open(base_list,'r') as F:
+        for line in F.readlines():
+             bam_list.append(line.strip())
+
+
+if __name__ == '__main__':
+    testsamplename = ""
+
+    help = """
+    Ensuring Sample Identity v0.8
+    Usage:   NGSCheckmate
+
+    Desc.:   Input = the absolute path list of vcf files (samtools mpileup and bcftools)
+             Output = Matched samples List
+
+    Eg.  :   GenomeMatcher -v /data/vcf_list.txt -b /data/dbsnp.bed -m classifying -c classfiles -o /data/output/Matched_list.txt
+             GenomeMatcher -d /data/vcf/ -b /data/dbsnp.bed -m classifying -c classfiles -o /data/output/Matched_list.txt
+
+    Sejoon Lee, Soo Lee, Eunjung Lee, 2015
+    """
+
+    parser = argparse.ArgumentParser(description=help, formatter_class=RawTextHelpFormatter)
+    group = parser.add_mutually_exclusive_group(required=True)
+    datatype = parser.add_mutually_exclusive_group(required=True)
+    datatype.add_argument('-B','--BAM',dest='BAM_type',action='store_true', help='BAM files to do NGS Checkmate')
+    datatype.add_argument('-V','--VCF',dest='VCF_type',action='store_true', help='VCF files to do NGS Checkmate')
+    parser.add_argument('-f','--family_cutoff',dest='family_cutoff',action='store_true', help='apply strict correlation threshold to remove family cases')
+
+    group.add_argument('-l','--list',metavar='data_list',dest='datalist',action='store', help='data list')
+    group.add_argument('-d','--dir',metavar='data_dir',dest='datadir',action='store', help='data directory')
+
+    parser.add_argument('-bed','--bedfile',metavar='BED file',required=True,dest='bed_file',action='store', help='A bed file containing SNP polymorphisms')
+
+    parser.add_argument('-t','--testsamplename',metavar='test_samplename',dest='testsamplename',action='store',help='file including test sample namses  with ":" delimeter (default : all combinations of samples), -t filename')
+    parser.add_argument('-O','--outdir',metavar='output_dir',dest='outdir',action='store', help='directory name for temp and output files')
+    parser.add_argument('-N','--outfilename',metavar='output_filename',dest='outfilename',action='store',default="output",help='OutputFileName ( default : output ), -N filename')
+
+#    parser.add_argument('-m','--method',metavar='METHOD',required=True,dest='method',action='store', choices={'clustering','classifying'},default='classifying', help='Method (Clustering, Classifying)')
+#    parser.add_argument('-k','--knn',metavar='1,2,3,..',dest='KNN',action='store', default="1", help='K value for K-nearest neighbors clustering')
+ #   parser.add_argument('-p','--pdf',metavar='PDFfile',dest='PDF_flag',action='store',default="otuput",help='output Prgramming R based clustering vector image of PDF file, -p filename')
+
+    args=parser.parse_args()
+
+    base_list = ""
+    base_dir = ""
+
+    if args.datalist != None :
+        base_list = args.datalist
+    if args.datadir != None :
+        base_dir = args.datadir
+        
+    if args.family_cutoff:
+        Family_flag=True
+
+    outdir = args.outdir
+    bedFile = args.bed_file
+    out_tag = args.outfilename
+
+    key_order = open(bedFile,'r')
+    for line in key_order.readlines():
+        if line.startswith("#"):
+            continue
+        temp = line.split('\t')
+        features.append(str(temp[0])+"_"+ str(temp[2]))
+
+    if args.BAM_type != False :
+        if args.datadir != None :
+            bam_list = []
+            find_bam_list()
+        elif args.datalist != None :
+            bam_list = []
+            get_bam_list()
+        run_mpileup()
+        base_dir = outdir
+        print "Generate Data Set from " + base_dir + "\nusing this bed file : " + bedFile
+        if args.testsamplename != None:
+            testsamplename = args.testsamplename
+            createDataSetFromDir_TEST(base_dir,bedFile,"1")
+            createDataSetFromDir_TEST(base_dir,bedFile,"2")
+            classifying_test()
+        else:
+            createDataSetFromDir(base_dir,bedFile)
+            classifying()
+    elif args.VCF_type != False :
+        if args.datadir != None :
+            print "Generate Data Set from " + base_dir + "\nusing this bed file : " + bedFile
+            if args.testsamplename != None:
+                testsamplename = args.testsamplename
+                createDataSetFromDir_TEST(base_dir,bedFile,"1")
+                createDataSetFromDir_TEST(base_dir,bedFile,"2")
+                classifying_test()
+            else:
+                createDataSetFromDir(base_dir,bedFile)
+                classifying()
+        elif args.datalist != None :
+            print "Generate Data Set from " + base_list + "\nusing this bed file : " + bedFile
+            if args.testsamplename != None:
+                testsamplename = args.testsamplename
+                createDataSetFromList_TEST(base_list,bedFile,"1")
+                createDataSetFromList_TEST(base_list,bedFile,"2")
+                classifying_test()
+            else:
+                createDataSetFromList(base_list,bedFile)
+                classifying()
+
+
+#    outFileName = args.class_file
+#    if args.method == "clustering":
+#        print "Classifying data set based on kNN ",str(args.KNN)
+#        clustering(int(args.KNN))
+#    elif args.method =="classifying":
+#        classifying()
+
+ #       if args.PDF_flag != None:
+    pdf_tag = out_tag
+    generate_R_scripts()
+    run_R_scripts()
+#	remove_internal_files()
