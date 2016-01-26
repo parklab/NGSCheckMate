@@ -877,9 +877,20 @@ def remove_internal_files():
 
 
 def run_mpileup():
-    SAMTOOLS="/NAS/nas100-5/tools/samtools-0.1.19/samtools"
-    BCFTOOLS="/NAS/nas100-5/tools/samtools-0.1.19/bcftools/bcftools"
-    REF="/NAS/nas33-2/mpileup/GRCh37-lite.fa"
+    
+
+    SAMTOOLS=""
+    BCFTOOLS=""
+    REF=""
+    with open("./ncm.conf",'r') as F:
+        for line in F.readlines():
+            temp = line.split('\"')
+	    if temp[0].startswith("SAMTOOLS"):
+                SAMTOOLS = temp[1].strip()
+            elif temp[0].startswith("BCFTOOLS"):
+                BCFTOOLS = temp[1].strip()
+            elif temp[0].startswith("REF"):
+                REF = temp[1].strip()
 #    REF="/NAS/nas33-2/mpileup/hg19.fasta"
 
     for sample in bam_list:
