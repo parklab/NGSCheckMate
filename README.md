@@ -6,7 +6,6 @@
 # NGS CheckMate
 Software program for checking sample matching for NGS data
 
--
 
 ## Usage
 
@@ -74,8 +73,6 @@ Usage : ./ngscheckmate_fastq <options> -1 fastqfile1 [-2 fastqfile2]  patternfil
 	  -p, --maxthread <number_of_threads> : number of threads to use (default : 1 )
 	  -j, --nodeptherror : in case estimated subsampling rate is larger than 1, do not stop but reset it to 1 and continue.
 ```
-
----
 
 ## Authors
 
