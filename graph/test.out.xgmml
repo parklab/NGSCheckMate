@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<graph label="Network" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cy="http://www.cytoscape.org" xmlns="http://www.cs.rpi.edu/XGMML"  directed="1">
+  <att name="documentVersion" value="1.1"/>
+  <att name="networkMetadata">
+    <rdf:RDF>
+      <rdf:Description rdf:about="http://www.cytoscape.org/">
+        <dc:type>NGSCheckMate File Matching Graph</dc:type>
+        <dc:description>N/A</dc:description>
+        <dc:identifier>N/A</dc:identifier>
+        <dc:date>2016-02-29 17:07:09</dc:date>
+        <dc:title>Network</dc:title>
+        <dc:source>http://www.cytoscape.org/</dc:source>
+        <dc:format>Cytoscape-XGMML</dc:format>
+      </rdf:Description>
+    </rdf:RDF>
+  </att>
+  <att type="string" name="backgroundColor" value="#ccccff"/>
+  <att type="real" name="GRAPH_VIEW_ZOOM" value="0.9976921765270234"/>
+  <att type="real" name="GRAPH_VIEW_CENTER_X" value="0.0"/>
+  <att type="real" name="GRAPH_VIEW_CENTER_Y" value="0.0"/>
+  <att type="boolean" name="NODE_SIZE_LOCKED" value="true"/>
+  <node label="node1" id="1">
+    <att type="string" name="NODE_TYPE" value="DefaultNode"/>
+    <att type="string" name="canonicalName" value="node1"/>
+    <att type="string" name="label" value="node1"/>
+    <att type="string" name="node.label" value="mynode:1"/>
+    <att type="string" name="node.shape" value="roundrect"/>
+    <att type="string" name="node.size" value="100.0"/>
+    <att type="string" name="node.borderColor" value="0,0,0"/>
+    <att type="string" name="node.fillColor" value="255,0,0"/>
+    <att type="string" name="node.labelColor" value="0,0,0"/>
+    <att type="string" name="node.lineWidth" value="1"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_BORDER_COLOR" value="java.awt.Color[r=0,g=0,b=0]"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_FILL_COLOR" value="java.awt.Color[r=255,g=0,b=0]"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_HEIGHT" value="100.0"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_WIDTH" value="100.0"/>
+    <graphics type="ROUNDED_RECTANGLE" h="100" w="100" x="-10" y="-10" fill="#ff0000" width="1" outline="#000000" cy:nodeTransparency="1.0" cy:nodeLabelFont="SansSerif.bold-0-12" cy:nodeLabel="mynode:1" cy:borderLineType="solid"/>
+  </node>
+  <node label="node2" id="2">
+    <att type="string" name="NODE_TYPE" value="DefaultNode"/>
+    <att type="string" name="canonicalName" value="node2"/>
+    <att type="string" name="label" value="node2"/>
+    <att type="string" name="node.label" value="mynode:2"/>
+    <att type="string" name="node.shape" value="roundrect"/>
+    <att type="string" name="node.size" value="100.0"/>
+    <att type="string" name="node.borderColor" value="0,0,0"/>
+    <att type="string" name="node.fillColor" value="0,255,0"/>
+    <att type="string" name="node.labelColor" value="0,0,0"/>
+    <att type="string" name="node.lineWidth" value="1"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_BORDER_COLOR" value="java.awt.Color[r=0,g=0,b=0]"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_FILL_COLOR" value="java.awt.Color[r=0,g=255,b=0]"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_HEIGHT" value="100.0"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_WIDTH" value="100.0"/>
+    <graphics type="ROUNDED_RECTANGLE" h="100" w="100" x="0" y="0" fill="#00ff00" width="1" outline="#000000" cy:nodeTransparency="1.0" cy:nodeLabelFont="SansSerif.bold-0-12" cy:nodeLabel="mynode:2" cy:borderLineType="solid"/>
+  </node>
+  <node label="node3" id="3">
+    <att type="string" name="NODE_TYPE" value="DefaultNode"/>
+    <att type="string" name="canonicalName" value="node3"/>
+    <att type="string" name="label" value="node3"/>
+    <att type="string" name="node.label" value="mynode:3"/>
+    <att type="string" name="node.shape" value="roundrect"/>
+    <att type="string" name="node.size" value="100.0"/>
+    <att type="string" name="node.borderColor" value="0,0,0"/>
+    <att type="string" name="node.fillColor" value="0,0,255"/>
+    <att type="string" name="node.labelColor" value="255,255,255"/>
+    <att type="string" name="node.lineWidth" value="5"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_BORDER_COLOR" value="java.awt.Color[r=0,g=0,b=0]"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_FILL_COLOR" value="java.awt.Color[r=0,g=0,b=255]"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_HEIGHT" value="100.0"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_WIDTH" value="100.0"/>
+    <graphics type="ROUNDED_RECTANGLE" h="100" w="100" x="10" y="10" fill="#0000ff" width="5" outline="#000000" cy:nodeTransparency="1.0" cy:nodeLabelFont="SansSerif.bold-0-12" cy:nodeLabel="mynode:3" cy:borderLineType="solid"/>
+  </node>
+  <edge label="node1 (DirectedEdge) node1" source="1" target="1">
+    <att type="string" name="canonicalName" value="node1 (DirectedEdge) node1"/>
+    <att type="string" name="edge.fontSize" value="15.0"/>
+    <att type="string" name="edge.label" value="myedge1"/>
+    <att type="string" name="edge.lineWidth" value="0.3"/>
+    <att type="string" name="interaction" value="DirectedEdge" cy:editable="false"/>
+    <graphics width="0.3" fill="#0000ff" cy:sourceArrow="0" cy:targetArrow="0" cy:sourceArrowColor="#000000" cy:targetArrowColor="#000000" cy:edgeLabelFont="Default-0-20" cy:edgeLabel="myedge1" cy:edgeLineType="SOLID" cy:curved="STRAIGHT_LINES"/>
+  </edge>
+  <edge label="node2 (DirectedEdge) node1" source="2" target="1">
+    <att type="string" name="canonicalName" value="node2 (DirectedEdge) node1"/>
+    <att type="string" name="edge.fontSize" value="15.0"/>
+    <att type="string" name="edge.label" value="myedge2"/>
+    <att type="string" name="edge.lineWidth" value="5"/>
+    <att type="string" name="interaction" value="DirectedEdge" cy:editable="false"/>
+    <graphics width="5" fill="#0000ff" cy:sourceArrow="0" cy:targetArrow="0" cy:sourceArrowColor="#000000" cy:targetArrowColor="#000000" cy:edgeLabelFont="Default-0-20" cy:edgeLabel="myedge2" cy:edgeLineType="SOLID" cy:curved="STRAIGHT_LINES"/>
+  </edge>
+</graph>
+

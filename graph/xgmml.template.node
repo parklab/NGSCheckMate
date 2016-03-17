@@ -1,0 +1,17 @@
+  <node label="node###NODE_ID###" id="###NODE_ID###">
+    <att type="string" name="NODE_TYPE" value="DefaultNode"/>
+    <att type="string" name="canonicalName" value="node###NODE_ID###"/>
+    <att type="string" name="label" value="node###NODE_ID###"/>
+    <att type="string" name="node.label" value="###NODE_LABEL###"/>
+    <att type="string" name="node.shape" value="roundrect"/>
+    <att type="string" name="node.size" value="100.0"/>
+    <att type="string" name="node.borderColor" value="###NODE_BORDERCOLOR_R###,###NODE_BORDERCOLOR_G###,###NODE_BORDERCOLOR_B###"/>
+    <att type="string" name="node.fillColor" value="###NODE_COLOR_R###,###NODE_COLOR_G###,###NODE_COLOR_B###"/>
+    <att type="string" name="node.labelColor" value="###NODE_LABELCOLOR_R###,###NODE_LABELCOLOR_G###,###NODE_LABELCOLOR_B###"/>
+    <att type="string" name="node.lineWidth" value="###NODE_BORDER_WIDTH###"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_BORDER_COLOR" value="java.awt.Color[r=###NODE_BORDERCOLOR_R###,g=###NODE_BORDERCOLOR_G###,b=###NODE_BORDERCOLOR_B###]"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_FILL_COLOR" value="java.awt.Color[r=###NODE_COLOR_R###,g=###NODE_COLOR_G###,b=###NODE_COLOR_B###]"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_HEIGHT" value="100.0"/>
+    <att type="string" name="vizmap:NGSCheckMate_graph NODE_WIDTH" value="100.0"/>
+    <graphics type="ROUNDED_RECTANGLE" h="100" w="100" x="###NODE_X###" y="###NODE_Y###" fill="###NODE_COLOR_HEX###" width="###NODE_BORDER_WIDTH###" outline="###NODE_BORDERCOLOR_HEX###" cy:nodeTransparency="1.0" cy:nodeLabelFont="SansSerif.bold-0-12" cy:nodeLabel="###NODE_LABEL###" cy:borderLineType="solid"/>
+  </node>
