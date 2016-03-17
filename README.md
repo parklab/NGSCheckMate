@@ -111,7 +111,8 @@ The logos (![alt text][ncmLogo] & ![alt text][ncmIcon]) have been created by [Fr
  - [King][iconKing] created by Yuri Mazursky ([CC BY 3.0 US][cc])
  - [Queen][iconQueen] created by Yuri Mazursky ([CC BY 3.0 US][cc])
 
-
+[sejooning]: https://github.com/sejooning
+[SooLee]: https://github.com/SooLee
 [cc]: https://creativecommons.org/licenses/by/3.0/us/
 [flekschas]: https://github.com/flekschas
 [iconDna]: https://thenounproject.com/term/dna/57369/
