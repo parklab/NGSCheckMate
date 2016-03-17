@@ -9,7 +9,9 @@ Software program for checking sample matching for NGS data
 
 ## Usage
 
-### 1) Input VCF
+### Main program
+
+#### 1) Input VCF
 
 - VCF files in `vcf_dir`:
 
@@ -25,7 +27,7 @@ Software program for checking sample matching for NGS data
 
 -
 
-### 2) Input BAM
+#### 2) Input BAM
 
 Change your configruration.
 
@@ -53,7 +55,7 @@ REF="/NAS/nas33-2/mpileup/hg19.fasta" or REF="/NAS/nas33-2/mpileup/GRCh37-lite.f
 
 -
 
-### 3) Input FASTQ
+#### 3) Input FASTQ
 
 ```bash
 Usage : ./ngscheckmate_fastq <options> -1 fastqfile1 [-2 fastqfile2]  patternfile(.pt)
@@ -74,7 +76,33 @@ Usage : ./ngscheckmate_fastq <options> -1 fastqfile1 [-2 fastqfile2]  patternfil
 	  -j, --nodeptherror : in case estimated subsampling rate is larger than 1, do not stop but reset it to 1 and continue.
 ```
 
+### Supporting scripts
+
+#### 1) Patterngenerator
+
+This set of scripts generates the .pt file used by the fastq module, given a bed file containing a set of SNP positions. It assumes a file containing a whole genome sequence and the bowtie alignment program.
+
+
+#### 2) Graph generator (Rscript)
+
+This script with a set of xgmml templates is used for generating a graph representing matching files as connected nodes. The output format is in .xgmml, which can be read by Cytoscape.
+
+
+```R
+source("graph/ngscheckmate2xgmml.R")
+create.xgmml.from.ngscheckmateout(label.file,ngscheckmateoutput.file,output.xgmml)
+```
+
+ - Label file : a tab-delimited text file containing a bam file name (1st column), an individual identifier (2nd column) and optionally, a file identifier (3rd column) for each line. An individual identifier must be unique to a subject (e.g. both tumor and normal samples from the same individual must have the same individual identifier). A file identifier must be unique to a file name.
+ - ngscheckmateoutput.file : the output text file of NGSCheckMate. It is a tab-delimited text file containing two bam file names (1st and 2nd columns), VAF correlation (3rd column) and average depth (4th column). It may contain either all pairs or matched pairs, depending on the option used to run NGSCheckMate. Either type works.
+ - Sample label file (sample.label.txt) and ngscheckmateouput.file (sample.input.txt) can be found in the subdirectory graph/.
+
+
+
 ## Authors
+
+Software programs : Alice Lee, [Sejoon Lee][sejooning] & [Soo Lee][SooLee]
+
 
 ## Acknoledgements
 
