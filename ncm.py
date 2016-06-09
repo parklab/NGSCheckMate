@@ -518,18 +518,18 @@ def calAUC(predStrengths, classLabels):
 def getPredefinedModel(depth):
      if Family_flag:
          if depth > 10:
-             return 0.874546, 0.022211, 0.646256175, 0.021336239
+             return 0.874611,0.022596,0.644481,0.020908
          elif depth > 5:
-             return 0.785249,0.021017, 0.598277053, 0.02253561
+             return 0.785312,0.021318,0.596133,0.022502
          elif depth > 2:
-             return 0.650573, 0.018699,0.536020197, 0.020461932
+             return 0.650299,0.019252,0.5346,0.020694
          elif depth > 1:
-             return 0.578386,0.018526, 0.49497342, 0.022346597
+             return 0.578582,0.018379,0.495017,0.021652
          elif depth > 0.5:
-             return 0.529327,0.025785, 0.465275173, 0.028221203
+             return 0.524757,0.023218,0.465653,0.027378
          else:
     #         print "Warning: Sample region depth is too low < 1"
-             return 0.529327,0.025785, 0.465275173, 0.028221203
+             return 0.524757,0.023218, 0.465653, 0.027378
      else:
          if depth > 10:
              return 0.874546, 0.022211, 0.310549, 0.060058
@@ -621,10 +621,14 @@ def classifying():
 
     dataSetSize = len(altFreqList)
 
+    filter_list = []
+
     for i in range(0, dataSetSize):
         for j in range(0, dataSetSize):
             if i!=j:
-                temp.append([keyList[i],keyList[j]])
+                if keyList[j] not in filter_list:
+                    temp.append([keyList[i],keyList[j]])
+        filter_list.append(keyList[i])
 
     for iterations in range(49,wholeFeatures):
 
@@ -660,12 +664,13 @@ def classifying():
         output_matrix = dict()
         
         if out_tag!="stdout":
-        	out_f = open(outdir + "/" + out_tag + ".txt","w")
+        	out_f = open(outdir + "/" + out_tag + "_all.txt","w")
+        	out_matched = open(outdir + "/" + out_tag + "_matched.txt","w")
 
-        for i in range(0, len(samples)):
-            output_matrix[temp[i][0]] = dict()
-            for j in range(0,len(samples)):
-                output_matrix[temp[i][0]][temp[j][0]] = 0
+        for i in range(0, len(keyList)):
+            output_matrix[keyList[i]] = dict()
+            for j in range(0,len(keyList)):
+                output_matrix[keyList[i]][keyList[j]] = 0
 
         if training_flag == 1:
             #make training set
@@ -685,9 +690,6 @@ def classifying():
                 if result[1] == 1:
                     print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
                 predStrength.append(result[0])
-    #            AUCs.append(calAUC(mat(predStrength),classLabel))
-    #            plotROC(mat(predStrength),classLabel)
-    #            print AUCs
         else :
             for i in range(0,len(samples)):
                 depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
@@ -695,20 +697,30 @@ def classifying():
                 result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
                 if result[1] ==1:
                     output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
+                    output_matrix[temp[i][1].strip()][temp[i][0].strip()] = samples[i]
                     if out_tag=="stdout":
                         print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
                     else :
                         out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
-                #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
+                        out_matched.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                else:
+                    output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
+                    output_matrix[temp[i][1].strip()][temp[i][0].strip()] = samples[i]
+                    if out_tag=="stdout":
+                        print str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                    else :
+                        out_f.write(str(temp[i][0][:-4]) + '\tunmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
                 predStrength.append(result[0])
-    #            AUCs.append(calAUC(mat(predStrength),classLabel))
-    #            plotROC(mat(predStrength),classLabel)
-    #            print AUCs
             #testing sample is samples
         output_matrix_f.write("sample_ID")
         for key in output_matrix.keys():
             output_matrix_f.write("\t" + key[0:key.index('.')])
         output_matrix_f.write("\n")
+
+#        for key in output_matrix.keys():
+#            for otherkey in output_matrix[key].keys():
+#                if output_matrix[key][otherkey] != 0:
+#                    output_matrix[otherkey][key] = output_matrix[key][otherkey] 
 
         for key in output_matrix.keys():
             output_matrix_f.write(key[0:key.index('.')])
@@ -718,7 +730,8 @@ def classifying():
             
         output_matrix_f.close()         
         if out_tag!="stdout":
-        	out_f.close()   
+        	out_f.close()
+        	out_matched.close()   
 
 
 
@@ -773,7 +786,7 @@ def classifying_test():
         output_matrix = dict()
         
         if out_tag!="stdout":
-            out_f = open(outdir + "/" + out_tag + ".txt","w")
+            out_f = open(outdir + "/" + out_tag + "_all.txt","w")
 
         for i in range(0, len(samples)):
             output_matrix[temp[i][0]] = dict()
@@ -916,11 +929,143 @@ def get_bam_list():
              bam_list.append(line.strip())
 
 
+def output_filter():
+    success_set_M = []
+    success_set_U = []
+    failure_set_M = []
+    failure_set_U = []
+
+    with open(outdir + "/" + out_tag + "_all.txt","r") as F:
+        for line in F.readlines():
+            temp = line.strip().split('\t')
+            
+            sample1 = temp[0]
+            sample2 = temp[2]
+            
+            match = temp[1]
+            
+            if match == "matched":
+                if sample1[sample1.index("TCGA"):sample1.index("TCGA")+12] == sample2[sample2.index("TCGA"):sample2.index("TCGA")+12] :
+                    success_set_M.append(line)
+                else:
+                    failure_set_M.append(line)
+            elif match == "unmatched":
+                if sample1[sample1.index("TCGA"):sample1.index("TCGA")+12] == sample2[sample2.index("TCGA"):sample2.index("TCGA")+12] :
+                    failure_set_U.append(line)
+                else:
+                    success_set_U.append(line)        
+              
+    Matched_file = open(outdir + "/" + out_tag + "_matched.txt",'w') 
+
+    for i in success_set_M:
+        Matched_file.write(i)
+    for i in failure_set_M:
+        Matched_file.write(i)  
+    
+    Matched_file.close()
+
+    problem_file = open(outdir + "/" + out_tag + "_problematic.txt",'w')
+
+    for i in failure_set_M:
+        problem_file.write(i)
+    for i in failure_set_U:
+        problem_file.write(i)
+
+    problem_file.close()
+
+    Summary_file = open(outdir + "/" + out_tag + "_summary.txt",'w')
+    
+ 
+
+    ## paired cluster - only failed things
+    Summary_file.write("###########################################\n")
+    Summary_file.write("###  Problematic clusters of same orgins ##\n")
+    Summary_file.write("###########################################\n\n")
+
+    cluster = dict()
+
+    result_set = failure_set_M + success_set_M
+
+    for line in result_set:
+        temp = line.strip().split('\t')
+        flag = 0
+        for key in cluster:
+            if temp[0] in cluster[key]:
+                cluster[key].add(temp[2])
+                flag = 1
+                break
+            elif temp[2] in cluster[key]:
+                cluster[key].add(temp[0])
+                flag = 1
+                break
+        
+        if flag == 0:
+            cluster[temp[0]] = set()
+            cluster[temp[0]].add(temp[0])
+            cluster[temp[0]].add(temp[2])
+            
+            
+    count = 0 
+    for key in cluster:
+        temp_list = []
+        flag = 0
+        for data in cluster[key]:
+            temp_list.append(data)
+            sample1 = temp_list[0]
+            ID = sample1[sample1.index("TCGA"):sample1.index("TCGA")+12]
+            
+            for sample1 in cluster[key]:
+                if ID != sample1[sample1.index("TCGA"):sample1.index("TCGA")+12]:
+                    flag = 1
+
+              
+
+        if flag == 1:
+            count = count + 1
+            Summary_file.write("Cluster " + str(count) + "\n")
+              
+            for data in cluster[key]:
+                Summary_file.write(data + "\n")
+            Summary_file.write("\n")
+
+                
+    ## Singleton
+    Summary_file.write("\n")
+    Summary_file.write("###########################################\n")
+    Summary_file.write("############### Singleton #################\n")
+    Summary_file.write("###########################################\n\n")
+
+    final_set = set()
+    filter_set = set()
+
+    result_set = failure_set_U
+
+    for line in result_set:
+        temp = line.strip().split('\t')
+        
+        final_set.add(temp[0])
+        final_set.add(temp[2])
+        
+        flag = 0
+        for key in cluster:
+            if temp[0] in cluster[key]:
+                filter_set.add(temp[0])
+            elif temp[2] in cluster[key]:
+                filter_set.add(temp[2])
+                
+
+
+    for i in final_set.difference(filter_set):
+        Summary_file.write(i + "\n")
+
+    Summary_file.close()
+
+
 if __name__ == '__main__':
     testsamplename = ""
 
     help = """
-    Ensuring Sample Identity v0.8
+    Ensuring Sample Identity v1.0
     Usage:   NGSCheckmate
 
     Desc.:   Input = the absolute path list of vcf files (samtools mpileup and bcftools)
@@ -1025,6 +1170,7 @@ if __name__ == '__main__':
 #        classifying()
 
  #       if args.PDF_flag != None:
+#    output_filter()
     pdf_tag = out_tag
     generate_R_scripts()
     run_R_scripts()
