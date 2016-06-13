@@ -12,6 +12,7 @@ global desire_depth
 global reference_length
 global pattern_length
 global maxthread
+global nodeptherror
 global PE
 global bed_file
 global outdir
@@ -305,6 +306,8 @@ def run_fastq_version():
             command = command + "-L " + pattern_length + " "
     if maxthread !="":
             command = command + "-p " + maxthread + " "
+    if nodeptherror !="":
+            command = command + "-j " + nodeptherror + " "
 
     if PE == 1:
             command =  command  + "-1 "  + fastq1 + " -2 " + fastq2 +" " + bed_file +" > " + outdir + "/" + temp_out + ".ncm"
@@ -365,73 +368,82 @@ def classifying():
             distance = pearson_def(vecA, vecB)
             samples.append(distance)
             
-    predStrength = []
-    training_flag =0
-####0715 Append
+        predStrength = []
+        training_flag =0
+    ####0715 Append
 
-    output_matrix_f = open(outdir + "/output_corr_matrix.txt","w")
-    output_matrix = dict()
-    
-    if out_tag!="stdout":
-    	out_f = open(outdir + "/" + out_tag + ".txt","w")
-
-    for i in range(0, len(samples)):
-        output_matrix[temp[i][0]] = dict()
-        for j in range(0,len(samples)):
-            output_matrix[temp[i][0]][temp[j][0]] = 0
-
-    if training_flag == 1:
-        #make training set
-        for i in range(0,len(samples)):
-            trainMatrix= []
-            trainCategory = []
-            for j in range(0, len(samples)):
-                if i==j:
-                    continue
-                else:
-                    trainMatrix.append(samples[j])
-                    trainCategory.append(classLabel[j])
-            #training samples in temp
-            #p0V, p1V, pAb = trainNB0(array(trainMatrix),array(trainCategory))
-            p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
-            result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
-            if result[1] == 1:
-                print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
-            predStrength.append(result[0])
-#            AUCs.append(calAUC(mat(predStrength),classLabel))
-#            plotROC(mat(predStrength),classLabel)
-#            print AUCs
-    else :
-        for i in range(0,len(samples)):
-            depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
-            p1V,p1S, p0V, p0S = getPredefinedModel(depth)
-            result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
-            if result[1] ==1:
-                output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
-                if out_tag=="stdout":
-                    print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
-                else :
-                    out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
-            #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
-            predStrength.append(result[0])
-#            AUCs.append(calAUC(mat(predStrength),classLabel))
-#            plotROC(mat(predStrength),classLabel)
-#            print AUCs
-        #testing sample is samples
-    output_matrix_f.write("sample_ID")
-    for key in output_matrix.keys():
-        output_matrix_f.write("\t" + key[0:key.index('.')])
-    output_matrix_f.write("\n")
-
-    for key in output_matrix.keys():
-        output_matrix_f.write(key[0:key.index('.')])
-        for otherkey in output_matrix.keys():
-            output_matrix_f.write("\t" + str(output_matrix[key][otherkey]))
-        output_matrix_f.write("\n")   
+        output_matrix_f = open(outdir + "/output_corr_matrix.txt","w")
+        output_matrix = dict()
         
-    output_matrix_f.close()         
-    if out_tag!="stdout":
-    	out_f.close()   
+        if out_tag!="stdout":
+            out_f = open(outdir + "/" + out_tag + "_all.txt","w")
+            out_matched = open(outdir + "/" + out_tag + "_matched.txt","w")
+
+        for i in range(0, len(keyList)):
+            output_matrix[keyList[i]] = dict()
+            for j in range(0,len(keyList)):
+                output_matrix[keyList[i]][keyList[j]] = 0
+
+        if training_flag == 1:
+            #make training set
+            for i in range(0,len(samples)):
+                trainMatrix= []
+                trainCategory = []
+                for j in range(0, len(samples)):
+                    if i==j:
+                        continue
+                    else:
+                        trainMatrix.append(samples[j])
+                        trainCategory.append(classLabel[j])
+                #training samples in temp
+                #p0V, p1V, pAb = trainNB0(array(trainMatrix),array(trainCategory))
+                p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
+                result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
+                if result[1] == 1:
+                    print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
+                predStrength.append(result[0])
+    #            AUCs.append(calAUC(mat(predStrength),classLabel))
+    #            plotROC(mat(predStrength),classLabel)
+    #            print AUCs
+        else :
+            for i in range(0,len(samples)):
+                depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
+                p1V,p1S, p0V, p0S = getPredefinedModel(depth)
+                result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
+                if result[1] ==1:
+                    output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
+                    output_matrix[temp[i][1].strip()][temp[i][0].strip()] = samples[i]
+                    if out_tag=="stdout":
+                        print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                    else :
+                        out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                        out_matched.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')               
+                else:
+                    if out_tag=="stdout":
+                        print str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                    else :
+                        out_f.write(str(temp[i][0][:-4]) + '\tunmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
+                predStrength.append(result[0])
+    #            AUCs.append(calAUC(mat(predStrength),classLabel))
+    #            plotROC(mat(predStrength),classLabel)
+    #            print AUCs
+            #testing sample is samples
+        output_matrix_f.write("sample_ID")
+        for key in output_matrix.keys():
+            output_matrix_f.write("\t" + key[0:key.index('.')])
+        output_matrix_f.write("\n")
+
+        for key in output_matrix.keys():
+            output_matrix_f.write(key[0:key.index('.')])
+            for otherkey in output_matrix.keys():
+                output_matrix_f.write("\t" + str(output_matrix[key][otherkey]))
+            output_matrix_f.write("\n")   
+            
+        output_matrix_f.close()         
+        if out_tag!="stdout":
+            out_f.close()   
+            out_matched.close()   
 
 
 def classifying_test():
@@ -481,69 +493,78 @@ def classifying_test():
     training_flag =0
 ####0715 Append
 
-    output_matrix_f = open(outdir + "/output_corr_matrix.txt","w")
-    output_matrix = dict()
-    
-    if out_tag!="stdout":
-        out_f = open(outdir + "/" + out_tag + ".txt","w")
-
-    for i in range(0, len(samples)):
-        output_matrix[temp[i][0]] = dict()
-        for j in range(0,len(samples)):
-            output_matrix[temp[i][0]][temp[j][0]] = 0
-
-    if training_flag == 1:
-        #make training set
-        for i in range(0,len(samples)):
-            trainMatrix= []
-            trainCategory = []
-            for j in range(0, len(samples)):
-                if i==j:
-                    continue
-                else:
-                    trainMatrix.append(samples[j])
-                    trainCategory.append(classLabel[j])
-            #training samples in temp
-            #p0V, p1V, pAb = trainNB0(array(trainMatrix),array(trainCategory))
-            p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
-            result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
-            if result[1] == 1:
-                print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
-            predStrength.append(result[0])
-#            AUCs.append(calAUC(mat(predStrength),classLabel))
-#            plotROC(mat(predStrength),classLabel)
-#            print AUCs
-    else :
-        for i in range(0,len(samples)):
-            depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
-            p1V,p1S, p0V, p0S = getPredefinedModel(depth)
-            result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
-            if result[1] ==1:
-                output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
-                if out_tag=="stdout":
-                    print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
-                else :
-                    out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
-            #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
-            predStrength.append(result[0])
-#            AUCs.append(calAUC(mat(predStrength),classLabel))
-#            plotROC(mat(predStrength),classLabel)
-#            print AUCs
-        #testing sample is samples
-    output_matrix_f.write("sample_ID")
-    for key in output_matrix.keys():
-        output_matrix_f.write("\t" + key[0:key.index('.')])
-    output_matrix_f.write("\n")
-
-    for key in output_matrix.keys():
-        output_matrix_f.write(key[0:key.index('.')])
-        for otherkey in output_matrix.keys():
-            output_matrix_f.write("\t" + str(output_matrix[key][otherkey]))
-        output_matrix_f.write("\n")   
+        output_matrix_f = open(outdir + "/output_corr_matrix.txt","w")
+        output_matrix = dict()
         
-    output_matrix_f.close()         
-    if out_tag!="stdout":
-        out_f.close()   
+        if out_tag!="stdout":
+            out_f = open(outdir + "/" + out_tag + "_all.txt","w")
+            out_matched = open(outdir + "/" + out_tag + "_matched.txt","w")
+
+        for i in range(0, len(keyList)):
+            output_matrix[keyList[i]] = dict()
+            for j in range(0,len(keyList)):
+                output_matrix[keyList[i]][keyList[j]] = 0
+
+        if training_flag == 1:
+            #make training set
+            for i in range(0,len(samples)):
+                trainMatrix= []
+                trainCategory = []
+                for j in range(0, len(samples)):
+                    if i==j:
+                        continue
+                    else:
+                        trainMatrix.append(samples[j])
+                        trainCategory.append(classLabel[j])
+                #training samples in temp
+                #p0V, p1V, pAb = trainNB0(array(trainMatrix),array(trainCategory))
+                p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
+                result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
+                if result[1] == 1:
+                    print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
+                predStrength.append(result[0])
+    #            AUCs.append(calAUC(mat(predStrength),classLabel))
+    #            plotROC(mat(predStrength),classLabel)
+    #            print AUCs
+        else :
+            for i in range(0,len(samples)):
+                depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
+                p1V,p1S, p0V, p0S = getPredefinedModel(depth)
+                result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
+                if result[1] ==1:
+                    output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
+                    output_matrix[temp[i][1].strip()][temp[i][0].strip()] = samples[i]
+                    if out_tag=="stdout":
+                        print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                    else :
+                        out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                        out_matched.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')               
+                else:
+                    if out_tag=="stdout":
+                        print str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                    else :
+                        out_f.write(str(temp[i][0][:-4]) + '\tunmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
+                predStrength.append(result[0])
+    #            AUCs.append(calAUC(mat(predStrength),classLabel))
+    #            plotROC(mat(predStrength),classLabel)
+    #            print AUCs
+            #testing sample is samples
+        output_matrix_f.write("sample_ID")
+        for key in output_matrix.keys():
+            output_matrix_f.write("\t" + key[0:key.index('.')])
+        output_matrix_f.write("\n")
+
+        for key in output_matrix.keys():
+            output_matrix_f.write(key[0:key.index('.')])
+            for otherkey in output_matrix.keys():
+                output_matrix_f.write("\t" + str(output_matrix[key][otherkey]))
+            output_matrix_f.write("\n")   
+            
+        output_matrix_f.close()         
+        if out_tag!="stdout":
+            out_f.close()   
+            out_matched.close()   
 
 def generate_R_scripts():
     r_file = open(outdir + "/r_script.r","w")
@@ -582,6 +603,139 @@ def remove_internal_files():
     proc = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     return_code = proc.wait()
 
+def output_filter():
+    success_set_M = []
+    success_set_U = []
+    failure_set_M = []
+    failure_set_U = []
+
+    with open(outdir + "/" + out_tag + "_all.txt","r") as F:
+        for line in F.readlines():
+            temp = line.strip().split('\t')
+            
+            sample1 = temp[0]
+            sample2 = temp[2]
+            
+            match = temp[1]
+            
+            if match == "matched":
+                if sample1[sample1.index("TCGA"):sample1.index("TCGA")+12] == sample2[sample2.index("TCGA"):sample2.index("TCGA")+12] :
+                    success_set_M.append(line)
+                else:
+                    failure_set_M.append(line)
+            elif match == "unmatched":
+                if sample1[sample1.index("TCGA"):sample1.index("TCGA")+12] == sample2[sample2.index("TCGA"):sample2.index("TCGA")+12] :
+                    failure_set_U.append(line)
+                else:
+                    success_set_U.append(line)        
+              
+    Matched_file = open(outdir + "/" + out_tag + "_matched.txt",'w') 
+
+    for i in success_set_M:
+        Matched_file.write(i)
+    for i in failure_set_M:
+        Matched_file.write(i)  
+    
+    Matched_file.close()
+
+    problem_file = open(outdir + "/" + out_tag + "_problematic.txt",'w')
+
+    for i in failure_set_M:
+        problem_file.write(i)
+    for i in failure_set_U:
+        problem_file.write(i)
+
+    problem_file.close()
+
+    Summary_file = open(outdir + "/" + out_tag + "_summary.txt",'w')
+    
+ 
+
+    ## paired cluster - only failed things
+    Summary_file.write("###########################################\n")
+    Summary_file.write("###  Problematic clusters of same orgins ##\n")
+    Summary_file.write("###########################################\n\n")
+
+    cluster = dict()
+
+    result_set = failure_set_M + success_set_M
+
+    for line in result_set:
+        temp = line.strip().split('\t')
+        flag = 0
+        for key in cluster:
+            if temp[0] in cluster[key]:
+                cluster[key].add(temp[2])
+                flag = 1
+                break
+            elif temp[2] in cluster[key]:
+                cluster[key].add(temp[0])
+                flag = 1
+                break
+        
+        if flag == 0:
+            cluster[temp[0]] = set()
+            cluster[temp[0]].add(temp[0])
+            cluster[temp[0]].add(temp[2])
+            
+            
+    count = 0 
+    for key in cluster:
+        temp_list = []
+        flag = 0
+        for data in cluster[key]:
+            temp_list.append(data)
+            sample1 = temp_list[0]
+            ID = sample1[sample1.index("TCGA"):sample1.index("TCGA")+12]
+            
+            for sample1 in cluster[key]:
+                if ID != sample1[sample1.index("TCGA"):sample1.index("TCGA")+12]:
+                    flag = 1
+
+              
+
+        if flag == 1:
+            count = count + 1
+            Summary_file.write("Cluster " + str(count) + "\n")
+              
+            for data in cluster[key]:
+                Summary_file.write(data + "\n")
+            Summary_file.write("\n")
+
+                
+    ## Singleton
+    Summary_file.write("\n")
+    Summary_file.write("###########################################\n")
+    Summary_file.write("############### Singleton #################\n")
+    Summary_file.write("###########################################\n\n")
+
+    final_set = set()
+    filter_set = set()
+
+    result_set = failure_set_U
+
+    for line in result_set:
+        temp = line.strip().split('\t')
+        
+        final_set.add(temp[0])
+        final_set.add(temp[2])
+        
+        flag = 0
+        for key in cluster:
+            if temp[0] in cluster[key]:
+                filter_set.add(temp[0])
+            elif temp[2] in cluster[key]:
+                filter_set.add(temp[2])
+                
+
+
+    for i in final_set.difference(filter_set):
+        Summary_file.write(i + "\n")
+
+    Summary_file.close()
+
+
+
 if __name__ == '__main__':
     sub_rate = ""
     desired_depth = ""
@@ -592,6 +746,7 @@ if __name__ == '__main__':
     fastq1 = ""
     fastq2 = ""
     testsamplename = ""
+    nodeptherror = ""
 
     help = """
     Ensuring Sample Identity v0.8
@@ -628,12 +783,13 @@ if __name__ == '__main__':
 #    group.add_argument('-d','--dir',metavar='VCF_dir',dest='vcf_files_dir',action='store', help='VCF files from samtools mpileup and bcftools')
 
     parser.add_argument('-f','--family_cutoff',dest='family_cutoff',action='store_true', help='apply strict correlation threshold to remove family cases')
-    parser.add_argument('-bed','--bed',metavar='feature bed file',required=True,dest='bed_file',action='store', help='bed file')
+    parser.add_argument('-pt','--pt',metavar='feature pattern file',required=True,dest='bed_file',action='store', help='pattern file')
     parser.add_argument('-s','--ss',metavar='subsampling_rate',dest='sub_rate',action='store', help='subsampling rate (default 1.0)')
     parser.add_argument('-d','--depth',metavar='desired_depth',dest='desired_depth',action='store', help='as an alternative to a user-defined subsampling rate, let the program compute the subsampling rate given a user-defined desired_depth and the data')
     parser.add_argument('-R','--reference_length',metavar='reference_length',dest='reference_length',action='store', help="The reference length (default : 3E9) to be used for computing subsampling rate. If the data is NOT WGS from human, and if you aree using the -d option, it is highly recommended to specify the reference length. For instance, if your data is human RNA-seq, the total reference length could be about 3percent of the human genome, which can be set as 1E8.")
     parser.add_argument('-L','--pattern_length',metavar='pattern_length',dest='pattern_length',action='store', help='The length of the flanking sequences being used to identify SNV sites. Default is 21bp. It is recommended not to change this value, unless you have created your own pattern file with a different pattern length.')
     parser.add_argument('-p','--maxthread',metavar='maxthread',dest='maxthread',action='store', help='number of threads to use (default : 1 )')
+    parser.add_argument('-j','--nodeptherror',metavar='nodeptherror',dest='nodeptherror',action='store', help='in case estimated subsampling rate is larger than 1, do not stop but reset it to 1 and continue')
 
     parser.add_argument('-O','--outdir',metavar='output_dir',dest='outdir',action='store', help='directory name for temp and output files')
     parser.add_argument('-N','--outfilename',metavar='output_filename',dest='outfilename',action='store',default="output",help='OutputFileName ( default : output ), -N filename')
@@ -658,6 +814,8 @@ if __name__ == '__main__':
         pattern_length = args.pattern_length
     if args.maxthread != None:
         maxthread = args.maxthread
+    if args.nodeptherror != None:
+        nodeptherror = args.nodeptherror
 
     if args.family_cutoff:
         Family_flag=True
@@ -738,6 +896,7 @@ if __name__ == '__main__':
 
   
 #  if args.PDF_flag != None:
+#    output_filter()
     pdf_tag = outfilename
     generate_R_scripts()
     run_R_scripts()
