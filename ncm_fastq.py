@@ -493,78 +493,78 @@ def classifying_test():
     training_flag =0
 ####0715 Append
 
-        output_matrix_f = open(outdir + "/output_corr_matrix.txt","w")
-        output_matrix = dict()
+    output_matrix_f = open(outdir + "/output_corr_matrix.txt","w")
+    output_matrix = dict()
         
-        if out_tag!="stdout":
-            out_f = open(outdir + "/" + out_tag + "_all.txt","w")
-            out_matched = open(outdir + "/" + out_tag + "_matched.txt","w")
+    if out_tag!="stdout":
+        out_f = open(outdir + "/" + out_tag + "_all.txt","w")
+        out_matched = open(outdir + "/" + out_tag + "_matched.txt","w")
 
-        for i in range(0, len(keyList)):
-            output_matrix[keyList[i]] = dict()
-            for j in range(0,len(keyList)):
-                output_matrix[keyList[i]][keyList[j]] = 0
+    for i in range(0, len(keyList)):
+        output_matrix[keyList[i]] = dict()
+        for j in range(0,len(keyList)):
+            output_matrix[keyList[i]][keyList[j]] = 0
 
-        if training_flag == 1:
-            #make training set
-            for i in range(0,len(samples)):
-                trainMatrix= []
-                trainCategory = []
-                for j in range(0, len(samples)):
-                    if i==j:
-                        continue
-                    else:
-                        trainMatrix.append(samples[j])
-                        trainCategory.append(classLabel[j])
-                #training samples in temp
-                #p0V, p1V, pAb = trainNB0(array(trainMatrix),array(trainCategory))
-                p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
-                result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
-                if result[1] == 1:
-                    print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
-                predStrength.append(result[0])
-    #            AUCs.append(calAUC(mat(predStrength),classLabel))
-    #            plotROC(mat(predStrength),classLabel)
-    #            print AUCs
-        else :
-            for i in range(0,len(samples)):
-                depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
-                p1V,p1S, p0V, p0S = getPredefinedModel(depth)
-                result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
-                if result[1] ==1:
-                    output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
-                    output_matrix[temp[i][1].strip()][temp[i][0].strip()] = samples[i]
-                    if out_tag=="stdout":
-                        print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
-                    else :
-                        out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
-                        out_matched.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')               
+    if training_flag == 1:
+        #make training set
+        for i in range(0,len(samples)):
+            trainMatrix= []
+            trainCategory = []
+            for j in range(0, len(samples)):
+                if i==j:
+                    continue
                 else:
-                    if out_tag=="stdout":
-                        print str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
-                    else :
-                        out_f.write(str(temp[i][0][:-4]) + '\tunmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
-                #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
-                predStrength.append(result[0])
-    #            AUCs.append(calAUC(mat(predStrength),classLabel))
-    #            plotROC(mat(predStrength),classLabel)
-    #            print AUCs
-            #testing sample is samples
-        output_matrix_f.write("sample_ID")
-        for key in output_matrix.keys():
-            output_matrix_f.write("\t" + key[0:key.index('.')])
-        output_matrix_f.write("\n")
+                    trainMatrix.append(samples[j])
+                    trainCategory.append(classLabel[j])
+            #training samples in temp
+            #p0V, p1V, pAb = trainNB0(array(trainMatrix),array(trainCategory))
+            p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
+            result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
+            if result[1] == 1:
+                print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
+            predStrength.append(result[0])
+#            AUCs.append(calAUC(mat(predStrength),classLabel))
+#            plotROC(mat(predStrength),classLabel)
+#            print AUCs
+    else :
+        for i in range(0,len(samples)):
+            depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
+            p1V,p1S, p0V, p0S = getPredefinedModel(depth)
+            result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
+            if result[1] ==1:
+                output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
+                output_matrix[temp[i][1].strip()][temp[i][0].strip()] = samples[i]
+                if out_tag=="stdout":
+                    print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                else :
+                    out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                    out_matched.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')               
+            else:
+                if out_tag=="stdout":
+                    print str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                else :
+                    out_f.write(str(temp[i][0][:-4]) + '\tunmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+            #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
+            predStrength.append(result[0])
+#            AUCs.append(calAUC(mat(predStrength),classLabel))
+#            plotROC(mat(predStrength),classLabel)
+#            print AUCs
+        #testing sample is samples
+    output_matrix_f.write("sample_ID")
+    for key in output_matrix.keys():
+        output_matrix_f.write("\t" + key[0:key.index('.')])
+    output_matrix_f.write("\n")
 
-        for key in output_matrix.keys():
-            output_matrix_f.write(key[0:key.index('.')])
-            for otherkey in output_matrix.keys():
-                output_matrix_f.write("\t" + str(output_matrix[key][otherkey]))
-            output_matrix_f.write("\n")   
+    for key in output_matrix.keys():
+        output_matrix_f.write(key[0:key.index('.')])
+        for otherkey in output_matrix.keys():
+            output_matrix_f.write("\t" + str(output_matrix[key][otherkey]))
+        output_matrix_f.write("\n")   
             
-        output_matrix_f.close()         
-        if out_tag!="stdout":
-            out_f.close()   
-            out_matched.close()   
+    output_matrix_f.close()         
+    if out_tag!="stdout":
+        out_f.close()   
+        out_matched.close()   
 
 def generate_R_scripts():
     r_file = open(outdir + "/r_script.r","w")
