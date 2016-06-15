@@ -53,20 +53,20 @@ Usage: python ncm.py -V <–d INPUT_DIR | -l I INPUT_LIST_FILE>  -bed BED_FILE �
 
 *Required arguments
 ```
--d DIR	directory that contains input files
-  or
--I FILE	text file that lists input files (one absolute path per line) 
-
--bed FILE	bed file that lists coordinates of known SNPs (included in the package) 
-(use Distinct_features_21067_hg19.bed for hg19, 
-or  Distinct_features_21067.bed forGRCh37)
--O PATH		The name of the output directory
+	-d DIR	directory that contains input files
+	  or
+	-I FILE	text file that lists input files (one absolute path per line) 
+	
+	-bed FILE	bed file that lists coordinates of known SNPs (included in the package) 
+	(use Distinct_features_21067_hg19.bed for hg19, 
+	or  Distinct_features_21067.bed forGRCh37)
+	-O PATH		The name of the output directory
 ```
 Optional arguments
 ```
--N NAME   The name of the output file (default: “output”)
--f 		Use strict correlation threshold. Recommended if your data contains family members.
--t file	A file with test sample files 
+	-N NAME   The name of the output file (default: “output”)
+	-f 		Use strict correlation threshold. Recommended if your data contains family members.
+	-t file	A file with test sample files 
 ```
 
 For examples,
@@ -102,20 +102,20 @@ Usage: python ncm.py -B <–d INPUT_DIR | -l I INPUT_LIST_FILE>  -bed BED_FILE �
 
 *Required arguments
 ```
--d DIR	directory that contains input files
-  or
--I FILE	text file that lists input files (one absolute path per line) 
-
--bed FILE	bed file that lists coordinates of known SNPs (included in the package) 
-(use Distinct_features_21067_hg19.bed for hg19, 
-or  Distinct_features_21067.bed forGRCh37)
--O PATH		The name of the output directory
+	-d DIR	directory that contains input files
+	  or
+	-I FILE	text file that lists input files (one absolute path per line) 
+	
+	-bed FILE	bed file that lists coordinates of known SNPs (included in the package) 
+	(use Distinct_features_21067_hg19.bed for hg19, 
+	or  Distinct_features_21067.bed forGRCh37)
+	-O PATH		The name of the output directory
 ```
 Optional arguments
 ```
--N NAME   The name of the output file (default: “output”)
--f 		Use strict correlation threshold. Recommended if your data contains family members.
--t file	A file with test sample files 
+	-N NAME   The name of the output file (default: “output”)
+	-f 		Use strict correlation threshold. Recommended if your data contains family members.
+	-t file	A file with test sample files 
 ```
 
 
