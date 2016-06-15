@@ -25,8 +25,8 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 #### Software environment
 * Unix/Linux System
 * Python 2.6 or above
-* Samtools version 0.1.19 (required only for BAM/VCF input)
-* Bcftools version 0.1.19 (required only for BAM/VCF input)
+* Samtools version 0.1.19 (required only for BAM input)
+* Bcftools version 0.1.19 (required only for BAM input)
 * R 3.1 or above (required only for image output of clustering dendrogram)
 
 #### Additional files
