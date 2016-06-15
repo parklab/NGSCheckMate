@@ -15,19 +15,19 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 * [Authors](#Authors)
 * [Acknoledgements](#Acknoledgements)
 
+
 ## Quick-start
 
 several quick start options are available:
-* [Download the latest realease](https://github.com/parklab/NGSCheckMate/)
+* [Download the latest release](https://github.com/parklab/NGSCheckMate/)
 * Clone the repo : `git clone https://github.com/parklab/NGSCheckMate.git`
 
 ### Requirements
-Unix/Linux System
-Python 2.6 or above
-Samtools version 0.1.19 (required only for BAM/VCF input)
-Bcftools version 0.1.19 (required only for BAM/VCF input)
-R 3.1 or above (required only for image output of clustering dendrogram)
-
+*Unix/Linux System
+*Python 2.6 or above
+*Samtools version 0.1.19 (required only for BAM/VCF input)
+*Bcftools version 0.1.19 (required only for BAM/VCF input)
+*R 3.1 or above (required only for image output of clustering dendrogram)
 
 ## Usage
 
