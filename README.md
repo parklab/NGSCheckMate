@@ -34,19 +34,19 @@ BCFTOOLS=”absolute path” # path for BCFTOOLS
 
 ### Requirements
 #### Software environment
-*Unix/Linux System
-*Python 2.6 or above
-*Samtools version 0.1.19 (required only for BAM/VCF input)
-*Bcftools version 0.1.19 (required only for BAM/VCF input)
-*R 3.1 or above (required only for image output of clustering dendrogram)
+* Unix/Linux System
+* Python 2.6 or above
+* Samtools version 0.1.19 (required only for BAM/VCF input)
+* Bcftools version 0.1.19 (required only for BAM/VCF input)
+* R 3.1 or above (required only for image output of clustering dendrogram)
 
 #### Additional files
-*Required for BAM
+* Required for BAM
 ** Human reference genome (hg19 or GRCh37 fasta file)
 ** A bed file(.bed) that lists the locations of selected SNPs (including in the package)
-*Required for VCF - Output of samtools mpileup
+* Required for VCF - Output of samtools mpileup
 ** A bed file(.bed) that lists the locations of selected SNPs (including in the package)
-*Required for FASTQ input
+* Required for FASTQ input
 ** A binary pattern file(.pt) that lists the k-mer sequences spanning selected SNPs (included in the package)
 
 ## Usage
