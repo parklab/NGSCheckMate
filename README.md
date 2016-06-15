@@ -41,13 +41,19 @@ BCFTOOLS=”absolute path” # path for BCFTOOLS
 * R 3.1 or above (required only for image output of clustering dendrogram)
 
 #### Additional files
-##### Required for BAM
-* Human reference genome (hg19 or GRCh37 fasta file)
-* A bed file(.bed) that lists the locations of selected SNPs (including in the package)
-##### Required for VCF - Output of samtools mpileup
-* A bed file(.bed) that lists the locations of selected SNPs (including in the package)
-##### Required for FASTQ input
-* A binary pattern file(.pt) that lists the k-mer sequences spanning selected SNPs (included in the package)
+* Required for BAM
+```
+Human reference genome (hg19 or GRCh37 fasta file)
+A bed file(.bed) that lists the locations of selected SNPs (including in the package)
+```
+* Required for VCF - Output of samtools mpileup
+```
+A bed file(.bed) that lists the locations of selected SNPs (including in the package)
+```
+* Required for FASTQ input
+```
+A binary pattern file(.pt) that lists the k-mer sequences spanning selected SNPs (included in the package)
+```
 
 ## Usage
 
