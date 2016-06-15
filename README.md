@@ -1,10 +1,32 @@
+# [NGSCheckMate](https://github.com/parklab/NGSCheckMate/)
+NGSCheckMate is a software package for identifying next generation sequencing (NGS) data files from the same individual. It analyzes various types of NGS data files including (but not limited to) whole genome/exome sequencing, RNA-seq, ChIP-seq, targeted sequencing of various sequencing depths. It also supports checking sample pairing across data types. For example, our performance evaluation showed high accuracy of NGSCheckMate in pairing DNA sequencing files with RNA-sequencing files, or RNA-seq files and ChIP-seq files from the same individual. NGSCheckMate takes BAM (reads with alignment), VCF (variants) or FASTQ (unaligned reads) files as input. The alignment-free module of NGSCheckMate was specifically designed for FASTQ input. Since it does not perform alignment or variant calling step, it runs very fast expedited by read subsampling and parallelization (e.g., For RNA-seq data, it takes less than one minute using a single core). The idea behind how NGSCheckMate works is to evaluate similarity (correlation) of allele fractions of known single-nucleotide polymorphisms (SNPs) among input files. Currently, it works only for human data, but it can be easily extended to non-human data by providing a bed file including known SNPs for the relevant organism. 
+
 <p align="center">
   <img src="https://parklab.github.io/NGSCheckMate/logo.svg"
        alt="NGS CheckMate" />
 </p>
 
-# NGS CheckMate
-Software program for checking sample matching for NGS data
+## Table of contents
+
+* [Quick start](#Quick-start)
+* [Documentation](#documentation)
+* [Usage](#Usage)
+* [Supporting scripts](#Supporting-scripts)
+* [Authors](#Authors)
+* [Acknoledgements](#Acknoledgements)
+
+## Quick-start
+
+several quick start options are available:
+* [Download the latest realease](https://github.com/parklab/NGSCheckMate/)
+* Clone the repo : `git clone https://github.com/parklab/NGSCheckMate.git`
+
+### Requirements
+Unix/Linux System
+Python 2.6 or above
+Samtools version 0.1.19 (required only for BAM/VCF input)
+Bcftools version 0.1.19 (required only for BAM/VCF input)
+R 3.1 or above (required only for image output of clustering dendrogram)
 
 
 ## Usage
@@ -84,7 +106,7 @@ Usage: python vaf_ncm.py -f -I <input_directory> -O <output_directory> -N output
 ```
 
 
-### Supporting scripts
+### Supporting-scripts
 
 #### 1) Patterngenerator
 
