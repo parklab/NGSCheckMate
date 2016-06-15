@@ -6,6 +6,11 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
        alt="NGS CheckMate" />
 </p>
 
+
+* pdf tutorial is included in the package. (Tutorial.pdf)
+ 
+
+
 ## Table of contents
 
 * [Quick start](#Quick-start)
