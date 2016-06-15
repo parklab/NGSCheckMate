@@ -16,7 +16,7 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 * [Acknoledgements](#Acknoledgements)
 
 
-## Quick-start
+## Quick start
 
 ### Download NGSCheckMate
 several quick start options are available:
@@ -42,12 +42,12 @@ BCFTOOLS=”absolute path” # path for BCFTOOLS
 
 #### Additional files
 * Required for BAM
-** Human reference genome (hg19 or GRCh37 fasta file)
-** A bed file(.bed) that lists the locations of selected SNPs (including in the package)
+- Human reference genome (hg19 or GRCh37 fasta file)
+- A bed file(.bed) that lists the locations of selected SNPs (including in the package)
 * Required for VCF - Output of samtools mpileup
-** A bed file(.bed) that lists the locations of selected SNPs (including in the package)
+- A bed file(.bed) that lists the locations of selected SNPs (including in the package)
 * Required for FASTQ input
-** A binary pattern file(.pt) that lists the k-mer sequences spanning selected SNPs (included in the package)
+- A binary pattern file(.pt) that lists the k-mer sequences spanning selected SNPs (included in the package)
 
 ## Usage
 
