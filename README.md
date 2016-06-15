@@ -48,7 +48,7 @@ A binary pattern file(.pt) that lists the k-mer sequences spanning selected SNPs
 
 #### 1) Input VCF
 ```
-Usage: python ncm.py -V <–d INPUT_DIR | -l I INPUT_LIST_FILE>  -bed BED_FILE –O OUTPUT_DIR [options]
+Usage: python ncm.py -V <–d INPUT_DIR | -I INPUT_LIST_FILE>  -bed BED_FILE –O OUTPUT_DIR [options]
 ```
 
 * Required arguments
@@ -97,7 +97,7 @@ BCFTOOLS=”absolute path” # path for BCFTOOLS
 ```
 
 ```
-Usage: python ncm.py -B <–d INPUT_DIR | -l I INPUT_LIST_FILE>  -bed BED_FILE –O OUTPUT_DIR [options]
+Usage: python ncm.py -B <–d INPUT_DIR | -I INPUT_LIST_FILE>  -bed BED_FILE –O OUTPUT_DIR [options]
 ```
 
 * Required arguments
