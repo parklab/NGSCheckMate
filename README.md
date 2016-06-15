@@ -86,16 +86,14 @@ For examples,
 
 #### 2) Input BAM
 
-Change your configruration.
+Set paths in the configuration file (required only for BAM input)
 
-Please open `ncm.py`, find `run_mpileup()` function, modifying below lists as your configurations:
+Edit ncm.conf file in the downloaded package directory according to your environment. 
 
 ```python
-SAMTOOLS="/NAS/nas100-5/tools/samtools-0.1.19/samtools"
-
-BCFTOOLS="/NAS/nas100-5/tools/samtools-0.1.19/bcftools/bcftools"
-
-REF="/NAS/nas33-2/mpileup/hg19.fasta" or REF="/NAS/nas33-2/mpileup/GRCh37-lite.fa"
+REF=”absolute path”  # path for the reference fasta file
+SAMTOOLS=”absolute path” # path for SAMTOOLS 
+BCFTOOLS=”absolute path” # path for BCFTOOLS
 ```
 
 ```
