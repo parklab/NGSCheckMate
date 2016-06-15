@@ -55,17 +55,37 @@ A binary pattern file(.pt) that lists the k-mer sequences spanning selected SNPs
 
 ## Usage
 
-### Main program
-
 #### 1) Input VCF
+```
+Usage: python ncm.py -V <–d INPUT_DIR | -l I INPUT_LIST_FILE>  -bed BED_FILE –O OUTPUT_DIR [options]
+```
 
+*Required arguments
+```
+-d DIR	directory that contains input files
+  or
+-I FILE	text file that lists input files (one absolute path per line) 
+
+-bed FILE	bed file that lists coordinates of known SNPs (included in the package) 
+(use Distinct_features_21067_hg19.bed for hg19, 
+or  Distinct_features_21067.bed forGRCh37)
+-O PATH		The name of the output directory
+```
+Optional arguments
+```
+-N NAME   The name of the output file (default: “output”)
+-f 		Use strict correlation threshold. Recommended if your data contains family members.
+-t file	A file with test sample files 
+```
+
+For examples,
 - VCF files in `vcf_dir`:
 
    ```bash
    python ncm.py -V -d vcf_dir -O output_Dir -N outputfileName -bed bed_file
    ```
 
-- VCF lists in `bam_list_file`:
+- VCF lists in `vcf_list_file`:
 
    ```bash
    python ncm.py -V -l vcf_list_file -O output_Dir -N outputfileName -bed bed_file
