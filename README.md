@@ -51,7 +51,7 @@ A binary pattern file(.pt) that lists the k-mer sequences spanning selected SNPs
 Usage: python ncm.py -V <–d INPUT_DIR | -l I INPUT_LIST_FILE>  -bed BED_FILE –O OUTPUT_DIR [options]
 ```
 
-*Required arguments
+* Required arguments
 ```
 	-d DIR	directory that contains input files
 	  or
@@ -62,7 +62,7 @@ Usage: python ncm.py -V <–d INPUT_DIR | -l I INPUT_LIST_FILE>  -bed BED_FILE �
 	or  Distinct_features_21067.bed forGRCh37)
 	-O PATH		The name of the output directory
 ```
-Optional arguments
+* Optional arguments
 ```
 	-N NAME   The name of the output file (default: “output”)
 	-f 		Use strict correlation threshold. Recommended if your data contains family members.
@@ -100,7 +100,7 @@ BCFTOOLS=”absolute path” # path for BCFTOOLS
 Usage: python ncm.py -B <–d INPUT_DIR | -l I INPUT_LIST_FILE>  -bed BED_FILE –O OUTPUT_DIR [options]
 ```
 
-*Required arguments
+* Required arguments
 ```
 	-d DIR	directory that contains input files
 	  or
@@ -111,14 +111,14 @@ Usage: python ncm.py -B <–d INPUT_DIR | -l I INPUT_LIST_FILE>  -bed BED_FILE �
 	or  Distinct_features_21067.bed forGRCh37)
 	-O PATH		The name of the output directory
 ```
-Optional arguments
+* Optional arguments
 ```
 	-N NAME   The name of the output file (default: “output”)
 	-f 		Use strict correlation threshold. Recommended if your data contains family members.
 	-t file	A file with test sample files 
 ```
 
-
+For examples,
  - BAM files in `bam_dir`:
 
    ```bash
