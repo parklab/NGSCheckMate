@@ -18,7 +18,6 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 ## Quick start
 
 ### Download NGSCheckMate
-several quick start options are available:
 * [Download the latest release](https://github.com/parklab/NGSCheckMate/)
 * Clone the repo : `git clone https://github.com/parklab/NGSCheckMate.git`
 
