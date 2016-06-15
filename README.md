@@ -58,8 +58,7 @@ Usage: python ncm.py -V <–d INPUT_DIR | -I INPUT_LIST_FILE>  -bed BED_FILE –
 	-I FILE	text file that lists input files (one absolute path per line) 
 	
 	-bed FILE	bed file that lists coordinates of known SNPs (included in the package) 
-	(use Distinct_features_21067_hg19.bed for hg19, 
-	or  Distinct_features_21067.bed forGRCh37)
+	(use SNP_hg19.bed for hg19, or SNP_GRCh37.bed for GRCh37 in feature folder)
 	-O PATH		The name of the output directory
 ```
 * Optional arguments
@@ -107,8 +106,7 @@ Usage: python ncm.py -B <–d INPUT_DIR | -I INPUT_LIST_FILE>  -bed BED_FILE –
 	-I FILE	text file that lists input files (one absolute path per line) 
 	
 	-bed FILE	bed file that lists coordinates of known SNPs (included in the package) 
-	(use Distinct_features_21067_hg19.bed for hg19, 
-	or  Distinct_features_21067.bed forGRCh37)
+	(use SNP_hg19.bed for hg19, or SNP_GRCh37.bed for GRCh37 in feature folder)
 	-O PATH		The name of the output directory
 ```
 * Optional arguments
