@@ -18,16 +18,36 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 
 ## Quick-start
 
+### Download NGSCheckMate
 several quick start options are available:
 * [Download the latest release](https://github.com/parklab/NGSCheckMate/)
 * Clone the repo : `git clone https://github.com/parklab/NGSCheckMate.git`
 
+###Set paths in the configuration file (required only for BAM/VCF input)
+Edit ncm.conf file in the downloaded package directory according to your environment
+
+```
+REF=”absolute path”  # path for the reference fasta file
+SAMTOOLS=”absolute path” # path for SAMTOOLS 
+BCFTOOLS=”absolute path” # path for BCFTOOLS
+```
+
 ### Requirements
+#### Software environment
 *Unix/Linux System
 *Python 2.6 or above
 *Samtools version 0.1.19 (required only for BAM/VCF input)
 *Bcftools version 0.1.19 (required only for BAM/VCF input)
 *R 3.1 or above (required only for image output of clustering dendrogram)
+
+#### Additional files
+*Required for BAM
+** Human reference genome (hg19 or GRCh37 fasta file)
+** A bed file(.bed) that lists the locations of selected SNPs (including in the package)
+*Required for VCF - Output of samtools mpileup
+** A bed file(.bed) that lists the locations of selected SNPs (including in the package)
+*Required for FASTQ input
+** A binary pattern file(.pt) that lists the k-mer sequences spanning selected SNPs (included in the package)
 
 ## Usage
 
@@ -106,7 +126,7 @@ Usage: python vaf_ncm.py -f -I <input_directory> -O <output_directory> -N output
 ```
 
 
-### Supporting-scripts
+## Supporting-scripts
 
 #### 1) Patterngenerator
 
