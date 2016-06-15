@@ -188,7 +188,7 @@ create.xgmml.from.ngscheckmateout(label.file,ngscheckmateoutput.file,output.xgmm
 Software programs : Alice Lee, [Sejoon Lee][sejooning] & [Soo Lee][SooLee]
 
 
-## Acknoledgements
+## Acknowledgments
 
 The logos (![alt text][ncmLogo] & ![alt text][ncmIcon]) have been created by [Fritz Lekschas][flekschas]. They are composed of the following great icons:
  - [DNA][iconDna] created by Irene Hoffman ([CC BY 3.0 US][cc])
