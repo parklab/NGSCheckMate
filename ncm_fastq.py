@@ -311,6 +311,8 @@ def run_fastq_version():
 
     if PE == 1:
             command =  command  + "-1 "  + fastq1 + " -2 " + fastq2 +" " + bed_file +" > " + outdir + "/" + temp_out + ".ncm"
+    if PE == 0:
+	        command = command + "-1 " + fastq1  +" " + bed_file +" > " + outdir + "/" + temp_out + ".ncm"
 
     print command
 
