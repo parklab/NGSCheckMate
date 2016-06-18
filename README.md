@@ -19,21 +19,18 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 * [Acknoledgements](#Acknoledgements)
 
 
-
+### Requirements
+#### Software environment
+* Unix/Linux System
+* Python 2.6 or above
+* R 3.1 or above (required to generate a PDF of sample clustering dendrogram and a xgmml graphical output for sample clustering; see Output and Supporting scripts)
+For the BAM module,
+* Samtools 0.1.19
+* Bcftools 0.1.19
 
 ### Download NGSCheckMate
 * [Download the latest release](https://github.com/parklab/NGSCheckMate/)
 * Clone the repo : `git clone https://github.com/parklab/NGSCheckMate.git`
-
-### Requirements
-#### Software environment
-*Unix/Linux System
-*Python 2.6 or above
-*R 3.1 or above (required to generate a PDF of sample clustering dendrogram and a xgmml graphical output for sample clustering; see Output and Supporting scripts)
-For the BAM module,
-*Samtools 0.1.19
-*Bcftools 0.1.19
-
 ```
 Human reference genome (hg19 or GRCh37 fasta file)
 A bed file(.bed) that lists the locations of selected SNPs (including in the package)
