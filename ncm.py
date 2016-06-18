@@ -66,52 +66,155 @@ def createDataSetFromDir(base_dir, bedFile):
             link = root + '/' +  file
             f = open(link, "r")
             dbsnpf= open(bedFile,"r")
-            depth = 0
+            depth = dict()
+            depth[file] = 0
             count = 0
 
-            sum = 0
+            sum=dict()
+            sum[file] = 0
 
             scores = dict()     # Scores of B-allel Frequencies
             #DBSNP ID collecting system
             for i in dbsnpf.readlines():
                 temp = i.split('\t')
-                ID = str(temp[0])+"_"+str(temp[2])
+                if temp[0].find("chr")!= -1:
+                    ID = str(temp[0][3:]) + "_" + str(temp[2])
+                else:   
+                    ID = str(temp[0]) + "_" + str(temp[2])
                 scores[ID] = 0
                 count = count + 1
+            
+            ## 0618_samtools and haplotyper
+            vcf_flag = 0
 
-            feature_list[file] = []
+#            feature_list[file] = []
+            score_set = dict()
             #VCF file PROCESSING  and Generation of features
-            for i in f.readlines():
+            total = 0
+            GVCF_samples = dict()
+            for i in f.readlines():        
                 if i.startswith("#"):
+                    if i.find("DP4") != -1:
+                        vcf_flag = 1
+                    if i.find("#CHROM") != -1:
+                        temp = i.strip().split('\t')
+                        total=len(temp) - 9
+                        if total != 1:
+                            for sample_idx in range(0,total):
+                                file = temp[sample_idx + 9]
+                                GVCF_samples[temp[sample_idx + 9]] = []
+                                score_set[temp[sample_idx + 9]] = dict()
+                                depth[temp[sample_idx + 9]] = 0
+                                sum[temp[sample_idx + 9]] =0
+                                feature_list[temp[sample_idx + 9]] = []
+                        if total == 1:
+                            feature_list[file] = []
                     continue
 
-                temp = i.split('\t')
-                values = temp[7].split(';')
+                temp = i.strip().split('\t')
+              ## ID in BED file only 
+                if temp[0].find("chr")!= -1:
+                    ID = str(temp[0][3:]) + "_" + str(temp[1])
+                else:   
+                    ID = str(temp[0]) + "_" + str(temp[1])
 
-                if values[0].startswith("INDEL"):
+                if ID not in scores:
                     continue
 
-                for j in values:
-                    if j.startswith("DP4"):
-                        readcounts = j.split(',')
-                        readcounts[0] = readcounts[0][4:]
-                        score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
-                        depth = depth + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+                if vcf_flag == 1:
+                    values = temp[7].split(';')
 
-                        ID = str(temp[0]) + "_" + str(temp[1])
+                    if values[0].startswith("INDEL"):
+                        continue
+
+                    for j in values:
+                        if j.startswith("DP4"):
+                            readcounts = j.split(',')
+                            readcounts[0] = readcounts[0][4:]
+                            score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+                            depth[file] = depth[file] + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+
+                            if ID in scores:
+                                feature_list[file].append(ID)
+                                scores[ID]= score
+                                sum[file] = sum[file] + float(readcounts[2]) + float(readcounts[3])
+                elif total == 1 and vcf_flag == 0:
+                    format = temp[8].split(':')  ##Format
+                    AD_idx = 0
+                    DP_idx = 0
+                    for idx in range(0,len(format)):
+                        if format[idx] == "AD":
+                            AD_idx = idx
+                        elif format[idx] == "DP":
+                            DP_idx = idx
+                    idx = 9
+                    values = temp[idx].split(":")
+                    readcounts = values[AD_idx].split(',')
+
+                    if float(readcounts[0]) + float(readcounts[1]) < 0.5:
+                        score =0
+                    else:
+                        score = float(readcounts[1])/ (float(readcounts[0]) + float(readcounts[1]))
+                    depth[file] = depth[file] + float(values[DP_idx])
+                    
+                    if ID in scores:
                         feature_list[file].append(ID)
-                        scores[ID]= score
-                        sum = sum + float(readcounts[2]) + float(readcounts[3])
+                        scores[ID]= score  ##from here!
+                        sum[file] = sum[file] + float(readcounts[1])
+                else:  ###### Haplotyper or other VCF
+                    format = temp[8].split(':')  ##Format
+                    AD_idx = 0
+                    DP_idx = 0
+                    for idx in range(0,len(format)):
+                        if format[idx] == "AD":
+                            AD_idx = idx
+                        elif format[idx] == "DP":
+                            DP_idx = idx
+                    idx = 9
+                    for file in GVCF_samples:
+                        values = temp[idx].split(":")
+                        if len(values) < len(format):
+                            score = 0
+                            idx = idx + 1
+                            continue
 
-            mean_depth[file] = depth / count
-            sum_file[file] = sum
+                        readcounts = values[AD_idx].split(',')
 
-            for key in features:
-                if glob_scores.has_key(file):
-                    glob_scores[file].append(scores[key])
-                else:
-                    glob_scores[file] = [scores[key]]
+                        if float(readcounts[0]) + float(readcounts[1]) < 0.5:
+                            score =0
+                        else:
+                            score = float(readcounts[1])/ (float(readcounts[0]) + float(readcounts[1]))
+                        depth[file] = depth[file] + float(values[DP_idx])
+                        
+                        if ID in scores:
+                            feature_list[file].append(ID)
+                            score_set[file][ID]= score   ##from here!
+                            sum[file] = sum[file] + float(readcounts[1])
 
+                        idx = idx + 1
+
+## TOTAL is not 1 or total is 1 cases
+            if total == 1:
+                mean_depth[file] = depth[file] / count
+                sum_file[file] = sum[file]
+
+                for key in features:
+                    if glob_scores.has_key(file):
+                        glob_scores[file].append(scores[key])
+                    else:
+                        glob_scores[file] = [scores[key]]    
+            else:
+                for file in GVCF_samples:
+                    mean_depth[file] = depth[file] / count
+                    sum_file[file] = sum[file]
+
+                    for key in features:
+                        if key not in score_set[file]:
+                            score_set[file][key] = 0
+                        if glob_scores.has_key(file):
+                            glob_scores[file].append(score_set[file][key])
+                        else:
+                            glob_scores[file] = [score_set[file][key]]    
             dbsnpf.close()
             f.close()
 
@@ -126,52 +229,155 @@ def createDataSetFromList(base_list, bedFile):
         f = open(link, "r")
         dbsnpf= open(bedFile,"r")
         file = link[link.rindex("/")+1:]
-        depth = 0
+        depth = dict()
+        depth[file] = 0
         count = 0
 
-        sum = 0
+        sum=dict()
+        sum[file] = 0
 
         scores = dict()     # Scores of B-allel Frequencies
         #DBSNP ID collecting system
         for i in dbsnpf.readlines():
             temp = i.split('\t')
-            ID = str(temp[0])+"_"+str(temp[2])
+            if temp[0].find("chr")!= -1:
+                ID = str(temp[0][3:]) + "_" + str(temp[2])
+            else:   
+                ID = str(temp[0]) + "_" + str(temp[2])
             scores[ID] = 0
             count = count + 1
+        
+        ## 0618_samtools and haplotyper
+        vcf_flag = 0
 
-        feature_list[file] = []
+#            feature_list[file] = []
+        score_set = dict()
         #VCF file PROCESSING  and Generation of features
-        for i in f.readlines():
+        total = 0
+        GVCF_samples = dict()
+        for i in f.readlines():        
             if i.startswith("#"):
+                if i.find("DP4") != -1:
+                    vcf_flag = 1
+                if i.find("#CHROM") != -1:
+                    temp = i.strip().split('\t')
+                    total=len(temp) - 9
+                    if total != 1:
+                        for sample_idx in range(0,total):
+                            file = temp[sample_idx + 9]
+                            GVCF_samples[temp[sample_idx + 9]] = []
+                            score_set[temp[sample_idx + 9]] = dict()
+                            depth[temp[sample_idx + 9]] = 0
+                            sum[temp[sample_idx + 9]] =0
+                            feature_list[temp[sample_idx + 9]] = []
+                    if total == 1:
+                        feature_list[file] = []
                 continue
 
-            temp = i.split('\t')
-            values = temp[7].split(';')
+            temp = i.strip().split('\t')
+          ## ID in BED file only 
+            if temp[0].find("chr")!= -1:
+                ID = str(temp[0][3:]) + "_" + str(temp[1])
+            else:   
+                ID = str(temp[0]) + "_" + str(temp[1])
 
-            if values[0].startswith("INDEL"):
+            if ID not in scores:
                 continue
 
-            for j in values:
-                if j.startswith("DP4"):
-                    readcounts = j.split(',')
-                    readcounts[0] = readcounts[0][4:]
-                    score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
-                    depth = depth + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+            if vcf_flag == 1:
+                values = temp[7].split(';')
 
-                    ID = str(temp[0]) + "_" + str(temp[1])
+                if values[0].startswith("INDEL"):
+                    continue
+
+                for j in values:
+                    if j.startswith("DP4"):
+                        readcounts = j.split(',')
+                        readcounts[0] = readcounts[0][4:]
+                        score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+                        depth[file] = depth[file] + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
+
+                        if ID in scores:
+                            feature_list[file].append(ID)
+                            scores[ID]= score
+                            sum[file] = sum[file] + float(readcounts[2]) + float(readcounts[3])
+            elif total == 1 and vcf_flag == 0:
+                format = temp[8].split(':')  ##Format
+                AD_idx = 0
+                DP_idx = 0
+                for idx in range(0,len(format)):
+                    if format[idx] == "AD":
+                        AD_idx = idx
+                    elif format[idx] == "DP":
+                        DP_idx = idx
+                idx = 9
+                values = temp[idx].split(":")
+                readcounts = values[AD_idx].split(',')
+
+                if float(readcounts[0]) + float(readcounts[1]) < 0.5:
+                    score =0
+                else:
+                    score = float(readcounts[1])/ (float(readcounts[0]) + float(readcounts[1]))
+                depth[file] = depth[file] + float(values[DP_idx])
+                
+                if ID in scores:
                     feature_list[file].append(ID)
-                    scores[ID]= score
-                    sum = sum + float(readcounts[2]) + float(readcounts[3])
+                    scores[ID]= score  ##from here!
+                    sum[file] = sum[file] + float(readcounts[1])
+            else:  ###### Haplotyper or other VCF
+                format = temp[8].split(':')  ##Format
+                AD_idx = 0
+                DP_idx = 0
+                for idx in range(0,len(format)):
+                    if format[idx] == "AD":
+                        AD_idx = idx
+                    elif format[idx] == "DP":
+                        DP_idx = idx
+                idx = 9
+                for file in GVCF_samples:
+                    values = temp[idx].split(":")
+                    if len(values) < len(format):
+                        score = 0
+                        idx = idx + 1
+                        continue
 
-        mean_depth[file] = depth / count
-        sum_file[file] = sum
+                    readcounts = values[AD_idx].split(',')
 
-        for key in features:
-            if glob_scores.has_key(file):
-                glob_scores[file].append(scores[key])
-            else:
-                glob_scores[file] = [scores[key]]
+                    if float(readcounts[0]) + float(readcounts[1]) < 0.5:
+                        score =0
+                    else:
+                        score = float(readcounts[1])/ (float(readcounts[0]) + float(readcounts[1]))
+                    depth[file] = depth[file] + float(values[DP_idx])
+                    
+                    if ID in scores:
+                        feature_list[file].append(ID)
+                        score_set[file][ID]= score   ##from here!
+                        sum[file] = sum[file] + float(readcounts[1])
 
+                    idx = idx + 1
+
+## TOTAL is not 1 or total is 1 cases
+        if total == 1:
+            mean_depth[file] = depth[file] / count
+            sum_file[file] = sum[file]
+
+            for key in features:
+                if glob_scores.has_key(file):
+                    glob_scores[file].append(scores[key])
+                else:
+                    glob_scores[file] = [scores[key]]    
+        else:
+            for file in GVCF_samples:
+                mean_depth[file] = depth[file] / count
+                sum_file[file] = sum[file]
+
+                for key in features:
+                    if key not in score_set[file]:
+                        score_set[file][key] = 0
+                    if glob_scores.has_key(file):
+                        glob_scores[file].append(score_set[file][key])
+                    else:
+                        glob_scores[file] = [score_set[file][key]]    
         dbsnpf.close()
         f.close()
 
@@ -699,20 +905,23 @@ def classifying():
                     output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
                     output_matrix[temp[i][1].strip()][temp[i][0].strip()] = samples[i]
                     if out_tag=="stdout":
-                        print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                        print str(temp[i][0]) + '\tmatched\t',str(temp[i][1]),'\t', round(samples[i],4),'\t',round(depth,2)
                     else :
-                        out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
-                        out_matched.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                        out_f.write(str(temp[i][0]) + '\tmatched\t' + str(temp[i][1])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                        out_matched.write(str(temp[i][0]) + '\tmatched\t' + str(temp[i][1])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
                 else:
                     if out_tag=="stdout":
-                        print str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                        print str(temp[i][0]) + '\tunmatched\t',str(temp[i][1]),'\t', round(samples[i],4),'\t',round(depth,2)
                     else :
-                        out_f.write(str(temp[i][0][:-4]) + '\tunmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                        out_f.write(str(temp[i][0]) + '\tunmatched\t' + str(temp[i][1])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
                 predStrength.append(result[0])
             #testing sample is samples
         output_matrix_f.write("sample_ID")
         for key in output_matrix.keys():
-            output_matrix_f.write("\t" + key[0:key.index('.')])
+            if key.find(".") != -1:
+                output_matrix_f.write("\t" + key[0:key.index('.')])
+            else:
+                output_matrix_f.write("\t" + key)
         output_matrix_f.write("\n")
 
 #        for key in output_matrix.keys():
@@ -721,7 +930,10 @@ def classifying():
 #                    output_matrix[otherkey][key] = output_matrix[key][otherkey] 
 
         for key in output_matrix.keys():
-            output_matrix_f.write(key[0:key.index('.')])
+            if key.find(".") != -1:
+                output_matrix_f.write(key[0:key.index('.')])
+            else:
+                output_matrix_f.write(key)
             for otherkey in output_matrix.keys():
                 output_matrix_f.write("\t" + str(output_matrix[key][otherkey]))
             output_matrix_f.write("\n")   
@@ -819,15 +1031,15 @@ def classifying_test():
                     output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
                     output_matrix[temp[i][1].strip()][temp[i][0].strip()] = samples[i]
                     if out_tag=="stdout":
-                        print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                        print str(temp[i][0]) + '\tmatched\t',str(temp[i][1]),'\t', round(samples[i],4),'\t',round(depth,2)
                     else :
-                        out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
-                        out_matched.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                        out_f.write(str(temp[i][0]) + '\tmatched\t' + str(temp[i][1])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                        out_matched.write(str(temp[i][0]) + '\tmatched\t' + str(temp[i][1])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
                 else:
                     if out_tag=="stdout":
-                        print str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                        print str(temp[i][0]) + '\tunmatched\t',str(temp[i][1]),'\t', round(samples[i],4),'\t',round(depth,2)
                     else :
-                        out_f.write(str(temp[i][0][:-4]) + '\tunmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
+                        out_f.write(str(temp[i][0]) + '\tunmatched\t' + str(temp[i][1])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
                 predStrength.append(result[0])
             #testing sample is samples
         output_matrix_f.write("sample_ID")
@@ -901,7 +1113,7 @@ def run_mpileup():
     REF=""
     with open("./ncm.conf",'r') as F:
         for line in F.readlines():
-            temp = line.split('\"')
+            temp = line.split('=')
 	    if temp[0].startswith("SAMTOOLS"):
                 SAMTOOLS = temp[1].strip()
             elif temp[0].startswith("BCFTOOLS"):
@@ -1075,8 +1287,10 @@ if __name__ == '__main__':
     Desc.:   Input = the absolute path list of vcf files (samtools mpileup and bcftools)
              Output = Matched samples List
 
-    Eg.  :   GenomeMatcher -v /data/vcf_list.txt -b /data/dbsnp.bed -m classifying -c classfiles -o /data/output/Matched_list.txt
-             GenomeMatcher -d /data/vcf/ -b /data/dbsnp.bed -m classifying -c classfiles -o /data/output/Matched_list.txt
+    Eg.  :   ncm.py -V -l /data/vcf_list.txt -bed /data/SNP_hg19.bed -O /data/output/ -N Matched_list
+             ncm.py -V -d /data/vcf/ -bed /data/SNP_hg19.bed -O /data/output -N Matched_list
+             ncm.py -B -d /data/bam/ -bed /data/SNP_hg19.bed -O /data/output -N Matched_list
+             ncm.py -B -l /data/bam_list.txt -bed /data/SNP_hg19.bed -O /data/output/ -N Matched_list
 
     Sejoon Lee, Soo Lee, Eunjung Lee, 2015
     """
@@ -1118,12 +1332,19 @@ if __name__ == '__main__':
     bedFile = args.bed_file
     out_tag = args.outfilename
 
+    if not os.path.isdir(outdir):
+        os.mkdir(outdir)
+
     key_order = open(bedFile,'r')
     for line in key_order.readlines():
         if line.startswith("#"):
             continue
         temp = line.split('\t')
-        features.append(str(temp[0])+"_"+ str(temp[2]))
+        if temp[0].find("chr")!= -1:
+            features.append(str(temp[0][3:])+"_"+ str(temp[2]))
+        else:   
+            features.append(str(temp[0])+"_"+ str(temp[2]))
+        
 
     if args.BAM_type != False :
         if args.datadir != None :

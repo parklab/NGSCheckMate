@@ -337,10 +337,14 @@ def classifying():
 
     dataSetSize = len(altFreqList)
 
+    filter_list = []
+
     for i in range(0, dataSetSize):
         for j in range(0, dataSetSize):
             if i!=j:
-                temp.append([keyList[i],keyList[j]])
+                if keyList[j] not in filter_list:
+                    temp.append([keyList[i],keyList[j]])
+        filter_list.append(keyList[i])
 
     for iterations in range(49,wholeFeatures):
 
@@ -795,7 +799,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-O','--outdir',metavar='output_dir',dest='outdir',action='store', help='directory name for temp and output files')
     parser.add_argument('-N','--outfilename',metavar='output_filename',dest='outfilename',action='store',default="output",help='OutputFileName ( default : output ), -N filename')
-    parser.add_argument('-I','--input',metavar='input_file_name',required=True,dest='inputfilename',action='store',help='Inputfile name that contains fastq file names, -I filename')
+    parser.add_argument('-l','--list',metavar='input_file_list',required=True,dest='inputfilename',action='store',help='Inputfile name that contains fastq file names, -I filename')
 
     parser.add_argument('-t','--testsamplename',metavar='test_samplename',dest='testsamplename',action='store',help='file including test sample namses  with ":" delimeter (default : all combinations of samples), -t filename')
 
@@ -805,6 +809,9 @@ if __name__ == '__main__':
     bed_file = args.bed_file
     outdir = args.outdir
     outfilename = args.outfilename
+
+    if not os.path.isdir(outdir):
+        os.mkdir(outdir)
 
     if args.sub_rate != None:
         sub_rate = args.sub_rate
