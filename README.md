@@ -6,7 +6,7 @@
 NGSCheckMate is a software package for identifying next generation sequencing (NGS) data files from the same individual. It analyzes various types of NGS data files including (but not limited to) whole genome sequencing (WGS), whole exome sequencing (WES), RNA-seq, ChIP-seq, and targeted sequencing of various depths. Data types can be mixed (e.g. WES and RNA-seq, or RNA-seq and ChIP-seq). It takes BAM (reads aligned to the genome), VCF (variants) or FASTQ (unaligned reads) files as input. NGSCheckMate uses depth-dependent correlation models of allele fractions of known single-nucleotide polymorphisms (SNPs) to identify samples from the same individual. Our alignment-free module is fast (e.g., less than one minute for RNA-seq using a single core) and we recommend it for a quick initial quality check, before pooling / aligning sequenced reads. The BAM and VCF modules can be used after the alignment and variant calling steps, respectively, to ensure correct sample annotation before further downstream analysis. Currently, it works only for human data.
 
 
-* pdf tutorial is included in the package. (Tutorial.pdf)
+* pdf documentation is included in the package. (Documentation.pdf)
  
 
 
@@ -189,7 +189,7 @@ create.xgmml.from.ngscheckmateout(label.file,ngscheckmateoutput.file,output.xgmm
 
 ## Authors
 
-Software programs : Alice Lee, [Sejoon Lee][sejooning] & [Soo Lee][SooLee]
+Software programs : [Alice E. Lee][ejalicelee], [Sejoon Lee][sejooning] & [Soo Lee][SooLee]
 
 
 ## Acknowledgments
@@ -199,6 +199,7 @@ The logos (![alt text][ncmLogo] & ![alt text][ncmIcon]) have been created by [Fr
  - [King][iconKing] created by Yuri Mazursky ([CC BY 3.0 US][cc])
  - [Queen][iconQueen] created by Yuri Mazursky ([CC BY 3.0 US][cc])
 
+[ejalicelee]: https://github.com/ejalicelee
 [sejooning]: https://github.com/sejooning
 [SooLee]: https://github.com/SooLee
 [cc]: https://creativecommons.org/licenses/by/3.0/us/
