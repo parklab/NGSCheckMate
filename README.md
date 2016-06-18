@@ -24,7 +24,8 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 ```
 - Unix/Linux System
 - Python 2.6 or above
-- R 3.1 or above (required to generate a PDF of sample clustering dendrogram and a xgmml graphical output for sample clustering; see Output and Supporting scripts)
+- R 3.1 or above (required to generate a PDF of sample clustering dendrogram and 
+     a xgmml graphical output for sample clustering; see Output and Supporting scripts)
 ```
 
 * For the BAM module,
