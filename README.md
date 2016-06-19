@@ -34,7 +34,7 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 
 * For the BAM module,
 ```
-- [Samtools 0.1.19]
+- Samtools 0.1.19
 - Bcftools 0.1.19
 ```
 #### 2) Additional files
@@ -308,4 +308,4 @@ The logos (![alt text][ncmLogo] & ![alt text][ncmIcon]) have been created by [Fr
 [iconQueen]: https://thenounproject.com/term/queen/224753/
 [ncmLogo]: https://parklab.github.io/NGSCheckMate/logo-16px.png "NGS CheckMate Logo"
 [ncmIcon]: https://parklab.github.io/NGSCheckMate/icon-16px.png "NGS CheckMate Icon"
-[samtools 0.1.19]: https://sourceforge.net/projects/samtools/files/samtools/0.1.19/
+
