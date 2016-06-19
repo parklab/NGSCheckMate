@@ -22,7 +22,7 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 * [Acknoledgements](#Acknoledgements)
 
 
-## [Requirements]
+## Requirements
 
 #### 1) Software environment
 ```
@@ -52,7 +52,7 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 - A binary pattern file (.pt) that lists the flanking sequences of selected SNPs (included in the package)
 ```
 
-## [Installation]
+## Installation
 #### 1) Downloading NGSCheckMate
 ```
 cd <installation_directory>
@@ -288,7 +288,7 @@ Sample label file (sample.label.txt) and ngscheckmateouput.file (sample.input.tx
 
 ## Authors
 
-Software programs : [Alice E. Lee][ejalicelee], [Sejoon Lee][sejooning] & [Soo Lee][SooLee]
+Software programs : [Sejoon Lee][sejooning], [Soo Lee][SooLee] & [Alice E. Lee][ejalicelee], 
 
 
 ## Acknowledgments
