@@ -60,7 +60,7 @@ git clone https://github.com/parklab/NGSCheckMate.git
 
 ## set a PATH according to you shell environment 
 ## for example, when using bash, add the following in your .bashrc 
-export PATH=<installation_directory>:$PATH 
+export PATH=<installation_directory>/NGSCheckMate:$PATH 
 ```
 
 #### 2) Configuration (required only for the BAM module)
