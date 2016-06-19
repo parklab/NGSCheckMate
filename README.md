@@ -22,7 +22,7 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 * [Acknoledgements](#Acknoledgements)
 
 
-##Requirements
+## Requirements
 
 #### 1) Software environment
 ```
