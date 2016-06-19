@@ -20,7 +20,8 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 
 
 ### Requirements
-#### Software environment
+
+#### 1) Software environment
 ```
 - Unix/Linux System
 - Python 2.6 or above
@@ -33,7 +34,7 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 - Samtools 0.1.19
 - Bcftools 0.1.19
 ```
-#### Additional files
+#### 2) Additional files
 * For the BAM module,
 ```
 - Human reference genome FASTA file (hg19 or GRCh37)
@@ -49,16 +50,17 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 ```
 
 ### Installation
-#### Downloading NGSCheckMate
+#### 1) Downloading NGSCheckMate
 ```
 cd <installation_directory>
 git clone https://github.com/parklab/NGSCheckMate.git
+
 ## set a PATH according to you shell environment 
 ## for example, when using bash, add the following in your .bashrc 
 export PATH=<installation_directory>:$PATH 
 ```
 
-#### Configuration (required only for the BAM module)
+#### 2) Configuration (required only for the BAM module)
 If your input is BAM/VCF files, add the following lines in your ncm.conf file in the package directory. If your input is FASTQ files, you can skip this step.
 ```
 REF=<absolute path for the reference FASTA file >  
@@ -68,92 +70,72 @@ BCFTOOLS=<absolute path for BCFTOOLS>
 
 ## Usage
 
-#### 1) Input VCF
+#### 1) BAM/VCF mode
 ```
-Usage: python ncm.py -V <–d INPUT_DIR | -I INPUT_LIST_FILE>  -bed BED_FILE –O OUTPUT_DIR [options]
-```
-
-* Required arguments
-```
-	-d DIR	directory that contains input files
-	  or
-	-I FILE	text file that lists input files (one absolute path per line) 
-	
-	-bed FILE	bed file that lists coordinates of known SNPs (included in the package) 
-	(use SNP_hg19.bed for hg19, or SNP_GRCh37.bed for GRCh37 in feature folder)
-	-O PATH		The name of the output directory
-```
-* Optional arguments
-```
-	-N NAME   The name of the output file (default: “output”)
-	-f 		Use strict correlation threshold. Recommended if your data contains family members.
-	-t file	A file with test sample files 
-```
-
-For examples,
-- VCF files in `vcf_dir`:
-
-   ```bash
-   python ncm.py -V -d vcf_dir -O output_Dir -N outputfileName -bed bed_file
-   ```
-
-- VCF lists in `vcf_list_file`:
-
-   ```bash
-   python ncm.py -V -l vcf_list_file -O output_Dir -N outputfileName -bed bed_file
-   ```
-
--
-
-#### 2) Input BAM
-
-Set paths in the configuration file (required only for BAM input)
-
-Edit ncm.conf file in the downloaded package directory according to your environment. 
-
-```python
-REF=”absolute path”  # path for the reference fasta file
-SAMTOOLS=”absolute path” # path for SAMTOOLS 
-BCFTOOLS=”absolute path” # path for BCFTOOLS
-```
-
-```
-Usage: python ncm.py -B <–d INPUT_DIR | -I INPUT_LIST_FILE>  -bed BED_FILE –O OUTPUT_DIR [options]
+Usage: python ncm.py <-B | -V> <–d INPUT_DIR | -l INPUT_LIST_FILE> <-bed BED_FILE> <–O OUTPUT_DIR> [options]
 ```
 
 * Required arguments
 ```
-	-d DIR	directory that contains input files
-	  or
-	-I FILE	text file that lists input files (one absolute path per line) 
-	
-	-bed FILE	bed file that lists coordinates of known SNPs (included in the package) 
-	(use SNP_hg19.bed for hg19, or SNP_GRCh37.bed for GRCh37 in feature folder)
-	-O PATH		The name of the output directory
+-B | -V			A flag that indicates an input file type (B: BAM, V: VCF)
+
+-d DIR			A directory that contains input files
+  or
+-l FILE			A text file that lists input files and sample names (one per line; see Input file format)
+
+-bed FILE  	A bed format file that lists the locations of selected SNPs (included in the package) 
+ SNP/SNP_hg19.bed for input BAM files aligned to hg19, 
+ SNP/SNP_GRCh37. bed for input BAM files aligned to GRCh37
+-O DIR			An output directory
 ```
 * Optional arguments
 ```
-	-N NAME   The name of the output file (default: “output”)
-	-f 		Use strict correlation threshold. Recommended if your data contains family members.
-	-t file	A file with test sample files 
+-N PREFIX   	A prefix of output files (default: output)
+
+-f 		 	Use strict VAF correlation cutoffs. Recommended when your data may include related    
+              individuals (parents-child, siblings)
 ```
 
-For examples,
- - BAM files in `bam_dir`:
+#### 2) Speed up to analyze multiple large BAM files
+You may need to analyze a large number of large BAM files. For example, you may want to identify the proper pairing of 100 cancer WGS data with their matched blood WGS data sequenced at high depth. In this case, it would take a long time to run NGSCheckMate on the set of BAM files, and we recommend the following procedures.
 
-   ```bash
-   python ncm.py -B -d bam_dir -O output_Dir -N outputfileName -bed bed_file
-   ```
+* STEP1: Generate a VCF file for each BAM file as follows. This step can be parallelized depending on your computing system. For example, the LSF-based system can perform this step in parallel using ‘bsub’ command. 
 
- - Bam files in `bam_list_file`:
+````
+# an example for generating sample.vcf from sample.bam mapped to hg19
+samtools mpileup –I –uf hg19.fasta –l snp_hg19.bed sample.bam | bcftools view –cg - > ./sample.vcf
+````
+   
+* STEP2: Run NGSCheckMate on the set of VCF files as input.
+````
+python ncm.py -V …
+````
 
-    ```bash
-    python ncm.py -B -d bam_list_file -O output_Dir -N outputfileName -bed bed_file
-    ```
+#### 3) FASTQ mode
+Usage: python ncm_fastq.py <-I INPUT_LIST_FILE> <-pt PT_FILE> <–O OUTPUT_DIR> [options]
+Required arguments
+-I FILE		A text file that lists input files and sample names (one per line; see Input file format)
 
--
+-pt FILE		A binary pattern file (.pt) that lists flanking sequences of selected SNPs (included in 
+           the package; SNP/SNP.pt)
 
-#### 3) Input FASTQ
+-O DIR		An output directory
+Optional arguments
+-N PREFIX  	A prefix for output files (default: “output”)
+
+-f 		Use strict VAF correlation cutoffs. Recommended when your data may include   
+ 		related individuals (parents-child, siblings)
+
+-s FLOAT		The read subsampling rate (default: 1.0)
+  or
+-d INT		The target depth for read subsampling. NGSCheckMate calculates a subsampling rate based on this target depth. 
+
+-R INT	The length of the genomic region with read mapping (default: 3x10^9) used to compute subsampling rate. If your data is NOT human WGS and you use the -d option, it is highly recommended that you specify this value. For instance, if your data is human RNA-seq, the genomic length with read mapping is ~3% of the human genome (1x10^8).
+
+-L INT	The length of the flanking sequences of the SNPs (default: 21bp). It is not recommended that you change this value unless you create your own pattern file (.pt) with a different length. See Supporting Scripts for how to generate your own pattern file.
+
+-p INT	The number of threads (default: 1)
+
 
 ```bash
 Usage : ./ngscheckmate_fastq <options> -1 fastqfile1 [-2 fastqfile2]  patternfile(.pt) > output.vaf
@@ -180,29 +162,146 @@ Usage: python vaf_ncm.py -f -I <input_directory> -O <output_directory> -N output
        -O : output directory
        -N : output_filename_tag
 ```
+#### 4) 4.	FASTQ mode (alternative way)
+A C program, ngscheckmate_fastq, can be directly called to generate a VAF file from one FASTQ file (single-end sequencing) or two FASTQ files(paired-end sequencing). Then, another script, vaf_ncm.py is used to read a set of VAF files to complete the downstream analysis. When you need to analyze many FASTQ files, the first VAF file generation using ngscheckmate_fastq can be parallelized. 
+
+ngscheckmate_fastq
+Usage: ngscheckmate_fastq <-1 FASTQ_FILE1> [-2 FASTQ_FILE2] <PT_FILE (.pt)> [options] >    
+                output.vaf
+
+Required arguments
+-1, --fastq1 FILE 	FASTQ file for single-end or the first FASTQ file for paired-end
+
+PT_FILE			A binary pattern file (.pt) that lists flanking sequences of selected SNPs 							(included in the package; SNP/SNP.pt)
+		
+Optional arguments
+-2, --fastq2 FILE 	The second FASTQ file for paired-end
+
+-s, --ss FLOAT		The read subsampling rate (default: 1.0)
+or
+-d, --depth INT 		The target depth for read subsampling. NGSCheckMate calculates a 
+		subsampling rate based on this target depth. 
+
+-R, --reference_length INT The length of the genomic region with read mapping (default: 3x10^9) to compute a subsampling rate. If your data is NOT human WGS and you use the -d option, it is highly recommended that you specify this value. For instance, if your data is human RNA-seq, the genomic length with read mapping is ~3% of the human genome (1x10^8).
+
+-L, --pattern_length INT 	The length of flanking sequences of SNPs (default: 21bp). It is recommended not to change this value unless you create your own pattern file (.pt) with a different length. see Supporting Scripts for how to generate your own pattern file.
+
+-p, --maxthread INT  	The number of threads to use (default : 1 )
+
+-j, --nodeptherror   		When the estimated subsampling rate is larger than 1, do not stop but     
+               reset the rate to 1 and continue
+
+vaf_ncm.py
+Usage: python vaf_ncm.py -f -I <INPUT_DIR> -O <OUTPUT_DIR > <-N PREFIX>
+
+-I DIR		Input directory that contains the output VAF files of ngscheckmate_fastq
+
+-O DIR		Output directory
+
+-N PREFIX	Ouput file prefix
+
+1.	BAM/VCF mode
+The input file that lists input BAM or VCF files (-l) needs to list one file per line.
+    
+Example:
+/data/LSJ.bam
+/data/LSH.bam
+/data/LSI.bam
+
+2.	FASTQ mode
+The input file that lists input FASTQ files (-l) should follow the format below.
+
+Paired-end data
+
+FASTQ_FILE1 (tab) FASTQ_FILE2 (tab) SAMPLE_NAME (\n)
+Example:
+/data/LSJ_R1.fastq	    /data/LSJ_R2.fastq      LSJ
+/data/LSH_R1.fastq	    /data/LSH_R2.fastq	   LSH
 
 
-## Supporting-scripts
-
-#### 1) Patterngenerator
-
-This set of scripts generates the .pt file used by the fastq module, given a bed file containing a set of SNP positions. It assumes a file containing a whole genome sequence and the bowtie alignment program.
 
 
-#### 2) Graph generator (Rscript)
 
-This script with a set of xgmml templates is used for generating a graph representing matching files as connected nodes. The output format is in .xgmml, which can be read by Cytoscape.
+Single-end data
 
+FASTQ_FILE1 (tab) SAMPLE_NAME (\n)
+Example:
+/data/LSJ.fastq	    LSJ
+/data/LSH.fastq	    LSH
 
-```R
-source("graph/ngscheckmate2xgmml.R")
-create.xgmml.from.ngscheckmateout(label.file,ngscheckmateoutput.file,output.xgmml)
+## Examples
+-
+#### 1) Test sample pairing using BAM input
+- BAM files in `/data/wgs_download/LUAD/`:
+
+````bash
+python ncm.py -B -f -d /data/wgs_download/LUAD/ -O LUAD_WGS/ -N LUAD -bed SNP/SNP_hg19.bed
+````
+ - BAM files listed in `bam_list_file`:
+ 
+```bash
+python ncm.py -B -f -l bam_list_file -O output_dir -N outputfile_prefix -bed SNP/SNP_hg19.bed
 ```
 
- - Label file : a tab-delimited text file containing a bam file name (1st column), an individual identifier (2nd column) and optionally, a file identifier (3rd column) for each line. An individual identifier must be unique to a subject (e.g. both tumor and normal samples from the same individual must have the same individual identifier). A file identifier must be unique to a file name.
- - ngscheckmateoutput.file : the output text file of NGSCheckMate. It is a tab-delimited text file containing two bam file names (1st and 2nd columns), VAF correlation (3rd column) and average depth (4th column). It may contain either all pairs or matched pairs, depending on the option used to run NGSCheckMate. Either type works.
- - Sample label file (sample.label.txt) and ngscheckmateouput.file (sample.input.txt) can be found in the subdirectory graph/.
+#### 2) Test sample pairing using VCF input
+python ncm.py -V -f -d /data/wgs_download/LUAD/ -O LUAD_WGS/ -N LUAD -bed SNP/SNP_hg19.bed
 
+#### 3) Test sample pairing using FASTQ input
+python ncm_fastq.py -l fastq_list.txt -O output -N ChIP_batch -p 4 -pt SNP/SNP.pt
+
+
+For examples,
+- VCF files in `vcf_dir`:
+
+   ```bash
+   python ncm.py -V -d vcf_dir -O output_Dir -N outputfileName -bed bed_file
+   ```
+
+- VCF lists in `vcf_list_file`:
+
+   ```bash
+   python ncm.py -V -l vcf_list_file -O output_Dir -N outputfileName -bed bed_file
+   ```
+   
+
+
+** Output
+-
+#### 1) PREFIX_all.txt
+This output file lists both matched and unmatched sample pairs with VAF correlation coefficients and representative sequencing depths.
+Format
+         Sample1 (tab) matched/unmatched (tab) Sample2 (tab) Correlation (tab) Depth
+6216-01A 	matched	6216-10A	0.7957	4.9
+6216-01A	unmatched	6324-10A	0.2153	15
+
+#### 2) PREFIX_matched.txt
+This output file lists sample pairs that were predicted to be matched based on our depth-dependent VAF correlation model. 
+Format
+         Sample1 (tab) matched_or_unmatched (tab) Sample2 (tab) Correlation (tab) Depth
+6216-01A	unmatched	6216-10A	0.7957	4.9
+
+#### 3) PREFIX.pdf
+This pdf file shows a dendrogram image of hierarchical clustering of samples based on VAF correlation coefficients.
+
+## Supporting scripts
+-
+#### 1) Patterngenerator
+The set of scripts in the patterngenerator folder in the package generate the .pt file used by the FSTQ module, in cases when the user wants to generate a custom .pt file. It requires a bed file containing a set of SNP positions, a genome reference file (both FASTA and bowtie 1 index) and the bowtie alignment program (http://bowtie-bio.sourceforge.net/index.shtml). 
+Usage: makesnvpattern.pl bedfile genomefasta genome(bowtie)index outdir outprefix
+	
+#### 2) Graph generator (Rscript)
+This script with a set of xgmml templates is used for generating a graph representing matching files as connected nodes. The output format is in .xgmml, which can be read by Cytoscape.
+
+````
+source("graph/ngscheckmate2xgmml.R")
+create.xgmml.from.ngscheckmateout(label.file,ngscheckmateoutput.file,output.xgmml)
+````
+
+- Label file: a tab-delimited text file containing a BAM file name (1st column), an individual identifier (2nd column) and optionally, a file identifier (3rd column) for each line. An individual identifier must be unique to a subject (e.g. both tumor and normal samples from the same individual must have the same individual identifier). A file identifier must be unique to a file name.
+
+- ngscheckmateoutput.file: the output text file of NGSCheckMate. It is a tab-delimited text file containing two BAM file names (1st and 2nd columns), VAF correlation (3rd column) and average depth (4th column). It may contain either all pairs or matched pairs, depending on the option used to run NGSCheckMate. Both options may be used to run this program.
+Sample label file (sample.label.txt) and ngscheckmateouput.file (sample.input.txt) can be found in the subdirectory graph/.
+-
 
 
 ## Authors
