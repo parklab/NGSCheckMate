@@ -578,7 +578,7 @@ def generate_R_scripts():
     cmd = cmd + "data = output_corr_matrix\n"
     cmd = cmd + "d3 <- as.dist((1 - data[,-1]))\n"
     cmd = cmd + "clust3 <- hclust(d3, method = \"average\")\n"
-    cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width=10, height=7)\n"
+    cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width="+str(math.log10(len(feature_list))*10) +", height=7)\n"
     cmd = cmd + "op = par(bg = \"gray85\")\n"
     cmd = cmd + "par(plt=c(0.05, 0.95, 0.5, 0.9))\n"
     cmd = cmd + "plot(clust3, lwd = 2, lty = 1,cex=0.8, xlab=\"Samples\", sub = \"\",  ylab=\"Distance (1-Pearson correlation)\",hang = -1, axes = FALSE)\n"
