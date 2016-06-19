@@ -14,6 +14,9 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 * [Requirement](#Requirement)
 * [Installation](#Installation)
 * [Usage](#Usage)
+* [Examples](#Examples)
+* [Input format](#Input format)
+* [Output](#Output)
 * [Supporting scripts](#Supporting-scripts)
 * [Authors](#Authors)
 * [Acknoledgements](#Acknoledgements)
@@ -69,7 +72,6 @@ BCFTOOLS=<absolute path for BCFTOOLS>
 ```
 
 ## Usage
-
 #### 1) BAM/VCF mode
 ```
 Usage: python ncm.py <-B | -V> <–d INPUT_DIR | -l INPUT_LIST_FILE> <-bed BED_FILE> <–O OUTPUT_DIR> [options]
@@ -77,160 +79,145 @@ Usage: python ncm.py <-B | -V> <–d INPUT_DIR | -l INPUT_LIST_FILE> <-bed BED_F
 
 * Required arguments
 ```
--B | -V			A flag that indicates an input file type (B: BAM, V: VCF)
+-B | -V		A flag that indicates an input file type (B: BAM, V: VCF)
 
--d DIR			A directory that contains input files
+-d DIR		A directory that contains input files
   or
--l FILE			A text file that lists input files and sample names (one per line; see Input file format)
+-l FILE		A text file that lists input files and sample names (one per line; see Input file format)
 
 -bed FILE  	A bed format file that lists the locations of selected SNPs (included in the package) 
- SNP/SNP_hg19.bed for input BAM files aligned to hg19, 
- SNP/SNP_GRCh37. bed for input BAM files aligned to GRCh37
--O DIR			An output directory
+ 		SNP/SNP_hg19.bed for input BAM files aligned to hg19, 
+ 		SNP/SNP_GRCh37. bed for input BAM files aligned to GRCh37
+
+-O DIR		An output directory
 ```
 * Optional arguments
 ```
 -N PREFIX   	A prefix of output files (default: output)
 
--f 		 	Use strict VAF correlation cutoffs. Recommended when your data may include related    
-              individuals (parents-child, siblings)
+-f 		Use strict VAF correlation cutoffs. Recommended when your data may include related    
+              	individuals (parents-child, siblings)
 ```
 
 #### 2) Speed up to analyze multiple large BAM files
 You may need to analyze a large number of large BAM files. For example, you may want to identify the proper pairing of 100 cancer WGS data with their matched blood WGS data sequenced at high depth. In this case, it would take a long time to run NGSCheckMate on the set of BAM files, and we recommend the following procedures.
 
-* STEP1: Generate a VCF file for each BAM file as follows. This step can be parallelized depending on your computing system. For example, the LSF-based system can perform this step in parallel using ‘bsub’ command. 
+* STEP1: Generate a VCF file for each BAM file as follows. 
+This step can be parallelized depending on your computing system. For example, the LSF-based system can perform this step in parallel using ‘bsub’ command. 
 
-````
+```
 # an example for generating sample.vcf from sample.bam mapped to hg19
 samtools mpileup –I –uf hg19.fasta –l snp_hg19.bed sample.bam | bcftools view –cg - > ./sample.vcf
-````
+```
    
 * STEP2: Run NGSCheckMate on the set of VCF files as input.
-````
+```
 python ncm.py -V …
-````
+```
 
 #### 3) FASTQ mode
+````
 Usage: python ncm_fastq.py <-I INPUT_LIST_FILE> <-pt PT_FILE> <–O OUTPUT_DIR> [options]
-Required arguments
+```
+
+* Required arguments
+```
 -I FILE		A text file that lists input files and sample names (one per line; see Input file format)
 
--pt FILE		A binary pattern file (.pt) that lists flanking sequences of selected SNPs (included in 
-           the package; SNP/SNP.pt)
+-pt FILE	A binary pattern file (.pt) that lists flanking sequences of selected SNPs (included in the package; SNP/SNP.pt)
 
 -O DIR		An output directory
-Optional arguments
+```
+
+* Optional arguments
+```
 -N PREFIX  	A prefix for output files (default: “output”)
 
 -f 		Use strict VAF correlation cutoffs. Recommended when your data may include   
  		related individuals (parents-child, siblings)
 
--s FLOAT		The read subsampling rate (default: 1.0)
+-s FLOAT	The read subsampling rate (default: 1.0)
   or
 -d INT		The target depth for read subsampling. NGSCheckMate calculates a subsampling rate based on this target depth. 
 
--R INT	The length of the genomic region with read mapping (default: 3x10^9) used to compute subsampling rate. If your data is NOT human WGS and you use the -d option, it is highly recommended that you specify this value. For instance, if your data is human RNA-seq, the genomic length with read mapping is ~3% of the human genome (1x10^8).
+-R INT		The length of the genomic region with read mapping (default: 3x10^9) used to compute subsampling rate. If your data is 		NOT human WGS and you use the -d option, it is highly recommended that you specify this value. For instance, if your data is 		human RNA-seq, the genomic length with read mapping is ~3% of the human genome (1x10^8).
 
--L INT	The length of the flanking sequences of the SNPs (default: 21bp). It is not recommended that you change this value unless you create your own pattern file (.pt) with a different length. See Supporting Scripts for how to generate your own pattern file.
+-L INT		The length of the flanking sequences of the SNPs (default: 21bp). It is not recommended that you change this value 			unless you create your own pattern file (.pt) with a different length. See Supporting Scripts for how to generate 			your own pattern file.
 
--p INT	The number of threads (default: 1)
-
-
-```bash
-Usage : ./ngscheckmate_fastq <options> -1 fastqfile1 [-2 fastqfile2]  patternfile(.pt) > output.vaf
-
-	Input arguments (required)
-	  patternfile : a binary file containing sequences flanking representative snv sites, along with markers indicating the snv index and whether the sequence represents reference or alternative allele.
-	  fastqfile1 : see below 'Options'.
-
-	Options
-	  -1, --fastq1 <fastq_file_1> : fastq file for SE data or first fastq file for a PE data. (required)
-	  -2, --fastq2 <fastq_file_2> : second fastq file for a PE data.
-	  -s, --ss <subsampling_rate> : subsampling rate (default 1.0)
-	  -d, --depth <desired_depth> : as an alternative to a user-defined subsampling rate, let the program compute the subsampling rate given a user-defined desired_depth and the data.
-	  -R, --reference_length <reference_length> : The reference length (default : 3E9) to be used for computing subsampling rate. If the data is NOT WGS from human, and if you're using the -d option, it is highly recommended to specify the reference length. For instance, if your data is human RNA-seq, the total reference length could be about 3% of the human genome, which can be set as 1E8.
-	  -L, --pattern_length <pattern_length> : The length of the flanking sequences being used to identify SNV sites. Default is 21bp. It is recommended not to change this value, unless you have created your own pattern file with a different pattern length.
-
-	  -p, --maxthread <number_of_threads> : number of threads to use (default : 1 )
-	  -j, --nodeptherror : in case estimated subsampling rate is larger than 1, do not stop but reset it to 1 and continue.
+-p INT		The number of threads (default: 1)
 ```
-```bash
-Usage: python vaf_ncm.py -f -I <input_directory> -O <output_directory> -N output
 
-       -I : input directory that contains the output (vaf) files of ngscheckmate_fastq.
-       -O : output directory
-       -N : output_filename_tag
-```
-#### 4) 4.	FASTQ mode (alternative way)
+#### 4) FASTQ mode (alternative way)
 A C program, ngscheckmate_fastq, can be directly called to generate a VAF file from one FASTQ file (single-end sequencing) or two FASTQ files(paired-end sequencing). Then, another script, vaf_ncm.py is used to read a set of VAF files to complete the downstream analysis. When you need to analyze many FASTQ files, the first VAF file generation using ngscheckmate_fastq can be parallelized. 
 
-ngscheckmate_fastq
-Usage: ngscheckmate_fastq <-1 FASTQ_FILE1> [-2 FASTQ_FILE2] <PT_FILE (.pt)> [options] >    
-                output.vaf
-
-Required arguments
+* ngscheckmate_fastq
+```
+Usage: ngscheckmate_fastq <-1 FASTQ_FILE1> [-2 FASTQ_FILE2] <PT_FILE (.pt)> [options] > output.vaf
+```
+* Required arguments
+```
 -1, --fastq1 FILE 	FASTQ file for single-end or the first FASTQ file for paired-end
 
-PT_FILE			A binary pattern file (.pt) that lists flanking sequences of selected SNPs 							(included in the package; SNP/SNP.pt)
+PT_FILE			A binary pattern file (.pt) that lists flanking sequences of selected SNPs 								(included in the package; SNP/SNP.pt)
 		
 Optional arguments
 -2, --fastq2 FILE 	The second FASTQ file for paired-end
 
 -s, --ss FLOAT		The read subsampling rate (default: 1.0)
 or
--d, --depth INT 		The target depth for read subsampling. NGSCheckMate calculates a 
-		subsampling rate based on this target depth. 
+-d, --depth INT 	The target depth for read subsampling. NGSCheckMate calculates a 
+			subsampling rate based on this target depth. 
 
--R, --reference_length INT The length of the genomic region with read mapping (default: 3x10^9) to compute a subsampling rate. If your data is NOT human WGS and you use the -d option, it is highly recommended that you specify this value. For instance, if your data is human RNA-seq, the genomic length with read mapping is ~3% of the human genome (1x10^8).
+-R, --reference_length INT 	The length of the genomic region with read mapping (default: 3x10^9) to compute a subsampling rate. If 				your data is NOT human WGS and you use the -d option, it is highly recommended that you specify this value. 					For nstance, if your data is human RNA-seq, the genomic length with read mapping is ~3% of the 						human genome (1x10^8).
 
--L, --pattern_length INT 	The length of flanking sequences of SNPs (default: 21bp). It is recommended not to change this value unless you create your own pattern file (.pt) with a different length. see Supporting Scripts for how to generate your own pattern file.
+-L, --pattern_length INT 	The length of flanking sequences of SNPs (default: 21bp). It is recommended not to change this value 					unless you create your own pattern file (.pt) with a different length. see Supporting Scripts for 					how to generate your own pattern file.
 
 -p, --maxthread INT  	The number of threads to use (default : 1 )
 
--j, --nodeptherror   		When the estimated subsampling rate is larger than 1, do not stop but     
-               reset the rate to 1 and continue
-
+-j, --nodeptherror   	When the estimated subsampling rate is larger than 1, do not stop but reset the rate to 1 and continue
+```
 vaf_ncm.py
+```
 Usage: python vaf_ncm.py -f -I <INPUT_DIR> -O <OUTPUT_DIR > <-N PREFIX>
-
+```
+* Required arguments
+```
 -I DIR		Input directory that contains the output VAF files of ngscheckmate_fastq
 
 -O DIR		Output directory
 
 -N PREFIX	Ouput file prefix
+```
 
-1.	BAM/VCF mode
+** Input file list format
+**** 1) BAM/VCF mode
 The input file that lists input BAM or VCF files (-l) needs to list one file per line.
     
 Example:
+```
 /data/LSJ.bam
 /data/LSH.bam
 /data/LSI.bam
-
-2.	FASTQ mode
+```
+**** 2) FASTQ mode
 The input file that lists input FASTQ files (-l) should follow the format below.
 
-Paired-end data
-
+* Paired-end data
+```
 FASTQ_FILE1 (tab) FASTQ_FILE2 (tab) SAMPLE_NAME (\n)
 Example:
 /data/LSJ_R1.fastq	    /data/LSJ_R2.fastq      LSJ
 /data/LSH_R1.fastq	    /data/LSH_R2.fastq	   LSH
-
-
-
-
-
-Single-end data
-
+```
+* Single-end data
+```
 FASTQ_FILE1 (tab) SAMPLE_NAME (\n)
 Example:
 /data/LSJ.fastq	    LSJ
 /data/LSH.fastq	    LSH
-
+```
 ## Examples
--
+
 #### 1) Test sample pairing using BAM input
 - BAM files in `/data/wgs_download/LUAD/`:
 
@@ -244,42 +231,37 @@ python ncm.py -B -f -l bam_list_file -O output_dir -N outputfile_prefix -bed SNP
 ```
 
 #### 2) Test sample pairing using VCF input
+- VCF files in `/data/wgs_download/LUAD/`:
+```
 python ncm.py -V -f -d /data/wgs_download/LUAD/ -O LUAD_WGS/ -N LUAD -bed SNP/SNP_hg19.bed
+```
+- VCF files listed in `vcf_list_file`:
 
+   ```bash
+   python ncm.py -V -f -l vcf_list_file -O output_dir -N outputfile_prefix -bed SNP/SNP_hg19.bed
+   ```
 #### 3) Test sample pairing using FASTQ input
+```
 python ncm_fastq.py -l fastq_list.txt -O output -N ChIP_batch -p 4 -pt SNP/SNP.pt
-
-
-For examples,
-- VCF files in `vcf_dir`:
-
-   ```bash
-   python ncm.py -V -d vcf_dir -O output_Dir -N outputfileName -bed bed_file
-   ```
-
-- VCF lists in `vcf_list_file`:
-
-   ```bash
-   python ncm.py -V -l vcf_list_file -O output_Dir -N outputfileName -bed bed_file
-   ```
-   
-
+```
 
 ** Output
--
 #### 1) PREFIX_all.txt
 This output file lists both matched and unmatched sample pairs with VAF correlation coefficients and representative sequencing depths.
-Format
-         Sample1 (tab) matched/unmatched (tab) Sample2 (tab) Correlation (tab) Depth
+
+* Format
+```
+Sample1 (tab) matched/unmatched (tab) Sample2 (tab) Correlation (tab) Depth
 6216-01A 	matched	6216-10A	0.7957	4.9
 6216-01A	unmatched	6324-10A	0.2153	15
-
+```
 #### 2) PREFIX_matched.txt
 This output file lists sample pairs that were predicted to be matched based on our depth-dependent VAF correlation model. 
-Format
-         Sample1 (tab) matched_or_unmatched (tab) Sample2 (tab) Correlation (tab) Depth
+* Format
+```
+Sample1 (tab) matched_or_unmatched (tab) Sample2 (tab) Correlation (tab) Depth
 6216-01A	unmatched	6216-10A	0.7957	4.9
-
+```
 #### 3) PREFIX.pdf
 This pdf file shows a dendrogram image of hierarchical clustering of samples based on VAF correlation coefficients.
 
