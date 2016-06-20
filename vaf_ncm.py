@@ -30,6 +30,7 @@ sum_file = dict()
 Family_flag = False
 
 
+
 #Calculation of AVerages
 def average(x):
     assert len(x) > 0
@@ -290,6 +291,10 @@ def classifying():
         predStrength = []
         training_flag =0
     ####0715 Append
+
+        if not os.path.isdir(outdir):
+           os.mkdir(outdir)
+
 
         output_matrix_f = open(outdir + "/output_corr_matrix.txt","w")
         output_matrix = dict()
