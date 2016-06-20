@@ -1,0 +1,542 @@
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171556/SRR1171556.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171556.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171557/SRR1171557.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171557.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171558/SRR1171558.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171558.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171559/SRR1171559.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171559.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171560/SRR1171560.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171560.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171561/SRR1171561.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171561.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171565/SRR1171565.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171565.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171566/SRR1171566.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171566.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171580/SRR1171580.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171580.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171581/SRR1171581.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171581.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171585/SRR1171585.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171585.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/genomes/Hsa.GRCh37.73/Homo_sapiens.GRCh37.73.dna.toplevel.refonly.fa -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171586/SRR1171586.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171586.recalibrated.vcf
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet002-003.orchestra>
+Subject: Job 4302515: <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP> Exited
+
+Job <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet002-003.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 13:20:39 2016
+Results reported at Sun Jun 19 13:36:20 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time   :    873.28 sec.
+    Max Memory :        46 MB
+    Max Swap   :       431 MB
+
+    Max Processes  :         5
+    Max Threads    :         6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet002-001.orchestra>
+Subject: Job 4302956: <python ncm_fastq.py -l fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> Exited
+
+Job <python ncm_fastq.py -l fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet002-001.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 13:44:46 2016
+Results reported at Sun Jun 19 13:44:47 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm_fastq.py -l fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time   :      0.14 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet002-001.orchestra>
+Subject: Job 4302957: <python ncm_fastq.py -l ~/qfastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> Exited
+
+Job <python ncm_fastq.py -l ~/qfastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet002-001.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 13:45:29 2016
+Results reported at Sun Jun 19 13:45:29 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm_fastq.py -l ~/qfastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time   :      0.16 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet002-008.orchestra>
+Subject: Job 4302958: <python ncm_fastq.py -l ~/qfastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> Exited
+
+Job <python ncm_fastq.py -l ~/qfastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet002-008.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 13:45:29 2016
+Results reported at Sun Jun 19 13:45:29 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm_fastq.py -l ~/qfastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time   :      0.17 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet002-013.orchestra>
+Subject: Job 4302959: <python ncm_fastq.py -l ~/qfastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> Exited
+
+Job <python ncm_fastq.py -l ~/qfastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet002-013.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 13:45:41 2016
+Results reported at Sun Jun 19 13:45:41 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm_fastq.py -l ~/qfastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time   :      0.13 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+./ngscheckmate_fastq -1 Sample_undetermined_lane1.R1.fastq -2 Sample_undetermined_lane2.R2.fastq SNP/SNP.pt > /n/data1/hms/dbmi/park/sl325//ncm.test.out2/lane1.ncm
+./ngscheckmate_fastq -1 Sample_undetermined_lane2.R1.fastq -2 Sample_undetermined_lane2.R2.fastq SNP/SNP.pt > /n/data1/hms/dbmi/park/sl325//ncm.test.out2/lane2.ncm
+Input File Error: Each line should be contain one or two fastq files name with tab delimited
+
+upper format is invalid
+Generate Data Set from /n/data1/hms/dbmi/park/sl325//ncm.test.out2
+using this bed file : SNP/SNP.pt
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet001-251.orchestra>
+Subject: Job 4302960: <python ncm_fastq.py -l ~/fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> Exited
+
+Job <python ncm_fastq.py -l ~/fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet001-251.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 13:45:59 2016
+Results reported at Sun Jun 19 13:46:00 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm_fastq.py -l ~/fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time   :      0.61 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171556/SRR1171556.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171556.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171557/SRR1171557.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171557.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171558/SRR1171558.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171558.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171559/SRR1171559.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171559.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171560/SRR1171560.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171560.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171561/SRR1171561.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171561.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171565/SRR1171565.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171565.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171566/SRR1171566.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171566.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171580/SRR1171580.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171580.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171581/SRR1171581.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171581.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171585/SRR1171585.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171585.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171586/SRR1171586.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171586.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171590/SRR1171590.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171590.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171591/SRR1171591.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171591.recalibrated.vcf
+Generate Data Set from /n/data1/hms/dbmi/park/sl325//ncm.test.out
+using this bed file : SNP/SNP_GRCh37.bed
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet002-001.orchestra>
+Subject: Job 4302719: <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP> Exited
+
+Job <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet002-001.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 13:36:30 2016
+Results reported at Sun Jun 19 13:53:42 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time   :   1007.25 sec.
+    Max Memory :        45 MB
+    Max Swap   :       431 MB
+
+    Max Processes  :         5
+    Max Threads    :         6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+./ngscheckmate_fastq -1 Sample_undetermined_lane1.R1.fastq -2 Sample_undetermined_lane1.R2.fastq SNP/SNP.pt > /n/data1/hms/dbmi/park/sl325//ncm.test.out2/lane1.ncm
+./ngscheckmate_fastq -1 Sample_undetermined_lane2.R1.fastq -2 Sample_undetermined_lane2.R2.fastq SNP/SNP.pt > /n/data1/hms/dbmi/park/sl325//ncm.test.out2/lane2.ncm
+Input File Error: Each line should be contain one or two fastq files name with tab delimited
+
+upper format is invalid
+Generate Data Set from /n/data1/hms/dbmi/park/sl325//ncm.test.out2
+using this bed file : SNP/SNP.pt
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet002-003.orchestra>
+Subject: Job 4303503: <python ncm_fastq.py -l ~/fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> Exited
+
+Job <python ncm_fastq.py -l ~/fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet002-003.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 14:35:55 2016
+Results reported at Sun Jun 19 14:35:57 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm_fastq.py -l ~/fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time   :      0.76 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171556/SRR1171556.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171556.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171557/SRR1171557.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171557.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171558/SRR1171558.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171558.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171559/SRR1171559.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171559.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171560/SRR1171560.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171560.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171561/SRR1171561.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171561.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171565/SRR1171565.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171565.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171566/SRR1171566.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171566.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171580/SRR1171580.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171580.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171581/SRR1171581.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171581.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171585/SRR1171585.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171585.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171586/SRR1171586.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171586.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171590/SRR1171590.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171590.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171591/SRR1171591.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171591.recalibrated.vcf
+Generate Data Set from /n/data1/hms/dbmi/park/sl325//ncm.test.out
+using this bed file : SNP/SNP_GRCh37.bed
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet002-014.orchestra>
+Subject: Job 4305522: <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP> Exited
+
+Job <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet002-014.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 16:48:26 2016
+Results reported at Sun Jun 19 17:05:09 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP
+------------------------------------------------------------
+
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time   :    939.52 sec.
+    Max Memory :        46 MB
+    Max Swap   :       431 MB
+
+    Max Processes  :         5
+    Max Threads    :         6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+ngscheckmate_fastq -1 Sample_undetermined_lane1.R1.fastq -2 Sample_undetermined_lane1.R2.fastq SNP/SNP.pt > /n/data1/hms/dbmi/park/sl325//ncm.test.out2/lane1.ncm
+ngscheckmate_fastq -1 Sample_undetermined_lane2.R1.fastq -2 Sample_undetermined_lane2.R2.fastq SNP/SNP.pt > /n/data1/hms/dbmi/park/sl325//ncm.test.out2/lane2.ncm
+Input File Error: Each line should be contain one or two fastq files name with tab delimited
+
+upper format is invalid
+Generate Data Set from /n/data1/hms/dbmi/park/sl325//ncm.test.out2
+using this bed file : SNP/SNP.pt
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet001-249.orchestra>
+Subject: Job 4313119: <python ncm_fastq.py -l ~/fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> Done
+
+Job <python ncm_fastq.py -l ~/fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet001-249.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 21:55:13 2016
+Results reported at Sun Jun 19 21:55:15 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm_fastq.py -l ~/fastq.list.oweioierwouie -pt SNP/SNP.pt -O /n/data1/hms/dbmi/park/sl325//ncm.test.out2 -N undetermined
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time   :      0.69 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171556/SRR1171556.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171556.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171557/SRR1171557.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171557.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171558/SRR1171558.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171558.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171559/SRR1171559.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171559.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171560/SRR1171560.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171560.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171561/SRR1171561.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171561.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171565/SRR1171565.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171565.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171566/SRR1171566.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171566.recalibrated.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/STAP/results.20140512/SRR1171580/SRR1171580.recalibrated.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out/SRR1171580.recalibrated.vcf
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet002-004.orchestra>
+Subject: Job 4313117: <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP> Exited
+
+Job <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet002-004.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 21:53:31 2016
+Results reported at Sun Jun 19 22:02:28 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out -N STAP
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time   :    520.72 sec.
+    Max Memory :        45 MB
+    Max Swap   :       431 MB
+
+    Max Processes  :         5
+    Max Threads    :         6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/MM/newpipeline.test/MM34_80.dupremoved.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out3/MM34_80.dupremoved.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/MM/newpipeline.test/MM34_80.sorted.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out3/MM34_80.sorted.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/MM/newpipeline.test/MM34_86.dupremoved.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out3/MM34_86.dupremoved.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_GRCh37.bed /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/MM/newpipeline.test/MM34_86.sorted.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out3/MM34_86.sorted.vcf
+Generate Data Set from /n/data1/hms/dbmi/park/sl325//ncm.test.out3
+using this bed file : SNP/SNP_GRCh37.bed
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet001-248.orchestra>
+Subject: Job 4313144: <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out3 -N MM> Done
+
+Job <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out3 -N MM> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet001-248.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 22:02:25 2016
+Results reported at Sun Jun 19 22:04:06 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_GRCh37.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out3 -N MM
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time   :     98.79 sec.
+    Max Memory :       185 MB
+    Max Swap   :       603 MB
+
+    Max Processes  :         5
+    Max Threads    :         6
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_hg19.bed /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/MM/newpipeline.test/MM34_80.dupremoved.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out3/MM34_80.dupremoved.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_hg19.bed /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/MM/newpipeline.test/MM34_80.sorted.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out3/MM34_80.sorted.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_hg19.bed /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/MM/newpipeline.test/MM34_86.dupremoved.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out3/MM34_86.dupremoved.vcf
+samtools mpileup -I -uf /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/resources/human_g1k_v37_decoy.fasta -l SNP/SNP_hg19.bed /n/data1/hms/dbmi/park/sl325/SingleCellRNAseq/MM/newpipeline.test/MM34_86.sorted.bam | bcftools view -cg - > /n/data1/hms/dbmi/park/sl325//ncm.test.out3/MM34_86.sorted.vcf
+Generate Data Set from /n/data1/hms/dbmi/park/sl325//ncm.test.out3
+using this bed file : SNP/SNP_hg19.bed
+
+------------------------------------------------------------
+Sender: LSF System <lsfadmin@clarinet002-010.orchestra>
+Subject: Job 4313212: <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_hg19.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out3 -N MM> Done
+
+Job <python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_hg19.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out3 -N MM> was submitted from host <loge.orchestra> by user <sl325> in cluster <hms_orchestra>.
+Job was executed on host(s) <clarinet002-010.orchestra>, in queue <long>, as user <sl325> in cluster <hms_orchestra>.
+</home/sl325> was used as the home directory.
+</home/sl325/git/NGSCheckMate> was used as the working directory.
+Started at Sun Jun 19 22:05:43 2016
+Results reported at Sun Jun 19 22:05:51 2016
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+python ncm.py -l tmpppp.bam.list -B -bed SNP/SNP_hg19.bed -O /n/data1/hms/dbmi/park/sl325//ncm.test.out3 -N MM
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time   :      6.91 sec.
+
+The output (if any) is above this job summary.
+
+
+
+PS:
+
+Read file <log.e> for stderr output of this job.
+

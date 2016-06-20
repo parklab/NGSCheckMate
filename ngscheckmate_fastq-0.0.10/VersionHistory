@@ -1,0 +1,26 @@
+//0.0.9 (20160111)
+* now it uses a binary pattern file (size 400KB instead of 7.6MB).
+* Decoy option is dropped.
+
+//0.0.8 (20151110)
+* When the estimated subsampling rate is larger than 1, the program now gives a warning and uses subsampling rate=1 instead of stopping if option -j is used.
+
+//0.0.7 (20150928)
+* Now it splits fastq file for multi-threading rather than dividing subsampling rate. For this, the input file must be read once, to count the number of lines.
+
+//0.0.6 (20150925)
+* Now it can take a decoy bait file optionally, to improve speed.
+* Now it can handle multi-threading with subsampling rate divided by the number of threads. However, it did not improve the performance for some reason.
+
+//0.0.5 (20150922)
+* Now it can estimate subsampling rate automatically, if the user specified desired depth (and reference length if the data is not a human WGS). 
+
+//0.0.4 (20150907)
+* Now it can read a PE data.
+
+//0.0.3 (20150906)
+* Now a hash is used instead of an adaptive radix tree. The speed is now 3x and memory is 1/4 of what it used to be.
+
+//0.0.2 (20150906)
+* A bug has been fixed that evaluates only a part of each read sequence when subsampling is done.
+
