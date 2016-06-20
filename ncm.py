@@ -646,10 +646,10 @@ def classify(T):
 
 
 def classifyNV(vec2Classify, p0Vec, p0S, p1Vec, p1S):
-    if abs(p0Vec - vec2Classify) + p0S > abs(p1Vec - vec2Classify) - p1S:
-        return abs((abs(p0Vec - vec2Classify) +  p0S )/ (abs(p1Vec - vec2Classify) -  p1S )), 1
+    if abs(p0Vec - vec2Classify) - p0S > abs(p1Vec - vec2Classify) - p1S:
+        return abs((abs(p0Vec - vec2Classify) - p0S )/ (abs(p1Vec - vec2Classify) -  p1S )), 1
     else: 
-        return abs((abs(p0Vec - vec2Classify) + p0S) / (abs(p1Vec - vec2Classify)  -  p1S)), 0  
+        return abs((abs(p0Vec - vec2Classify) - p0S) / (abs(p1Vec - vec2Classify)  -  p1S)), 0  
 
 #    if depth < 5:
 #        if (vec2Classify >= (p1Vec - p1S)):
