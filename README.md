@@ -296,7 +296,7 @@ Sample label file (sample.label.txt) and ngscheckmateouput.file (sample.input.tx
 
 ## Authors
 
-Software programs : [Sejoon Lee][sejooning], [Soo Lee][SooLee] & [Alice E. Lee][ejalicelee], 
+Software programs : [Sejoon Lee][sejooning], [Soo Lee][SooLee] & [Alice E. Lee][ejalicelee] 
 
 
 ## Acknowledgments
