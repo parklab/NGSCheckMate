@@ -298,7 +298,14 @@ def plotROC(predStrengths, classLabels):
 
 
 def run_fastq_version():
-    command = "ngscheckmate_fastq "
+    INSTALL_DIR=""
+    if "NCM_HOME" in os.environ.keys():
+        INSTALL_DIR=os.environ['NCM_HOME'] + "/"
+    else :
+        print "WARNNING : NCM_HOME is not defined yet. Therefore, program will try to search ngscheckmate_fastq file from the current directory"
+        INSTALL_DIR=""
+
+    command = INSTALL_DIR + "ngscheckmate_fastq "
     if sub_rate!= "":
             command = command + "-s " + sub_rate  + " "
     if desired_depth !="":

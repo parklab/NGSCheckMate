@@ -1114,7 +1114,13 @@ def run_mpileup():
     SAMTOOLS=""
     BCFTOOLS=""
     REF=""
-    with open("ncm.conf",'r') as F:
+    INSTALL_DIR=""
+    if "NCM_HOME" in os.environ.keys():
+        INSTALL_DIR=os.environ['NCM_HOME'] + "/"
+    else:
+        print "WARNNING : NCM_HOME is not defined yet. Therefore, program will try to search ncm.conf file from the current directory"
+        INSTALL_DIR=""
+    with open(INSTALL_DIR + "ncm.conf",'r') as F:
         for line in F.readlines():
             temp = line.split('=')
 	    if temp[0].startswith("SAMTOOLS"):
