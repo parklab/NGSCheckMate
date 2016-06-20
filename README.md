@@ -125,12 +125,12 @@ python ncm.py -V …
 
 #### 3) FASTQ mode
 ````
-Usage: python ncm_fastq.py <-I INPUT_LIST_FILE> <-pt PT_FILE> <–O OUTPUT_DIR> [options]
+Usage: python ncm_fastq.py <-l INPUT_LIST_FILE> <-pt PT_FILE> <–O OUTPUT_DIR> [options]
 ```
 
 * Required arguments
 ```
--I FILE		A text file that lists input files and sample names (one per line; see Input file format)
+-l FILE		A text file that lists input files and sample names (one per line; see Input file format)
 
 -pt FILE	A binary pattern file (.pt) that lists flanking sequences of selected SNPs (included in the package; SNP/SNP.pt)
 
