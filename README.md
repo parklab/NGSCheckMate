@@ -63,20 +63,20 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 ## Installation
 #### 1) Downloading NGSCheckMate
 ```
-cd <installation_directory>
+cd <installation_dir>
 git clone https://github.com/parklab/NGSCheckMate.git
 
-## set a PATH according to you shell environment 
+## set NCM_HOME according to you shell environment 
 ## for example, when using bash, add the following in your .bashrc 
-export PATH=<installation_directory>/NGSCheckMate:$PATH 
+export NCM_HOME=<installation_dir>/NGSCheckMate
 ```
 
 #### 2) Configuration (required only for the BAM module)
 If your input is BAM/VCF files, add the following lines in your ncm.conf file in the package directory. If your input is FASTQ files, you can skip this step.
 ```
-REF=<absolute path for the reference FASTA file >  
-SAMTOOLS=<absolute path for SAMTOOLS> 
-BCFTOOLS=<absolute path for BCFTOOLS>
+REF=<path for the reference FASTA file >  
+SAMTOOLS=<path for samtools> 
+BCFTOOLS=<path for bcftools>
 ```
 
 ## Usage
