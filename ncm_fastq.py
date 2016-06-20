@@ -110,7 +110,10 @@ def createDataSetFromDir(base_dir, bedFile):
                     
             mean_depth[file] = depth / float(count) 
  #           print count
-            real_depth[file] = depth / float(real_count)
+            if float(real_count) == 0:
+                real_depth[file] = depth / float(count)
+            else:
+                real_depth[file] = depth / float(real_count)
  #           sum_file[file] = sum                        
                      
             for key in features:
@@ -295,7 +298,7 @@ def plotROC(predStrengths, classLabels):
 
 
 def run_fastq_version():
-    command = "./ngscheckmate_fastq "
+    command = "ngscheckmate_fastq "
     if sub_rate!= "":
             command = command + "-s " + sub_rate  + " "
     if desired_depth !="":

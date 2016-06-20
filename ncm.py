@@ -1067,19 +1067,22 @@ def classifying_test():
 
 def generate_R_scripts():
     r_file = open(outdir + "/r_script.r","w")
-    cmd = "output_corr_matrix <- read.delim(\"" + outdir +  "/output_corr_matrix.txt\")\n"
-    cmd = cmd + "data = output_corr_matrix\n"
-    cmd = cmd + "d3 <- as.dist((1 - data[,-1]))\n"
-    cmd = cmd + "clust3 <- hclust(d3, method = \"average\")\n"
-    cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width="+str(math.log10(len(feature_list))*10) +", height=7)\n"
-    cmd = cmd + "op = par(bg = \"gray85\")\n"
-    cmd = cmd + "par(plt=c(0.05, 0.95, 0.2, 0.9))\n"
-    cmd = cmd + "plot(clust3, lwd = 2, lty = 1,cex=0.8, xlab=\"Samples\", sub = \"\",  ylab=\"Distance (1-Pearson correlation)\",hang = -1, axes = FALSE)\n"
-    cmd = cmd + "axis(side = 2, at = seq(0, 1, 0.2), labels = FALSE, lwd = 2)\n"
-    cmd = cmd + "mtext(seq(0, 1, 0.2), side = 2, at = seq(0, 1, 0.2), line = 1,   las = 2)\n"
-    cmd = cmd + "dev.off()\n"
-    r_file.write(cmd)
-    r_file.close()
+    if len(feature_list)==0:
+       r_file.close()
+    else :
+       cmd = "output_corr_matrix <- read.delim(\"" + outdir +  "/output_corr_matrix.txt\")\n"
+       cmd = cmd + "data = output_corr_matrix\n"
+       cmd = cmd + "d3 <- as.dist((1 - data[,-1]))\n"
+       cmd = cmd + "clust3 <- hclust(d3, method = \"average\")\n"
+       cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width="+str(math.log10(len(feature_list))*10) +", height=7)\n"
+       cmd = cmd + "op = par(bg = \"gray85\")\n"
+       cmd = cmd + "par(plt=c(0.05, 0.95, 0.2, 0.9))\n"
+       cmd = cmd + "plot(clust3, lwd = 2, lty = 1,cex=0.8, xlab=\"Samples\", sub = \"\",  ylab=\"Distance (1-Pearson correlation)\",hang = -1, axes = FALSE)\n"
+       cmd = cmd + "axis(side = 2, at = seq(0, 1, 0.2), labels = FALSE, lwd = 2)\n"
+       cmd = cmd + "mtext(seq(0, 1, 0.2), side = 2, at = seq(0, 1, 0.2), line = 1,   las = 2)\n"
+       cmd = cmd + "dev.off()\n"
+       r_file.write(cmd)
+       r_file.close()
 
 
 
@@ -1111,7 +1114,7 @@ def run_mpileup():
     SAMTOOLS=""
     BCFTOOLS=""
     REF=""
-    with open("./ncm.conf",'r') as F:
+    with open("ncm.conf",'r') as F:
         for line in F.readlines():
             temp = line.split('=')
 	    if temp[0].startswith("SAMTOOLS"):
