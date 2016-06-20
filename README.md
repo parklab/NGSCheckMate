@@ -261,15 +261,15 @@ This output file lists both matched and unmatched sample pairs with VAF correlat
 * Format
 ```
 Sample1 (tab) matched/unmatched (tab) Sample2 (tab) Correlation (tab) Depth
-6216-01A 	matched	6216-10A	0.7957	4.9
-6216-01A	unmatched	6324-10A	0.2153	15
+6216-01A 	matched        	     6216-10A	      0.7957	       4.9
+6216-01A	unmatched	     6324-10A	      0.2153	       15
 ```
 #### 2) PREFIX_matched.txt
 This output file lists sample pairs that were predicted to be matched based on our depth-dependent VAF correlation model. 
 * Format
 ```
 Sample1 (tab) matched_or_unmatched (tab) Sample2 (tab) Correlation (tab) Depth
-6216-01A	unmatched	6216-10A	0.7957	4.9
+6216-01A	unmatched        	6216-10A  	 0.7957           4.9
 ```
 #### 3) PREFIX.pdf
 This pdf file shows a dendrogram image of hierarchical clustering of samples based on VAF correlation coefficients.
