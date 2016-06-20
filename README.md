@@ -182,7 +182,6 @@ or
 
 -p, --maxthread INT  	The number of threads to use (default : 1 )
 
--j, --nodeptherror   	When the estimated subsampling rate is larger than 1, do not stop but reset the rate to 1 and continue
 ```
 vaf_ncm.py
 ```
