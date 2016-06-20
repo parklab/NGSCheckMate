@@ -240,7 +240,8 @@ python ncm.py -B -f -l bam_list_file -O output_dir -N outputfile_prefix -bed SNP
 
 #### 2) Test sample pairing using VCF input
 - VCF files in `/data/wgs_download/LUAD/`:
-```
+
+```bash
 python ncm.py -V -f -d /data/wgs_download/LUAD/ -O LUAD_WGS/ -N LUAD -bed SNP/SNP_hg19.bed
 ```
 - VCF files listed in `vcf_list_file`:
@@ -253,7 +254,7 @@ python ncm.py -V -f -d /data/wgs_download/LUAD/ -O LUAD_WGS/ -N LUAD -bed SNP/SN
 python ncm_fastq.py -l fastq_list.txt -O output -N ChIP_batch -p 4 -pt SNP/SNP.pt
 ```
 
-** Output
+**Output
 #### 1) PREFIX_all.txt
 This output file lists both matched and unmatched sample pairs with VAF correlation coefficients and representative sequencing depths.
 
