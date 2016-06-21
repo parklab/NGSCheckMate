@@ -1153,7 +1153,7 @@ def run_mpileup():
     for sample in bam_list:
         filename = sample.split("/")
         tag = filename[-1][0:filename[-1].rindex(".")]
-        if version.startswith("0") != -1:
+        if version.startswith("0"):
             command = SAMTOOLS + " mpileup -I -uf " + REF + " -l " + bedFile + " " + sample + " | "  + BCFTOOLS + " view -cg - > " + outdir + "/" + tag  + ".vcf"
         else:
             command = SAMTOOLS + " mpileup -uf " + REF + " -l " + bedFile + " " + sample + " | "  + BCFTOOLS + " call -c > " + outdir + "/" + tag  + ".vcf"
