@@ -1,0 +1,91 @@
+==14743== Memcheck, a memory error detector
+==14743== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==14743== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==14743== Command: ./ngscheckmate_fastq -s0.1 -p4 -1 /n/data1/hms/dbmi/park/sl325/ngscheckmatetestout/Sample_undetermined_lane1.R1.fastq -2 /n/data1/hms/dbmi/park/sl325/ngscheckmatetestout/Sample_undetermined_lane1.R2.fastq ../SNP/SNP.pt
+==14743== 
+--14743-- Valgrind options:
+--14743--    --log-fd=3
+--14743--    --leak-check=full
+--14743--    --show-reachable=yes
+--14743--    -v
+--14743-- Contents of /proc/version:
+--14743--   Linux version 2.6.32-504.12.2.el6.x86_64 (mockbuild@c6b9.bsys.dev.centos.org) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-11) (GCC) ) #1 SMP Wed Mar 11 22:03:14 UTC 2015
+--14743-- 
+--14743-- Arch and hwcaps: AMD64, LittleEndian, amd64-cx16-rdtscp-sse3
+--14743-- Page sizes: currently 4096, max supported 4096
+--14743-- Valgrind library directory: /home/sl325/bin/valgrind-3.11.0/lib/valgrind
+--14743-- Reading syms from /home/sl325/git/NGSCheckMate/ngscheckmate_fastq
+--14743-- Reading syms from /lib64/ld-2.12.so
+--14743-- Reading syms from /home/sl325/bin/valgrind-3.11.0/lib/valgrind/memcheck-amd64-linux
+--14743--    object doesn't have a dynamic symbol table
+--14743-- Scheduler: using generic scheduler lock implementation.
+--14743-- Reading suppressions file: /home/sl325/bin/valgrind-3.11.0/lib/valgrind/default.supp
+==14743== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-14743-by-sl325-on-clarinet002-065.orchestra
+==14743== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-14743-by-sl325-on-clarinet002-065.orchestra
+==14743== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-14743-by-sl325-on-clarinet002-065.orchestra
+==14743== 
+==14743== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==14743== don't want to do, unless you know exactly what you're doing,
+==14743== or are doing some strange experiment):
+==14743==   /home/sl325/bin/valgrind-3.11.0/lib/valgrind/../../bin/vgdb --pid=14743 ...command...
+==14743== 
+==14743== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==14743==   /path/to/gdb ./ngscheckmate_fastq
+==14743== and then give GDB the following command
+==14743==   target remote | /home/sl325/bin/valgrind-3.11.0/lib/valgrind/../../bin/vgdb --pid=14743
+==14743== --pid is optional if only one valgrind process is running
+==14743== 
+--14743-- REDIR: 0x4017c30 (ld-linux-x86-64.so.2:strlen) redirected to 0x38052fb1 (vgPlain_amd64_linux_REDIR_FOR_strlen)
+--14743-- Reading syms from /home/sl325/bin/valgrind-3.11.0/lib/valgrind/vgpreload_core-amd64-linux.so
+--14743-- Reading syms from /home/sl325/bin/valgrind-3.11.0/lib/valgrind/vgpreload_memcheck-amd64-linux.so
+==14743== WARNING: new redirection conflicts with existing -- ignoring it
+--14743--     old: 0x04017c30 (strlen              ) R-> (0000.0) 0x38052fb1 vgPlain_amd64_linux_REDIR_FOR_strlen
+--14743--     new: 0x04017c30 (strlen              ) R-> (2007.0) 0x04c299e0 strlen
+--14743-- REDIR: 0x4017a40 (ld-linux-x86-64.so.2:index) redirected to 0x4c295c0 (index)
+--14743-- REDIR: 0x4017ac0 (ld-linux-x86-64.so.2:strcmp) redirected to 0x4c2a3a0 (strcmp)
+--14743-- REDIR: 0x4018a10 (ld-linux-x86-64.so.2:mempcpy) redirected to 0x4c2d220 (mempcpy)
+--14743-- Reading syms from /lib64/libpthread-2.12.so
+--14743-- Reading syms from /lib64/libm-2.12.so
+--14743-- Reading syms from /lib64/libz.so.1.2.3
+--14743--    object doesn't have a symbol table
+--14743-- Reading syms from /lib64/libc-2.12.so
+--14743-- REDIR: 0x556cd00 (libc.so.6:strcasecmp) redirected to 0x4a2255c (_vgnU_ifunc_wrapper)
+--14743-- REDIR: 0x556efc0 (libc.so.6:strncasecmp) redirected to 0x4a2255c (_vgnU_ifunc_wrapper)
+--14743-- REDIR: 0x5569190 (libc.so.6:__GI_strlen) redirected to 0x4c29940 (__GI_strlen)
+--14743-- REDIR: 0x556ac70 (libc.so.6:__GI_strrchr) redirected to 0x4c29350 (__GI_strrchr)
+--14743-- REDIR: 0x55716a0 (libc.so.6:memcpy) redirected to 0x4c2aa60 (memcpy)
+--14743-- REDIR: 0x5567690 (libc.so.6:__GI_strchr) redirected to 0x4c29470 (__GI_strchr)
+--14743-- REDIR: 0x5562ac0 (libc.so.6:malloc) redirected to 0x4c28203 (malloc)
+--14743-- REDIR: 0x5568ba0 (libc.so.6:strcpy) redirected to 0x4a2255c (_vgnU_ifunc_wrapper)
+--14743-- REDIR: 0x561c140 (libc.so.6:???) redirected to 0x4c29a00 (strcpy)
+--14743-- REDIR: 0x5572b20 (libc.so.6:strchrnul) redirected to 0x4c2cdf0 (strchrnul)
+--14743-- REDIR: 0x5563920 (libc.so.6:free) redirected to 0x4c27bdd (free)
+--14743-- REDIR: 0xffffffffff600400 (???:???) redirected to 0x38052f9d (vgPlain_amd64_linux_REDIR_FOR_vtime)
+==14743== 
+==14743== HEAP SUMMARY:
+==14743==     in use at exit: 36 bytes in 2 blocks
+==14743==   total heap usage: 3 allocs, 1 frees, 604 bytes allocated
+==14743== 
+==14743== Searching for pointers to 2 not-freed blocks
+==14743== Checked 97,776 bytes
+==14743== 
+==14743== 12 bytes in 1 blocks are still reachable in loss record 1 of 2
+==14743==    at 0x4C2828A: malloc (vg_replace_malloc.c:299)
+==14743==    by 0x403BCC: main (in /home/sl325/git/NGSCheckMate/ngscheckmate_fastq)
+==14743== 
+==14743== 24 bytes in 1 blocks are still reachable in loss record 2 of 2
+==14743==    at 0x4C2828A: malloc (vg_replace_malloc.c:299)
+==14743==    by 0x403BAE: main (in /home/sl325/git/NGSCheckMate/ngscheckmate_fastq)
+==14743== 
+==14743== LEAK SUMMARY:
+==14743==    definitely lost: 0 bytes in 0 blocks
+==14743==    indirectly lost: 0 bytes in 0 blocks
+==14743==      possibly lost: 0 bytes in 0 blocks
+==14743==    still reachable: 36 bytes in 2 blocks
+==14743==         suppressed: 0 bytes in 0 blocks
+==14743== 
+==14743== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 5 from 5)
+--14743-- 
+--14743-- used_suppression:      5 dl-hack3-cond-1 /home/sl325/bin/valgrind-3.11.0/lib/valgrind/default.supp:1218
+==14743== 
+==14743== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 5 from 5)

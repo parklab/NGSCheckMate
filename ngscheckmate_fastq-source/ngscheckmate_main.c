@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
    /* parsing options */
    while(1){
        option_index=0;
-       c= getopt_long (argc, argv, "1:2:s:d:R:L:p", long_options, &option_index);
+       c= getopt_long (argc, argv, "1:2:s:d:R:L:p:", long_options, &option_index);
 
        if(c==-1) break;
        switch(c){
