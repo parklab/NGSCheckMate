@@ -94,8 +94,9 @@ Usage: python ncm.py <-B | -V> <–d INPUT_DIR | -l INPUT_LIST_FILE> <-bed BED_F
 -l FILE		A text file that lists input files and sample names (one per line; see Input file format)
 
 -bed FILE  	A bed format file that lists the locations of selected SNPs (included in the package) 
- 		SNP/SNP_hg19.bed for input BAM files aligned to hg19, 
- 		SNP/SNP_GRCh37. bed for input BAM files aligned to GRCh37
+ 		SNP/SNP_GRCh37_hg19_wChr.bed if your reference genome fasta file contains 'chr' in your chromosome name (e.g. 'chr10'), 
+ 		SNP/SNP_GRCh37_hg19_woChr.bed if not. 
+                Either file works for the VCF mode.
 
 -O DIR		An output directory
 ```
@@ -130,7 +131,7 @@ Usage: python ncm_fastq.py <-l INPUT_LIST_FILE> <-pt PT_FILE> <–O OUTPUT_DIR> 
 
 * Required arguments
 ```
--l FILE		A text file that lists input files and sample names (one per line; see Input file format)
+-l FILE		A text file that lists input fastq (or fastq.gz) files and sample names (one per line; see Input file format)
 
 -pt FILE	A binary pattern file (.pt) that lists flanking sequences of selected SNPs (included in the package; SNP/SNP.pt)
 
@@ -164,12 +165,12 @@ Usage: ngscheckmate_fastq <-1 FASTQ_FILE1> [-2 FASTQ_FILE2] <PT_FILE (.pt)> [opt
 ```
 * Required arguments
 ```
--1, --fastq1 FILE 	FASTQ file for single-end or the first FASTQ file for paired-end
+-1, --fastq1 FILE 	FASTQ file for single-end or the first FASTQ file for paired-end. File can be gzipped.
 
 PT_FILE			A binary pattern file (.pt) that lists flanking sequences of selected SNPs 								(included in the package; SNP/SNP.pt)
 		
 Optional arguments
--2, --fastq2 FILE 	The second FASTQ file for paired-end
+-2, --fastq2 FILE 	The second FASTQ file for paired-end. File can be gzipped.
 
 -s, --ss FLOAT		The read subsampling rate (default: 1.0)
 or
@@ -229,24 +230,24 @@ Example:
 - BAM files in `/data/wgs_download/LUAD/`:
 
 ````bash
-python ncm.py -B -f -d /data/wgs_download/LUAD/ -O LUAD_WGS/ -N LUAD -bed SNP/SNP_hg19.bed
+python ncm.py -B -f -d /data/wgs_download/LUAD/ -O LUAD_WGS/ -N LUAD -bed SNP/SNP_GRCh37_hg19_woChr.bed
 ````
  - BAM files listed in `bam_list_file`:
  
 ```bash
-python ncm.py -B -f -l bam_list_file -O output_dir -N outputfile_prefix -bed SNP/SNP_hg19.bed
+python ncm.py -B -f -l bam_list_file -O output_dir -N outputfile_prefix -bed SNP/SNP_GRCh37_hg19_woChr.bed
 ```
 
 #### 2) Test sample pairing using VCF input
 - VCF files in `/data/wgs_download/LUAD/`:
 
 ```bash
-python ncm.py -V -f -d /data/wgs_download/LUAD/ -O LUAD_WGS/ -N LUAD -bed SNP/SNP_hg19.bed
+python ncm.py -V -f -d /data/wgs_download/LUAD/ -O LUAD_WGS/ -N LUAD -bed SNP/SNP_GRCh37_hg19_woChr.bed
 ```
 - VCF files listed in `vcf_list_file`:
 
 ```bash
-python ncm.py -V -f -l vcf_list_file -O output_dir -N outputfile_prefix -bed SNP/SNP_hg19.bed
+python ncm.py -V -f -l vcf_list_file -O output_dir -N outputfile_prefix -bed SNP/SNP_GRCh37_hg19_woChr.bed
 ```
 #### 3) Test sample pairing using FASTQ input
 ```bash

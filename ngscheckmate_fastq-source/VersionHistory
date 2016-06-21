@@ -1,3 +1,7 @@
+//0.0.10 (20160621)
+* now it doesn't use -j option. It is applied always.
+* now it can take gzipped fastq files.
+
 //0.0.9 (20160111)
 * now it uses a binary pattern file (size 400KB instead of 7.6MB).
 * Decoy option is dropped.

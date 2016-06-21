@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <zlib.h>
 #include "stringhash2.h"
 #include "patternconvert.h"
 
@@ -115,36 +116,60 @@ long*** build_count_array(void)
 void get_readlength_nReads (char* fastqfilename)
 {
     FILE* fastq_file=0;
+    gzFile* gz_fastq_file=0;
     char line[SINGLE_LINE_MAX],seq[SINGLE_LINE_MAX];
+    char gzmode=0;
 
     if(strlen(fastqfilename)==0){ fastq_file = stdin; }
     else {
-      fastq_file = fopen((const char*)fastqfilename,"r");
-      /*Check for validity of the file.*/
-      if(fastq_file == 0)
-      {
-         fprintf(stderr,"can't open fastq file.\n");
-         exit(1);
+      gz_fastq_file = gzopen((const char*)fastqfilename,"r");
+      if(gz_fastq_file !=0){ gzmode=1; }
+      else {
+        fastq_file = fopen((const char*)fastqfilename,"r");
+        if(fastq_file ==0)
+        {
+           fprintf(stderr,"can't open fastq file.\n");
+           exit(1);
+        }
       }
     }
 
-    // first read
-    if(fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL && fgets(seq, SINGLE_LINE_MAX, fastq_file) != NULL){
-           if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
-           read_length = strlen(seq);
-         fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
-         fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
-    }
-    nReads=1;
-    // all the other reads
-    while (fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL) {
-         fgets(seq, SINGLE_LINE_MAX, fastq_file); // ignore 2nd line
-         fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
-         fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
-         nReads++;  // just count
-    }
-    fclose(fastq_file);
+    if(gzmode){
+       // first read
+       if(gzgets(gz_fastq_file, line, SINGLE_LINE_MAX) != NULL && gzgets(gz_fastq_file, seq, SINGLE_LINE_MAX) != NULL){
+            if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
+            read_length = strlen(seq);
+            gzgets(gz_fastq_file, line, SINGLE_LINE_MAX); // ignore 3rd line
+            gzgets(gz_fastq_file, line, SINGLE_LINE_MAX); // ignore 4th line
+       }
+       nReads=1;
+       // all the other reads
+       while (gzgets(gz_fastq_file, line, SINGLE_LINE_MAX) != NULL) {
+            gzgets(gz_fastq_file, seq, SINGLE_LINE_MAX); // ignore 2nd line
+            gzgets(gz_fastq_file, line, SINGLE_LINE_MAX); // ignore 3rd line
+            gzgets(gz_fastq_file, line, SINGLE_LINE_MAX); // ignore 4th line
+            nReads++;  // just count
+       }
+       gzclose(gz_fastq_file);
 
+    }else{
+       // first read
+       if(fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL && fgets(seq, SINGLE_LINE_MAX, fastq_file) != NULL){
+              if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
+              read_length = strlen(seq);
+            fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
+            fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
+       }
+       nReads=1;
+       // all the other reads
+       while (fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL) {
+            fgets(seq, SINGLE_LINE_MAX, fastq_file); // ignore 2nd line
+            fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
+            fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
+            nReads++;  // just count
+       }
+       fclose(fastq_file);
+    }
 }
 
 
@@ -182,68 +207,120 @@ void* read_fastq_thread (void* arg){
 void read_fastq (char* fastqfilename, hash* h, long** count_array, int patternlength, double subsampling_rate, long startpos, long endpos)
 {
     FILE* fastq_file=0;
+    gzFile* gz_fastq_file=0;
     char line[SINGLE_LINE_MAX],seq[SINGLE_LINE_MAX];
     int i,last_i;
     int2 val;
     long n;
+    char gzmode=0;
 
     if(strlen(fastqfilename)==0){ fastq_file = stdin; }
     else {
-      fastq_file = fopen((const char*)fastqfilename,"r");
-      /*Check for validity of the file.*/
-      if(fastq_file == 0)
-      {
-         fprintf(stderr,"can't open fastq file.\n");
-         exit(1);
-      }
-    }
-
-    // move to startpos
-    n=0;
-    while(n<startpos) {
-      fgets(line, SINGLE_LINE_MAX, fastq_file);
-      fgets(line, SINGLE_LINE_MAX, fastq_file);
-      fgets(line, SINGLE_LINE_MAX, fastq_file);
-      fgets(line, SINGLE_LINE_MAX, fastq_file);
-      n++;
-    }
-
-    if(subsampling_rate==1.){
-      while (fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL && n<endpos) {
-         if(fgets(seq, SINGLE_LINE_MAX, fastq_file)!=NULL){
-           if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
-
-           last_i=strlen(seq)-patternlength;
-           for(i=0;i<=last_i;i++){
-             val=search_hash(seq+i,patternlength,h);
-             if(val.i!=-1) { count_array[val.c][val.i]++; break; }
-           }
-           fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
-           fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
-         }
-         n++;
-      }
-    }else{
-      while (fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL && n<endpos) {
-        if(fgets(seq, SINGLE_LINE_MAX, fastq_file)!=NULL){
-         if( ((double)rand()/(double)RAND_MAX )<subsampling_rate){
-           if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
-
-           last_i=strlen(seq)-patternlength;
-           for(i=0;i<=last_i;i++){
-             val=search_hash(seq+i,patternlength,h);
-             if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
-           }
-         }         
-         fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
-         fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
+      gz_fastq_file = gzopen((const char*)fastqfilename,"r");
+      if(gz_fastq_file !=0){ gzmode=1; }
+      else {
+        fastq_file = fopen((const char*)fastqfilename,"r");
+        if(fastq_file ==0)
+        {
+           fprintf(stderr,"can't open fastq file.\n");
+           exit(1);
         }
-        n++;
       }
     }
-    fclose(fastq_file);
 
+    if(gzmode){
+       // move to startpos
+       n=0;
+       while(n<startpos) {
+         gzgets(gz_fastq_file, line, SINGLE_LINE_MAX);
+         gzgets(gz_fastq_file, line, SINGLE_LINE_MAX);
+         gzgets(gz_fastq_file, line, SINGLE_LINE_MAX);
+         gzgets(gz_fastq_file, line, SINGLE_LINE_MAX);
+         n++;
+       }
+   
+       if(subsampling_rate==1.){
+         while (gzgets(gz_fastq_file, line, SINGLE_LINE_MAX) != NULL && n<endpos) {
+            if(gzgets(gz_fastq_file, seq, SINGLE_LINE_MAX)!=NULL){
+              if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
+   
+              last_i=strlen(seq)-patternlength;
+              for(i=0;i<=last_i;i++){
+                val=search_hash(seq+i,patternlength,h);
+                if(val.i!=-1) { count_array[val.c][val.i]++; break; }
+              }
+              gzgets(gz_fastq_file, line, SINGLE_LINE_MAX); // ignore 3rd line
+              gzgets(gz_fastq_file, line, SINGLE_LINE_MAX); // ignore 4th line
+            }
+            n++;
+         }
+       }else{
+         while (gzgets(gz_fastq_file, line, SINGLE_LINE_MAX) != NULL && n<endpos) {
+           if(gzgets(gz_fastq_file, seq, SINGLE_LINE_MAX)!=NULL){
+            if( ((double)rand()/(double)RAND_MAX )<subsampling_rate){
+              if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
+   
+              last_i=strlen(seq)-patternlength;
+              for(i=0;i<=last_i;i++){
+                val=search_hash(seq+i,patternlength,h);
+                if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
+              }
+            }         
+            gzgets(gz_fastq_file, line, SINGLE_LINE_MAX); // ignore 3rd line
+            gzgets(gz_fastq_file, line, SINGLE_LINE_MAX); // ignore 4th line
+           }
+           n++;
+         }
+       }
+       gzclose(gz_fastq_file);
 
+    }else{
+
+       // move to startpos
+       n=0;
+       while(n<startpos) {
+         fgets(line, SINGLE_LINE_MAX, fastq_file);
+         fgets(line, SINGLE_LINE_MAX, fastq_file);
+         fgets(line, SINGLE_LINE_MAX, fastq_file);
+         fgets(line, SINGLE_LINE_MAX, fastq_file);
+         n++;
+       }
+   
+       if(subsampling_rate==1.){
+         while (fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL && n<endpos) {
+            if(fgets(seq, SINGLE_LINE_MAX, fastq_file)!=NULL){
+              if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
+   
+              last_i=strlen(seq)-patternlength;
+              for(i=0;i<=last_i;i++){
+                val=search_hash(seq+i,patternlength,h);
+                if(val.i!=-1) { count_array[val.c][val.i]++; break; }
+              }
+              fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
+              fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
+            }
+            n++;
+         }
+       }else{
+         while (fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL && n<endpos) {
+           if(fgets(seq, SINGLE_LINE_MAX, fastq_file)!=NULL){
+            if( ((double)rand()/(double)RAND_MAX )<subsampling_rate){
+              if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
+   
+              last_i=strlen(seq)-patternlength;
+              for(i=0;i<=last_i;i++){
+                val=search_hash(seq+i,patternlength,h);
+                if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
+              }
+            }         
+            fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
+            fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
+           }
+           n++;
+         }
+       }
+       fclose(fastq_file);
+    }
 }
 
 
@@ -253,106 +330,196 @@ void read_fastq_PE (char* fastqfilename, char* fastqfilename2, hash* h, long** c
 {
     FILE* fastq_file=0;
     FILE* fastq_file2=0;
+    gzFile* gz_fastq_file=0;
+    gzFile* gz_fastq_file2=0;
     char line[SINGLE_LINE_MAX],seq[SINGLE_LINE_MAX],line2[SINGLE_LINE_MAX],seq2[SINGLE_LINE_MAX];
     int i,last_i,last_i2;
     int2 val;
     long n,n2;
+    char gzmode=0;
 
-    //fprintf(stderr,"scanning fastq in a paired-end mode..\n"); // DEBUGGING
-
-    if(strlen(fastqfilename)==0||strlen(fastqfilename2)==0){ 
-       fprintf(stderr,"Can't open fastq file.\n");
-    }
+    if(strlen(fastqfilename)==0||strlen(fastqfilename2)==0){ fprintf(stderr,"Can't open fastq file.\n"); exit(1); }
     else {
-      fastq_file = fopen((const char*)fastqfilename,"r");
-      fastq_file2 = fopen((const char*)fastqfilename2,"r");
-      /*Check for validity of the file.*/
-      if(fastq_file == 0 || fastq_file2 == 0)
-      {
-         fprintf(stderr,"can't open fastq file.\n");
-         exit(1);
-      }
-    }
-
-    // move to startpos
-    n=0;
-    while(n<startpos) {
-      fgets(line, SINGLE_LINE_MAX, fastq_file);
-      fgets(line, SINGLE_LINE_MAX, fastq_file);
-      fgets(line, SINGLE_LINE_MAX, fastq_file);
-      fgets(line, SINGLE_LINE_MAX, fastq_file);
-      n++;
-    }
-    n2=0;
-    while(n2<startpos) {
-      fgets(line, SINGLE_LINE_MAX, fastq_file2);
-      fgets(line, SINGLE_LINE_MAX, fastq_file2);
-      fgets(line, SINGLE_LINE_MAX, fastq_file2);
-      fgets(line, SINGLE_LINE_MAX, fastq_file2);
-      n2++;
-    }
-
-
-    if(subsampling_rate==1.){
-      while (fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL && fgets(line2, SINGLE_LINE_MAX, fastq_file2) != NULL && n<endpos) {
-        
-        if(fgets(seq, SINGLE_LINE_MAX, fastq_file)!=NULL && fgets(seq2, SINGLE_LINE_MAX, fastq_file2)!=NULL){
-           if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
-           if(seq2[strlen(seq2)-1]=='\n') seq2[strlen(seq2)-1]='\0'; /*chomp*/
-
-           last_i=strlen(seq)-patternlength;
-           for(i=0;i<=last_i;i++){
-             val=search_hash(seq+i,patternlength,h);
-             if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
-           }
-           if(val.i==-1){ // If the pattern is not found in the first mate, search the second mate. If the pattern is found in the first mate, do not search the second mate, to avoid double-counting.
-             last_i2=strlen(seq2)-patternlength;
-             for(i=0;i<=last_i2;i++){
-               val=search_hash(seq2+i,patternlength,h);
-               if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
-             }
-           }
-
-           fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
-           fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
-           fgets(line2, SINGLE_LINE_MAX, fastq_file2); // ignore 3rd line
-           fgets(line2, SINGLE_LINE_MAX, fastq_file2); // ignore 4th line
-         }
-         n++;
-      }
-    }else{
-      while (fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL && fgets(line2, SINGLE_LINE_MAX, fastq_file2) != NULL && n<endpos) {
-        
-        if(fgets(seq, SINGLE_LINE_MAX, fastq_file)!=NULL && fgets(seq2, SINGLE_LINE_MAX, fastq_file2)!=NULL){
-         if( ((double)rand()/(double)RAND_MAX )<subsampling_rate){
-
-           if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
-           if(seq2[strlen(seq2)-1]=='\n') seq2[strlen(seq2)-1]='\0'; /*chomp*/
-
-           last_i=strlen(seq)-patternlength;
-           for(i=0;i<=last_i;i++){
-             val=search_hash(seq+i,patternlength,h);
-             if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
-           }
-           if(val.i==-1){ // If the pattern is not found in the first mate, search the second mate. If the pattern is found in the first mate, do not search the second mate, to avoid double-counting.
-             last_i2=strlen(seq2)-patternlength;
-             for(i=0;i<=last_i2;i++){
-               val=search_hash(seq2+i,patternlength,h);
-               if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
-             }
-           }
-         }
-         fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
-         fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
-         fgets(line2, SINGLE_LINE_MAX, fastq_file2); // ignore 3rd line
-         fgets(line2, SINGLE_LINE_MAX, fastq_file2); // ignore 4th line
+      gz_fastq_file = gzopen((const char*)fastqfilename,"r");
+      gz_fastq_file2 = gzopen((const char*)fastqfilename2,"r");
+      if(gz_fastq_file !=0 && gz_fastq_file2 !=0){ gzmode=1; }
+      else if(gz_fastq_file ==0 && gz_fastq_file2 ==0){
+        fastq_file = fopen((const char*)fastqfilename,"r");
+        fastq_file2 = fopen((const char*)fastqfilename2,"r");
+        if(fastq_file ==0 || fastq_file2 == 0)
+        {
+           fprintf(stderr,"can't open fastq file.\n");
+           exit(1);
         }
-        n++;
       }
+      else { fprintf(stderr,"Both fastq files must be either gzipped or non-gzipped.\n"); exit(1); }
     }
-    fclose(fastq_file);
-    fclose(fastq_file2);
 
+
+    if(gzmode){
+
+       // move to startpos
+       n=0;
+       while(n<startpos) {
+         gzgets(gz_fastq_file,line, SINGLE_LINE_MAX);
+         gzgets(gz_fastq_file,line, SINGLE_LINE_MAX);
+         gzgets(gz_fastq_file,line, SINGLE_LINE_MAX);
+         gzgets(gz_fastq_file,line, SINGLE_LINE_MAX);
+         n++;
+       }
+       n2=0;
+       while(n2<startpos) {
+         gzgets(gz_fastq_file2, line, SINGLE_LINE_MAX);
+         gzgets(gz_fastq_file2, line, SINGLE_LINE_MAX);
+         gzgets(gz_fastq_file2, line, SINGLE_LINE_MAX);
+         gzgets(gz_fastq_file2, line, SINGLE_LINE_MAX);
+         n2++;
+       }
+  
+   
+       if(subsampling_rate==1.){
+         while (gzgets(gz_fastq_file,line, SINGLE_LINE_MAX) != NULL && gzgets(gz_fastq_file2,line2, SINGLE_LINE_MAX) != NULL && n<endpos) {
+           
+           if(gzgets(gz_fastq_file, seq, SINGLE_LINE_MAX)!=NULL && gzgets(gz_fastq_file2, seq2, SINGLE_LINE_MAX)!=NULL){
+              if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
+              if(seq2[strlen(seq2)-1]=='\n') seq2[strlen(seq2)-1]='\0'; /*chomp*/
+   
+              last_i=strlen(seq)-patternlength;
+              for(i=0;i<=last_i;i++){
+                val=search_hash(seq+i,patternlength,h);
+                if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
+              }
+              if(val.i==-1){ // If the pattern is not found in the first mate, search the second mate. If the pattern is found in the first mate, do not search the second mate, to avoid double-counting.
+                last_i2=strlen(seq2)-patternlength;
+                for(i=0;i<=last_i2;i++){
+                  val=search_hash(seq2+i,patternlength,h);
+                  if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
+                }
+              }
+   
+              gzgets(gz_fastq_file,line, SINGLE_LINE_MAX); // ignore 3rd line
+              gzgets(gz_fastq_file,line, SINGLE_LINE_MAX); // ignore 4th line
+              gzgets(gz_fastq_file2,line2, SINGLE_LINE_MAX); // ignore 3rd line
+              gzgets(gz_fastq_file2,line2, SINGLE_LINE_MAX); // ignore 4th line
+            }
+            n++;
+         }
+       }else{
+         while (gzgets(gz_fastq_file,line, SINGLE_LINE_MAX) != NULL && gzgets(gz_fastq_file2,line2, SINGLE_LINE_MAX) != NULL && n<endpos) {
+           
+           if(gzgets(gz_fastq_file, seq, SINGLE_LINE_MAX)!=NULL && gzgets(gz_fastq_file2, seq2, SINGLE_LINE_MAX)!=NULL){
+            if( ((double)rand()/(double)RAND_MAX )<subsampling_rate){
+   
+              if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
+              if(seq2[strlen(seq2)-1]=='\n') seq2[strlen(seq2)-1]='\0'; /*chomp*/
+   
+              last_i=strlen(seq)-patternlength;
+              for(i=0;i<=last_i;i++){
+                val=search_hash(seq+i,patternlength,h);
+                if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
+              }
+              if(val.i==-1){ // If the pattern is not found in the first mate, search the second mate. If the pattern is found in the first mate, do not search the second mate, to avoid double-counting.
+                last_i2=strlen(seq2)-patternlength;
+                for(i=0;i<=last_i2;i++){
+                  val=search_hash(seq2+i,patternlength,h);
+                  if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
+                }
+              }
+            }
+            gzgets(gz_fastq_file,line, SINGLE_LINE_MAX); // ignore 3rd line
+            gzgets(gz_fastq_file,line, SINGLE_LINE_MAX); // ignore 4th line
+            gzgets(gz_fastq_file2,line2, SINGLE_LINE_MAX); // ignore 3rd line
+            gzgets(gz_fastq_file2,line2, SINGLE_LINE_MAX); // ignore 4th line
+           }
+           n++;
+         }
+       }
+       gzclose(gz_fastq_file);
+       gzclose(gz_fastq_file2);
+
+    }else{
+       // move to startpos
+       n=0;
+       while(n<startpos) {
+         fgets(line, SINGLE_LINE_MAX, fastq_file);
+         fgets(line, SINGLE_LINE_MAX, fastq_file);
+         fgets(line, SINGLE_LINE_MAX, fastq_file);
+         fgets(line, SINGLE_LINE_MAX, fastq_file);
+         n++;
+       }
+       n2=0;
+       while(n2<startpos) {
+         fgets(line, SINGLE_LINE_MAX, fastq_file2);
+         fgets(line, SINGLE_LINE_MAX, fastq_file2);
+         fgets(line, SINGLE_LINE_MAX, fastq_file2);
+         fgets(line, SINGLE_LINE_MAX, fastq_file2);
+         n2++;
+       }
+   
+   
+       if(subsampling_rate==1.){
+         while (fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL && fgets(line2, SINGLE_LINE_MAX, fastq_file2) != NULL && n<endpos) {
+           
+           if(fgets(seq, SINGLE_LINE_MAX, fastq_file)!=NULL && fgets(seq2, SINGLE_LINE_MAX, fastq_file2)!=NULL){
+              if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
+              if(seq2[strlen(seq2)-1]=='\n') seq2[strlen(seq2)-1]='\0'; /*chomp*/
+   
+              last_i=strlen(seq)-patternlength;
+              for(i=0;i<=last_i;i++){
+                val=search_hash(seq+i,patternlength,h);
+                if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
+              }
+              if(val.i==-1){ // If the pattern is not found in the first mate, search the second mate. If the pattern is found in the first mate, do not search the second mate, to avoid double-counting.
+                last_i2=strlen(seq2)-patternlength;
+                for(i=0;i<=last_i2;i++){
+                  val=search_hash(seq2+i,patternlength,h);
+                  if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
+                }
+              }
+   
+              fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
+              fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
+              fgets(line2, SINGLE_LINE_MAX, fastq_file2); // ignore 3rd line
+              fgets(line2, SINGLE_LINE_MAX, fastq_file2); // ignore 4th line
+            }
+            n++;
+         }
+       }else{
+         while (fgets(line, SINGLE_LINE_MAX, fastq_file) != NULL && fgets(line2, SINGLE_LINE_MAX, fastq_file2) != NULL && n<endpos) {
+           
+           if(fgets(seq, SINGLE_LINE_MAX, fastq_file)!=NULL && fgets(seq2, SINGLE_LINE_MAX, fastq_file2)!=NULL){
+            if( ((double)rand()/(double)RAND_MAX )<subsampling_rate){
+   
+              if(seq[strlen(seq)-1]=='\n') seq[strlen(seq)-1]='\0'; /*chomp*/
+              if(seq2[strlen(seq2)-1]=='\n') seq2[strlen(seq2)-1]='\0'; /*chomp*/
+   
+              last_i=strlen(seq)-patternlength;
+              for(i=0;i<=last_i;i++){
+                val=search_hash(seq+i,patternlength,h);
+                if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
+              }
+              if(val.i==-1){ // If the pattern is not found in the first mate, search the second mate. If the pattern is found in the first mate, do not search the second mate, to avoid double-counting.
+                last_i2=strlen(seq2)-patternlength;
+                for(i=0;i<=last_i2;i++){
+                  val=search_hash(seq2+i,patternlength,h);
+                  if(val.i!=-1) { count_array[val.c][val.i]++; break; } // val.c==2 means decoy
+                }
+              }
+            }
+            fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 3rd line
+            fgets(line, SINGLE_LINE_MAX, fastq_file); // ignore 4th line
+            fgets(line2, SINGLE_LINE_MAX, fastq_file2); // ignore 3rd line
+            fgets(line2, SINGLE_LINE_MAX, fastq_file2); // ignore 4th line
+           }
+           n++;
+         }
+       }
+       fclose(fastq_file);
+       fclose(fastq_file2);
+
+
+
+    }
 }
 
 
@@ -383,17 +550,16 @@ void printusage(char* program)
 
    printf("\tInput arguments (required)\n");
    printf("\t  patternfile : a binary file containing sequences flanking representative snv sites, along with markers indicating the snv index and whether the sequence represents reference or alternative allele.\n");
-   printf("\t  fastqfile1 : see below 'Options'.\n\n");
+   printf("\t  -1, --fastq1 <fastq_file_1> : fastq file for SE data or first fastq file for a PE data. File can be gzipped (auto-detect).\n\n");
 
    printf("\tOptions\n");
-   printf("\t  -1, --fastq1 <fastq_file_1> : fastq file for SE data or first fastq file for a PE data. (required)\n");
-   printf("\t  -2, --fastq2 <fastq_file_2> : second fastq file for a PE data.\n");
+   printf("\t  -2, --fastq2 <fastq_file_2> : second fastq file for a PE data. File can be gzipped (auto-detect)\n");
    printf("\t  -s, --ss <subsampling_rate> : subsampling rate (default 1.0)\n");
    printf("\t  -d, --depth <desired_depth> : as an alternative to a user-defined subsampling rate, let the program compute the subsampling rate given a user-defined desired_depth and the data.\n");
    printf("\t  -R, --reference_length <reference_length> : The reference length (default : 3E9) to be used for computing subsampling rate. If the data is NOT WGS from human, and if you're using the -d option, it is highly recommended to specify the reference length. For instance, if your data is human RNA-seq, the total reference length could be about 3%% of the human genome, which can be set as 1E8.\n");
-   printf("\t  -L, --pattern_length <pattern_length> : The length of the flanking sequences being used to identify SNV sites. Default is 21bp. It is recommended not to change this value, unless you have created your own pattern file with a different pattern length.\n\n");
+   printf("\t  -L, --pattern_length <pattern_length> : The length of the flanking sequences being used to identify SNV sites. Default is 21bp. It is recommended not to change this value, unless you have created your own pattern file with a different pattern length.\n");
+   printf("\t  -p, --maxthread <number_of_threads> : number of threads to use (default : 1 )\n\n");
 
-   printf("\t  -p, --maxthread <number_of_threads> : number of threads to use (default : 1 )\n");
 }
 
 
