@@ -197,7 +197,7 @@ Usage: python vaf_ncm.py -f -I <INPUT_DIR> -O <OUTPUT_DIR > <-N PREFIX>
 -N PREFIX	Ouput file prefix
 ```
 
-** Input file list format
+#### Input file list format
 **** 1) BAM/VCF mode
 The input file that lists input BAM or VCF files (-l) needs to list one file per line.
     
