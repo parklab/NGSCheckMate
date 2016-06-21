@@ -1108,6 +1108,12 @@ def remove_internal_files():
     return_code = proc.wait()
 
 
+def getCallResult(command):
+    fd_popen = subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE, shell=True)
+    (stdoutdata,stderrdata) = fd_popen.communicate()
+    return stdoutdata,stderrdata
+
+
 def run_mpileup():
     
 
@@ -1130,12 +1136,27 @@ def run_mpileup():
             elif temp[0].startswith("REF"):
                 REF = temp[1].strip()
 #    REF="/NAS/nas33-2/mpileup/hg19.fasta"
+    
+    version =""
+##version of samtools
+    samtools_version = getCallResult(SAMTOOLS)
+    for samtool_line in samtools_version:
+        if samtool_line.find("Version") != -1:
+            version_flag = 1
+            version_line = samtool_line.split("\n")
+            for version_tag in version_line:
+                if version_tag.find("Version") != -1:
+                    version_list = version_tag.split(" ")
+                    version = version_list[1]
+    print version
 
     for sample in bam_list:
         filename = sample.split("/")
         tag = filename[-1][0:filename[-1].rindex(".")]
-        command = SAMTOOLS + " mpileup -I -uf " + REF + " -l " + bedFile + " " + sample + " | "  + BCFTOOLS + " view -cg - > " + outdir + "/" + tag  + ".vcf"
-
+        if version.startswith("0") != -1:
+            command = SAMTOOLS + " mpileup -I -uf " + REF + " -l " + bedFile + " " + sample + " | "  + BCFTOOLS + " view -cg - > " + outdir + "/" + tag  + ".vcf"
+        else:
+            command = SAMTOOLS + " mpileup -uf " + REF + " -l " + bedFile + " " + sample + " | "  + BCFTOOLS + " call -c > " + outdir + "/" + tag  + ".vcf"
         print command
         call(command,shell=True)
  #       proc = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
