@@ -292,8 +292,6 @@ create.xgmml.from.ngscheckmateout(label.file,ngscheckmateoutput.file,output.xgmm
 - ngscheckmateoutput.file: the output text file of NGSCheckMate. It is a tab-delimited text file containing two BAM file names (1st and 2nd columns), VAF correlation (3rd column) and average depth (4th column). It may contain either all pairs or matched pairs, depending on the option used to run NGSCheckMate. Both options may be used to run this program.
 
 - Sample label file (sample.label.txt) and ngscheckmateouput.file (sample.input.txt) can be found in the subdirectory graph/.
--
-
 
 ## Authors
 
