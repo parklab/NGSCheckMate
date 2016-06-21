@@ -67,3 +67,6 @@
 --14852-- REDIR: 0x561b6b0 (libc.so.6:__strlen_sse42) redirected to 0x4c299a0 (__strlen_sse42)
 --14852-- REDIR: 0x556ac10 (libc.so.6:strncpy) redirected to 0x4a2255c (_vgnU_ifunc_wrapper)
 --14852-- REDIR: 0x561cb60 (libc.so.6:???) redirected to 0x4c29ba0 (strncpy)
+--14852-- REDIR: 0x556c530 (libc.so.6:mempcpy) redirected to 0x4c2ce60 (mempcpy)
+--14852-- REDIR: 0x5569380 (libc.so.6:strncmp) redirected to 0x4a2255c (_vgnU_ifunc_wrapper)
+--14852-- REDIR: 0x5611280 (libc.so.6:__strncmp_sse42) redirected to 0x4c2a200 (__strncmp_sse42)
