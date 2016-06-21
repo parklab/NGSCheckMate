@@ -116,7 +116,7 @@ This step can be parallelized depending on your computing system. For example, t
 
 ```
 # an example for generating sample.vcf from sample.bam mapped to hg19
-samtools mpileup –I –uf hg19.fasta –l snp_hg19.bed sample.bam | bcftools view –cg - > ./sample.vcf
+samtools mpileup –I –uf hg19.fasta –l SNP_GRCh37_hg19_woChr.bed sample.bam | bcftools view –cg - > ./sample.vcf
 ```
    
 * STEP2: Run NGSCheckMate on the set of VCF files as input.
@@ -165,12 +165,12 @@ Usage: ngscheckmate_fastq <-1 FASTQ_FILE1> [-2 FASTQ_FILE2] <PT_FILE (.pt)> [opt
 ```
 * Required arguments
 ```
--1, --fastq1 FILE 	FASTQ file for single-end or the first FASTQ file for paired-end. File can be gzipped.
+-1, --fastq1 FILE 	FASTQ file for single-end or the first FASTQ file for paired-end. File can be gzipped (auto-detect).
 
 PT_FILE			A binary pattern file (.pt) that lists flanking sequences of selected SNPs 								(included in the package; SNP/SNP.pt)
 		
 Optional arguments
--2, --fastq2 FILE 	The second FASTQ file for paired-end. File can be gzipped.
+-2, --fastq2 FILE 	The second FASTQ file for paired-end. File can be gzipped (auto-detect).
 
 -s, --ss FLOAT		The read subsampling rate (default: 1.0)
 or
