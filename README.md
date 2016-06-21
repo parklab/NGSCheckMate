@@ -45,6 +45,7 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
   make
 
 ```
+
 #### 2) Additional files
 * For the BAM module,
 ```
@@ -59,6 +60,8 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 ```
 - A binary pattern file (.pt) that lists the flanking sequences of selected SNPs (included in the package)
 ```
+
+
 
 ## Installation
 #### 1) Downloading NGSCheckMate
@@ -78,6 +81,8 @@ REF=<path for the reference FASTA file >
 SAMTOOLS=<path for samtools> 
 BCFTOOLS=<path for bcftools>
 ```
+
+
 
 ## Usage
 #### 1) BAM/VCF mode
@@ -197,6 +202,8 @@ Usage: python vaf_ncm.py -f -I <INPUT_DIR> -O <OUTPUT_DIR > <-N PREFIX>
 -N PREFIX	Ouput file prefix
 ```
 
+
+
 ## Input file list format
 **** 1) BAM/VCF mode
 The input file that lists input BAM or VCF files (-l) needs to list one file per line.
@@ -224,6 +231,9 @@ Example:
 /data/LSJ.fastq	    LSJ
 /data/LSH.fastq	    LSH
 ```
+
+
+
 ## Examples
 
 #### 1) Test sample pairing using BAM input
@@ -253,6 +263,8 @@ python ncm.py -V -f -l vcf_list_file -O output_dir -N outputfile_prefix -bed SNP
 ```bash
 python ncm_fastq.py -l fastq_list.txt -O output -N ChIP_batch -p 4 -pt SNP/SNP.pt
 ```
+
+
 
 ## Output
 #### 1) PREFIX_all.txt
@@ -293,6 +305,8 @@ create.xgmml.from.ngscheckmateout(label.file,ngscheckmateoutput.file,output.xgmm
 - ngscheckmateoutput.file: the output text file of NGSCheckMate. It is a tab-delimited text file containing two BAM file names (1st and 2nd columns), VAF correlation (3rd column) and average depth (4th column). It may contain either all pairs or matched pairs, depending on the option used to run NGSCheckMate. Both options may be used to run this program.
 
 - Sample label file (sample.label.txt) and ngscheckmateouput.file (sample.input.txt) can be found in the subdirectory graph/.
+
+
 
 ## Authors
 
