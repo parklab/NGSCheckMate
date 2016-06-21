@@ -205,7 +205,7 @@ Usage: python vaf_ncm.py -f -I <INPUT_DIR> -O <OUTPUT_DIR > <-N PREFIX>
 
 
 ## Input file list format
-**** 1) BAM/VCF mode
+#### 1) BAM/VCF mode
 The input file that lists input BAM or VCF files (-l) needs to list one file per line.
     
 Example:
@@ -214,7 +214,8 @@ Example:
 /data/LSH.bam
 /data/LSI.bam
 ```
-**** 2) FASTQ mode
+
+#### 2) FASTQ mode
 The input file that lists input FASTQ files (-l) should follow the format below.
 
 * Paired-end data
