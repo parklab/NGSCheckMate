@@ -108,7 +108,7 @@ def createDataSetFromDir(base_dir, bedFile):
                 
                     feature_list[file].append(temp[0])
                     
-            mean_depth[file] = depth / 11696.0 
+            mean_depth[file] = depth / count 
  #           print count
             if float(real_count) == 0:
                 real_depth[file] = depth / float(count)
