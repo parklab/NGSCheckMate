@@ -20,10 +20,13 @@ feature_list = dict()   #Each Feature List
 label = []              #Samples
 features = []           #dbSNP features
 mean_depth = dict()
+real_depth = dict()
+real_count = dict()
 sum_file = dict()
 out_tag = ""
 pdf_tag = ""
 Family_flag = False
+Nonzero_flag = False
 
 
 #Calculation of AVerages
@@ -68,6 +71,7 @@ def createDataSetFromDir(base_dir, bedFile):
             dbsnpf= open(bedFile,"r")
             depth = dict()
             depth[file] = 0
+            real_count[file] = 0
             count = 0
 
             sum=dict()
@@ -105,6 +109,7 @@ def createDataSetFromDir(base_dir, bedFile):
                                 GVCF_samples[temp[sample_idx + 9]] = []
                                 score_set[temp[sample_idx + 9]] = dict()
                                 depth[temp[sample_idx + 9]] = 0
+                                real_count[temp[sample_idx + 9]] = 0
                                 sum[temp[sample_idx + 9]] =0
                                 feature_list[temp[sample_idx + 9]] = []
                         if total == 1:
@@ -133,7 +138,9 @@ def createDataSetFromDir(base_dir, bedFile):
                             readcounts[0] = readcounts[0][4:]
                             score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
                             depth[file] = depth[file] + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
-
+                            if (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3])) > 0:
+                                real_count[file] = real_count[file] + 1  
+                          
                             if ID in scores:
                                 feature_list[file].append(ID)
                                 scores[ID]= score
@@ -156,6 +163,8 @@ def createDataSetFromDir(base_dir, bedFile):
                     else:
                         score = float(readcounts[1])/ (float(readcounts[0]) + float(readcounts[1]))
                     depth[file] = depth[file] + float(values[DP_idx])
+                    if float(values[DP_idx]) > 0:
+                        real_count[file] = real_count[file] + 1
                     
                     if ID in scores:
                         feature_list[file].append(ID)
@@ -185,7 +194,8 @@ def createDataSetFromDir(base_dir, bedFile):
                         else:
                             score = float(readcounts[1])/ (float(readcounts[0]) + float(readcounts[1]))
                         depth[file] = depth[file] + float(values[DP_idx])
-                        
+                        if float(values[DP_idx]) > 0:
+                            real_count[file] = real_count[file] + 1
                         if ID in scores:
                             feature_list[file].append(ID)
                             score_set[file][ID]= score   ##from here!
@@ -195,7 +205,8 @@ def createDataSetFromDir(base_dir, bedFile):
 
 ## TOTAL is not 1 or total is 1 cases
             if total == 1:
-                mean_depth[file] = depth[file] / count
+                mean_depth[file] = depth[file] / float(count)
+                real_depth[file] = depth[file] / float(real_count[file])
                 sum_file[file] = sum[file]
 
                 for key in features:
@@ -205,7 +216,8 @@ def createDataSetFromDir(base_dir, bedFile):
                         glob_scores[file] = [scores[key]]    
             else:
                 for file in GVCF_samples:
-                    mean_depth[file] = depth[file] / count
+                    mean_depth[file] = depth[file] / float(count)
+                    real_depth[file] = depth[file] / float(real_count[file])
                     sum_file[file] = sum[file]
 
                     for key in features:
@@ -231,6 +243,7 @@ def createDataSetFromList(base_list, bedFile):
         file = link[link.rindex("/")+1:]
         depth = dict()
         depth[file] = 0
+        real_count[file] = 0
         count = 0
 
         sum=dict()
@@ -268,6 +281,7 @@ def createDataSetFromList(base_list, bedFile):
                             GVCF_samples[temp[sample_idx + 9]] = []
                             score_set[temp[sample_idx + 9]] = dict()
                             depth[temp[sample_idx + 9]] = 0
+                            real_count[temp[sample_idx + 9]] = 0
                             sum[temp[sample_idx + 9]] =0
                             feature_list[temp[sample_idx + 9]] = []
                     if total == 1:
@@ -296,7 +310,9 @@ def createDataSetFromList(base_list, bedFile):
                         readcounts[0] = readcounts[0][4:]
                         score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
                         depth[file] = depth[file] + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
-
+                        if (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3])) > 0:
+                            real_count[file] = real_count[file] + 1 
+                       
                         if ID in scores:
                             feature_list[file].append(ID)
                             scores[ID]= score
@@ -319,7 +335,8 @@ def createDataSetFromList(base_list, bedFile):
                 else:
                     score = float(readcounts[1])/ (float(readcounts[0]) + float(readcounts[1]))
                 depth[file] = depth[file] + float(values[DP_idx])
-                
+                if float(values[DP_idx]) > 0:
+                    real_count[file] = real_count[file] + 1
                 if ID in scores:
                     feature_list[file].append(ID)
                     scores[ID]= score  ##from here!
@@ -348,7 +365,9 @@ def createDataSetFromList(base_list, bedFile):
                     else:
                         score = float(readcounts[1])/ (float(readcounts[0]) + float(readcounts[1]))
                     depth[file] = depth[file] + float(values[DP_idx])
-                    
+                    if float(values[DP_idx]) > 0:
+                        real_count[file] = real_count[file] + 1                   
+ 
                     if ID in scores:
                         feature_list[file].append(ID)
                         score_set[file][ID]= score   ##from here!
@@ -358,7 +377,8 @@ def createDataSetFromList(base_list, bedFile):
 
 ## TOTAL is not 1 or total is 1 cases
         if total == 1:
-            mean_depth[file] = depth[file] / count
+            mean_depth[file] = depth[file] / float(count)
+            real_depth[file] = depth[file] / float(real_count[file])
             sum_file[file] = sum[file]
 
             for key in features:
@@ -368,7 +388,8 @@ def createDataSetFromList(base_list, bedFile):
                     glob_scores[file] = [scores[key]]    
         else:
             for file in GVCF_samples:
-                mean_depth[file] = depth[file] / count
+                mean_depth[file] = depth[file] / float(count)
+                real_depth[file] = depth[file] / float(real_count[file])
                 sum_file[file] = sum[file]
 
                 for key in features:
@@ -898,7 +919,12 @@ def classifying():
                 predStrength.append(result[0])
         else :
             for i in range(0,len(samples)):
-                depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
+                depth = 0
+                if Nonzero_flag: 
+                    depth = min(real_depth[temp[i][0].strip()],real_depth[temp[i][1].strip()])
+                else:
+                    depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
+               
                 p1V,p1S, p0V, p0S = getPredefinedModel(depth)
                 result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
                 if result[1] ==1:
@@ -1074,7 +1100,10 @@ def generate_R_scripts():
        cmd = cmd + "data = output_corr_matrix\n"
        cmd = cmd + "d3 <- as.dist((1 - data[,-1]))\n"
        cmd = cmd + "clust3 <- hclust(d3, method = \"average\")\n"
-       cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width="+str(math.log10(len(feature_list))*10) +", height=7)\n"
+       if len(feature_list) < 5:
+           cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width=10, height=7)\n"
+       else:
+           cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width="+str(math.log10(len(feature_list))*10) +", height=7)\n"
        cmd = cmd + "op = par(bg = \"gray85\")\n"
        cmd = cmd + "par(plt=c(0.05, 0.95, 0.2, 0.9))\n"
        cmd = cmd + "plot(clust3, lwd = 2, lty = 1,cex=0.8, xlab=\"Samples\", sub = \"\",  ylab=\"Distance (1-Pearson correlation)\",hang = -1, axes = FALSE)\n"
@@ -1340,6 +1369,7 @@ if __name__ == '__main__':
     parser.add_argument('-t','--testsamplename',metavar='test_samplename',dest='testsamplename',action='store',help='file including test sample namses  with ":" delimeter (default : all combinations of samples), -t filename')
     parser.add_argument('-O','--outdir',metavar='output_dir',dest='outdir',action='store', help='directory name for temp and output files')
     parser.add_argument('-N','--outfilename',metavar='output_filename',dest='outfilename',action='store',default="output",help='OutputFileName ( default : output ), -N filename')
+    parser.add_argument('-nz','--nonzero',dest='nonzero_read',action='store_true',help='Use non-zero mean depth of target loci as reference correlation. (default: Use mean depth of all target loci)')
 
 #    parser.add_argument('-m','--method',metavar='METHOD',required=True,dest='method',action='store', choices={'clustering','classifying'},default='classifying', help='Method (Clustering, Classifying)')
 #    parser.add_argument('-k','--knn',metavar='1,2,3,..',dest='KNN',action='store', default="1", help='K value for K-nearest neighbors clustering')
@@ -1357,6 +1387,8 @@ if __name__ == '__main__':
         
     if args.family_cutoff:
         Family_flag=True
+    if args.nonzero_read:
+        Nonzero_flag=True
 
     outdir = args.outdir
     bedFile = args.bed_file
