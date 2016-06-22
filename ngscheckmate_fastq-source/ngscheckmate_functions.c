@@ -22,7 +22,8 @@ hash* read_patternfile_construct_hash(char* patternfilename){
     hash* h;
     int n;
  
-    // 1. read pattern and decoy files to get the number of keys
+
+    // 1. read pattern file to get the number of keys
     if(strlen(patternfilename)==0){ pattern_file = stdin; }
     else {
       pattern_file = fopen((const char*)patternfilename,"rb");
@@ -42,8 +43,8 @@ hash* read_patternfile_construct_hash(char* patternfilename){
     k=0;
     while(fread(&patternline,sizeof(Patternline),1,pattern_file) != 0){
        convert2str(patternline.pattern,&patternstr,&rcpatternstr);
-       store_each_pattern(patternstr,0,patternline.index,h);
-       store_each_pattern(rcpatternstr,0,patternline.index,h);
+       store_each_pattern(patternstr,0,patternline.index,h);  // reference allele
+       store_each_pattern(rcpatternstr,0,patternline.index,h);  // reference allele, rc
        if(k==0) offset=(PATTERNLEN-1)/2;
        else if(k==1) offset=PATTERNLEN-1;
        else offset=0;
@@ -52,8 +53,8 @@ hash* read_patternfile_construct_hash(char* patternfilename){
           if(base[j]!=original_b) {
              patternstr[offset]=base[j];
              rcpatternstr[PATTERNLEN-offset-1]=rcbase[j];
-             store_each_pattern(patternstr,1,patternline.index,h);
-             store_each_pattern(rcpatternstr,1,patternline.index,h);
+             store_each_pattern(patternstr,1,patternline.index,h);  // alt allele
+             store_each_pattern(rcpatternstr,1,patternline.index,h);  // alt allele, rc
           }
        }
        if(patternline.index>max_index) max_index=patternline.index;
@@ -523,24 +524,59 @@ void read_fastq_PE (char* fastqfilename, char* fastqfilename2, hash* h, long** c
 }
 
 
+// the array marking which SNP index was present in the hash.
+void create_index_array(char* patternfilename){
+    FILE* pattern_file=0;
+    int n;
+    Patternline patternline; 
 
-void print_count_array(long*** count_arrays){
+    index_array=calloc(max_index+1,sizeof(char));
+    
+    // 1. read pattern file to get the number of keys
+    if(strlen(patternfilename)==0){ pattern_file = stdin; }
+    else {
+      pattern_file = fopen((const char*)patternfilename,"rb");
+      /*Check for validity of the file.*/
+      if(pattern_file == 0)
+      {
+         fprintf(stderr,"can't open binary pattern file.\n");
+         exit(1);
+      }
+    }
+
+    fread(&n,sizeof(int),1,pattern_file);
+    while(fread(&patternline,sizeof(Patternline),1,pattern_file) != 0) index_array[patternline.index]=1;
+
+}
+
+
+void print_count_array(long*** count_arrays, char* patternfilename){
   int i,ti;
   long totalcount,refcount,altcount;
   double vaf;
+
+  //mark in index array which SNP index was present in the hash
+  create_index_array(patternfilename);
+
   printf("index\tref\talt\tvaf\n");
   for(i=0;i<=max_index;i++){
-     refcount=0;
-     altcount=0;
-     totalcount=0;
-     for(ti=0;ti<nthread;ti++){
-       refcount += count_arrays[ti][0][i];
-       altcount += count_arrays[ti][1][i];
+     if(index_array[i]==0) printf("%d\tNA\tNA\tNA\n",i);
+     else {
+        refcount=0;
+        altcount=0;
+        totalcount=0;
+        for(ti=0;ti<nthread;ti++){
+          refcount += count_arrays[ti][0][i];
+          altcount += count_arrays[ti][1][i];
+        }
+        totalcount = refcount+altcount;
+        if(totalcount>0) printf("%d\t%ld\t%ld\t%lf\n",i,refcount,altcount,(double)altcount / (double)totalcount);
+        else printf("%d\t%ld\t%ld\tNA\n",i,refcount,altcount);
      }
-     totalcount = refcount+altcount;
-     if(totalcount>0) printf("%d\t%ld\t%ld\t%lf\n",i,refcount,altcount,(double)altcount / (double)totalcount);
-     else printf("%d\t%ld\t%ld\tNA\n",i,refcount,altcount);
   }
+
+  //delete the index array
+  free(index_array);
 }
 
 

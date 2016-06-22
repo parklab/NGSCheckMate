@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
    delete_hash(h); h=NULL;
    fprintf(stderr,"finished deleting hash\n");
 
-   print_count_array(count_arrays);
+   print_count_array(count_arrays,patternfilename);
    fprintf(stderr,"finished printing count array\n");
 
    //freeing count_array
@@ -160,7 +160,6 @@ int main(int argc, char* argv[])
      free(count_arrays[ti]); count_arrays[ti]=NULL;
    }
    free(count_arrays); count_arrays=NULL;
-
 
    //allocated memory for threading.
    if(nthread>1){

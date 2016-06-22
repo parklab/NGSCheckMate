@@ -34,6 +34,7 @@ int max_index;
 int read_length;
 long nReads;
 char nodeptherror;
+char* index_array;
 
 hash* read_patternfile_construct_hash(char*);
 void store_each_pattern (char*, char, int, hash*);
@@ -41,7 +42,9 @@ long*** build_count_array(void);
 void* read_fastq_thread(void*);
 void read_fastq (char*, hash*, long**, int, double, long, long);
 void read_fastq_PE (char*, char*, hash*, long**, int, double, long, long);
-void print_count_array(long***);
+void print_count_array(long***,char*);
+void create_index_array(char*);
+
 double guess_subsampling_rate (double, double, char);
 void get_readlength_nReads (char*);
 
