@@ -112,8 +112,8 @@ Usage: python ncm.py <-B | -V> <–d INPUT_DIR | -l INPUT_LIST_FILE> <-bed BED_F
 -f 		Use strict VAF correlation cutoffs. Recommended when your data may include related    
               	individuals (parents-child, siblings)
               	
--nz             Use non-zero mean depth of target loci as reference correlation.
-                (default: Use mean depth of all target loci)
+-nz             Use the mean of non-zero depths across the SNPs as a reference depth
+ 		(default: Use the mean depth across all the SNPs)
 ```
 
 #### 2) Speed up to analyze multiple large BAM files
@@ -153,8 +153,8 @@ Usage: python ncm_fastq.py <-l INPUT_LIST_FILE> <-pt PT_FILE> <–O OUTPUT_DIR> 
 -f 		Use strict VAF correlation cutoffs. Recommended when your data may include   
  		related individuals (parents-child, siblings)
  		
--nz             Use non-zero mean depth of target loci as reference correlation.
-                (default: Use mean depth of all target loci)
+-nz            Use the mean of non-zero depths across the SNPs as a reference depth
+ 		(default: Use the mean depth across all the SNPs)
 
 -s FLOAT	The read subsampling rate (default: 1.0)
   or
@@ -206,9 +206,10 @@ Usage: python vaf_ncm.py -f -I <INPUT_DIR> -O <OUTPUT_DIR > <-N PREFIX>
 -O DIR		Output directory
 
 -N PREFIX	Ouput file prefix
+
+-nz            	Use the mean of non-zero depths across the SNPs as a reference depth
+ 		(default: Use the mean depth across all the SNPs)
 ```
-
-
 
 ## Input file list format
 #### 1) BAM/VCF mode
