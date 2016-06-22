@@ -34,8 +34,8 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 
 * For the BAM module,
 ```
-- samtools 0.1.19 
-- bcftools 0.1.19 (a utility program of Samtools 0.1.19) 
+- samtools (tested on version 0.1.19 and 1.3.1) 
+- bcftools 0.1.19 (a utility program included in samtools) 
   
   To install both programs:
   you download Samtools 0.1.19 (e.g.) https://sourceforge.net/projects/samtools/files/samtools/0.1.19/ 
