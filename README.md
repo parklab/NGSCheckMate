@@ -93,6 +93,7 @@ Usage: python ncm.py <-B | -V> <–d INPUT_DIR | -l INPUT_LIST_FILE> <-bed BED_F
 * Required arguments
 ```
 -B | -V		A flag that indicates an input file type (B: BAM, V: VCF)
+		Input bam files need to be sorted by coordinates and indexed.
 
 -d DIR		A directory that contains input files
   or
@@ -117,14 +118,14 @@ Usage: python ncm.py <-B | -V> <–d INPUT_DIR | -l INPUT_LIST_FILE> <-bed BED_F
 ```
 
 #### 2) Speed up to analyze multiple large BAM files
-You may need to analyze a large number of large BAM files. For example, you may want to identify the proper pairing of 100 cancer WGS data with their matched blood WGS data sequenced at high depth. In this case, it would take a long time to run NGSCheckMate on the set of BAM files, and we recommend the following procedures.
+You may need to analyze a large number of large BAM files. For example, you may want to identify the proper pairing of 100 cancer WGS data with their matched blood WGS data sequenced at high depth. In this case, it would take a long time to run NGSCheckMate on the set of BAM files, and we recommend the following procedures. 
 
 * STEP1: Generate a VCF file for each BAM file as follows. 
 This step can be parallelized depending on your computing system. For example, the LSF-based system can perform this step in parallel using ‘bsub’ command. 
 
 ```
 # an example for generating sample.vcf from sample.bam mapped to hg19
-samtools mpileup –I –uf hg19.fasta –l SNP_GRCh37_hg19_woChr.bed sample.bam | bcftools view –cg - > ./sample.vcf
+samtools mpileup -I -uf hg19.fasta -l SNP_GRCh37_hg19_woChr.bed sample.bam | bcftools view -cg - > ./sample.vcf
 ```
    
 * STEP2: Run NGSCheckMate on the set of VCF files as input.
