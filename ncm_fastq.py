@@ -28,6 +28,7 @@ mean_depth = dict()
 real_depth = dict()
 sum_file = dict()
 Family_flag = False
+Nonzero_flag = False
 
 #Calculation of AVerages
 def average(x):
@@ -108,7 +109,7 @@ def createDataSetFromDir(base_dir, bedFile):
                 
                     feature_list[file].append(temp[0])
                     
-            mean_depth[file] = depth / count 
+            mean_depth[file] = depth / float(count) 
  #           print count
             if float(real_count) == 0:
                 real_depth[file] = depth / float(count)
@@ -175,9 +176,12 @@ def createDataSetFromDir_test(base_dir, bedFile,order):
                 
                     feature_list[file].append(temp[0])
                     
-            mean_depth[file] = depth / 11696.0 
+            mean_depth[file] = depth / float(count) 
  #           print count
-            real_depth[file] = depth / float(real_count)
+            if float(real_count) == 0:
+                real_depth[file] = depth / float(count)
+            else:
+                real_depth[file] = depth / float(real_count)
  #           sum_file[file] = sum                        
                      
             for key in features:
@@ -303,7 +307,7 @@ def run_fastq_version():
         INSTALL_DIR=os.environ['NCM_HOME'] + "/"
     else :
         print "WARNNING : NCM_HOME is not defined yet. Therefore, program will try to search ngscheckmate_fastq file from the current directory"
-        INSTALL_DIR=""
+        INSTALL_DIR="./"
 
     command = INSTALL_DIR + "ngscheckmate_fastq "
     if sub_rate!= "":
@@ -423,7 +427,12 @@ def classifying():
     #            print AUCs
         else :
             for i in range(0,len(samples)):
-                depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
+                depth = 0 
+                if Nonzero_flag:
+                    depth = min(real_depth[temp[i][0].strip()],real_depth[temp[i][1].strip()])
+                else:
+                    depth = min(mean_depth[temp[i][0].strip()],mean_depth[temp[i][1].strip()])
+  
                 p1V,p1S, p0V, p0S = getPredefinedModel(depth)
                 result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
                 if result[1] ==1:
@@ -810,6 +819,7 @@ if __name__ == '__main__':
     parser.add_argument('-O','--outdir',metavar='output_dir',dest='outdir',action='store', help='directory name for temp and output files')
     parser.add_argument('-N','--outfilename',metavar='output_filename',dest='outfilename',action='store',default="output",help='OutputFileName ( default : output ), -N filename')
     parser.add_argument('-l','--list',metavar='input_file_list',required=True,dest='inputfilename',action='store',help='Inputfile name that contains fastq file names, -I filename')
+    parser.add_argument('-nz','--nonzero',dest='nonzero_read',action='store_true',help='Use non-zero mean depth of target loci as reference correlation. (default: Use mean depth of all target loci)')
 
     parser.add_argument('-t','--testsamplename',metavar='test_samplename',dest='testsamplename',action='store',help='file including test sample namses  with ":" delimeter (default : all combinations of samples), -t filename')
 
@@ -838,6 +848,8 @@ if __name__ == '__main__':
 
     if args.family_cutoff:
         Family_flag=True
+    if args.nonzero_read:
+        Nonzero_flag=True
 
     with open(args.inputfilename,'r') as F:
         for line in F.xreadlines():
