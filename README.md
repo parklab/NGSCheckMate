@@ -99,9 +99,9 @@ Usage: python ncm.py <-B | -V> <–d INPUT_DIR | -l INPUT_LIST_FILE> <-bed BED_F
 -l FILE		A text file that lists input files and sample names (one per line; see Input file format)
 
 -bed FILE  	A bed format file that lists the locations of selected SNPs (included in the package) 
- 		SNP/SNP_GRCh37_hg19_wChr.bed if your reference genome fasta file contains 'chr' in a chromosome name (e.g. 'chr10'), 
+ 		SNP/SNP_GRCh37_hg19_wChr.bed if your reference genome fasta file contains 'chr' in a chromosome name (e.g. 'chr10'). 
  		SNP/SNP_GRCh37_hg19_woChr.bed otherwise. 
-                Either file works for the VCF mode.
+       		Either file works for the VCF mode.
 
 -O DIR		An output directory
 ```
