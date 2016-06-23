@@ -147,13 +147,17 @@ def createDataSetFromDir(base_dir, bedFile):
                                 sum[file] = sum[file] + float(readcounts[2]) + float(readcounts[3])
                 elif total == 1 and vcf_flag == 0:
                     format = temp[8].split(':')  ##Format
-                    AD_idx = 0
-                    DP_idx = 0
+                    AD_idx = -1
+                    DP_idx = -1
                     for idx in range(0,len(format)):
                         if format[idx] == "AD":
                             AD_idx = idx
                         elif format[idx] == "DP":
                             DP_idx = idx
+                    if AD_idx == -1:
+                        continue
+                    if DP_idx == -1:
+                        continue
                     idx = 9
                     values = temp[idx].split(":")
                     readcounts = values[AD_idx].split(',')
@@ -172,13 +176,17 @@ def createDataSetFromDir(base_dir, bedFile):
                         sum[file] = sum[file] + float(readcounts[1])
                 else:  ###### Haplotyper or other VCF
                     format = temp[8].split(':')  ##Format
-                    AD_idx = 0
-                    DP_idx = 0
+                    AD_idx = -1
+                    DP_idx = -1
                     for idx in range(0,len(format)):
                         if format[idx] == "AD":
                             AD_idx = idx
                         elif format[idx] == "DP":
                             DP_idx = idx
+                    if AD_idx == -1:
+                        continue
+                    if DP_idx == -1:
+                        continue
                     idx = 9
                     for file in GVCF_samples:
                         values = temp[idx].split(":")
@@ -319,13 +327,17 @@ def createDataSetFromList(base_list, bedFile):
                             sum[file] = sum[file] + float(readcounts[2]) + float(readcounts[3])
             elif total == 1 and vcf_flag == 0:
                 format = temp[8].split(':')  ##Format
-                AD_idx = 0
-                DP_idx = 0
+                AD_idx = -1 
+                DP_idx = -1
                 for idx in range(0,len(format)):
                     if format[idx] == "AD":
                         AD_idx = idx
                     elif format[idx] == "DP":
                         DP_idx = idx
+                if AD_idx == -1:
+                    continue
+                if DP_idx == -1:
+                    continue
                 idx = 9
                 values = temp[idx].split(":")
                 readcounts = values[AD_idx].split(',')
@@ -343,13 +355,17 @@ def createDataSetFromList(base_list, bedFile):
                     sum[file] = sum[file] + float(readcounts[1])
             else:  ###### Haplotyper or other VCF
                 format = temp[8].split(':')  ##Format
-                AD_idx = 0
-                DP_idx = 0
+                AD_idx = -1
+                DP_idx = -1
                 for idx in range(0,len(format)):
                     if format[idx] == "AD":
                         AD_idx = idx
                     elif format[idx] == "DP":
                         DP_idx = idx
+                if AD_idx == -1:
+                    continue
+                if DP_idx == -1:
+                    continue
                 idx = 9
                 for file in GVCF_samples:
                     values = temp[idx].split(":")
