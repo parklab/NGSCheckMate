@@ -136,10 +136,13 @@ def createDataSetFromDir(base_dir, bedFile):
                         if j.startswith("DP4"):
                             readcounts = j.split(',')
                             readcounts[0] = readcounts[0][4:]
-                            score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
-                            depth[file] = depth[file] + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
-                            if (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3])) > 0:
+                            total_reads =(float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3])) 
+                            score = 0
+                            if total_reads > 0:
+                                score = (float(readcounts[2]) + float(readcounts[3])) / total_reads
                                 real_count[file] = real_count[file] + 1  
+
+                            depth[file] = depth[file] + total_reads
                           
                             if ID in scores:
                                 feature_list[file].append(ID)
@@ -316,10 +319,13 @@ def createDataSetFromList(base_list, bedFile):
                     if j.startswith("DP4"):
                         readcounts = j.split(',')
                         readcounts[0] = readcounts[0][4:]
-                        score = (float(readcounts[2]) + float(readcounts[3])) / (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
-                        depth[file] = depth[file] + (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3]))
-                        if (float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3])) > 0:
-                            real_count[file] = real_count[file] + 1 
+                        total_reads =(float(readcounts[0]) + float(readcounts[1]) + float(readcounts[2]) + float(readcounts[3])) 
+                        score = 0
+                        if total_reads > 0:
+                            score = (float(readcounts[2]) + float(readcounts[3])) / total_reads
+                            real_count[file] = real_count[file] + 1  
+
+                        depth[file] = depth[file] + total_reads
                        
                         if ID in scores:
                             feature_list[file].append(ID)
