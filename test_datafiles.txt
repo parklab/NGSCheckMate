@@ -1,0 +1,3 @@
+Chip-seq data : http://www.ncbi.nlm.nih.gov/sra; SRP030041
+BT325 Single Cell : http://www.ncbi.nlm.nih.gov/sra; SRP052627
+BT340 Single Cell : http://www.ncbi.nlm.nih.gov/sra; SRP052627
