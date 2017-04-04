@@ -3,10 +3,13 @@
   <img src="https://parklab.github.io/NGSCheckMate/logo.svg"
        alt="NGS CheckMate" />
 </p>
+
 NGSCheckMate is a software package for identifying next generation sequencing (NGS) data files from the same individual. It analyzes various types of NGS data files including (but not limited to) whole genome sequencing (WGS), whole exome sequencing (WES), RNA-seq, ChIP-seq, and targeted sequencing of various depths. Data types can be mixed (e.g. WES and RNA-seq, or RNA-seq and ChIP-seq). It takes BAM (reads aligned to the genome), VCF (variants) or FASTQ (unaligned reads) files as input. NGSCheckMate uses depth-dependent correlation models of allele fractions of known single-nucleotide polymorphisms (SNPs) to identify samples from the same individual. Our alignment-free module is fast (e.g., less than one minute for RNA-seq using a single core) and we recommend it for a quick initial quality check, before pooling / aligning sequenced reads. The BAM and VCF modules can be used after the alignment and variant calling steps, respectively, to ensure correct sample annotation before further downstream analysis. Currently, it works only for human data.
 
+NGSCheckMate paper is now published in [_Nucleic Acids Research_](https://academic.oup.com/nar/article-lookup/doi/10.1093/nar/gkx193).
 
-* pdf documentation is included in the package. (Documentation.pdf)
+
+* pdf documentation is included in the package. [Documentation.pdf](Documentation.pdf)
  
 
 
