@@ -141,7 +141,7 @@ python ncm.py -V …
 ```
 
 #### 3) FASTQ mode
-````
+```
 Usage: python ncm_fastq.py <-l INPUT_LIST_FILE> <-pt PT_FILE> <–O OUTPUT_DIR> [options]
 ```
 
