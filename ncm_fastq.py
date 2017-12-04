@@ -779,29 +779,38 @@ if __name__ == '__main__':
     nodeptherror = ""
 
     help = """
-    Ensuring Sample Identity v0.8
-    Usage : python ./ngscheckmate_fastq <options> -1 fastqfile1 [-2 fastqfile2]  patternfile
+    NGSCheckMate v1.0
+    Usage : python ncm_fastq.py -l INPUT_LIST_FILE -pt PT_FILE -O OUTPUT_DIR [options]
+            python ncm_fastq.py -l FASTQ_list.txt -pt ./SNP/SNP.pt -O ./ncm_fastq_output -p 4 -f
+            python ncm_fastq.py -l FASTQ_list.txt -pt ./SNP/SNP.pt -O ./ncm_fastq_output -p 4 -f -nz
 
         Input arguments (required)
-          patternfile : a text file with sequences flanking representative snv sites, along with markers indicating the snv index and whether the sequence represents reference or alternative allele.
-          fastqfile1 : see below 'Options'.
+          -l  FILE      A text file that lists input fastq (or fastq.gz) files and sample names (one per line; see Input file format)
+          -pt FILE      A binary pattern file (.pt) that lists flanking sequences of selected SNPs (included in the package; SNP/SNP.pt)
+          -O  DIR       An output directory
 
         Options
-          -s, --ss <subsampling_rate> : subsampling rate (default 1.0)
-          -d, --depth <desired_depth> : as an alternative to a user-defined subsampling rate, let the program compute the subsampling rate given a user-defined desired_depth and the data.
-          -R, --reference_length <reference_length> : The reference length (default : 3E9) to be used for computing subsampling rate. If the data is NOT WGS from human, and if you're using the -d option, it is highly recommended to specify the reference length. For instance, if your data is human RNA-seq, the total reference length could be about 3% of the human genome, which can be set as 1E8.
-          -L, --pattern_length <pattern_length> : The length of the flanking sequences being used to identify SNV sites. Default is 21bp. It is recommended not to change this value, unless you have created your own pattern file with a different pattern length.
-          -p, --maxthread <number_of_threads> : number of threads to use (default : 1 )
+          -N PREFIX     A prefix for output files (default: "output")
 
-          -O, --output_dir <out_dir> : A directory of output files. <default : ./>
-          -N, --Name <result_name> : a prefix of name of result file. <default : output>
-          -I, --input_file <absolute_path_fastq_files_list> : List of Absolute paths of fastq files (single file per line, if second fastq file is exist, write fastq files using tab delimited. (required)
-                                                             ex) fastq_file_R1  fastq_file_R2   sample_ID
-          -f, --family-considered mode : Reference correlations of family considered models
-          -c, --answerset <answer_file> : Input answer file which have pair list of file names user want to examine (default : all possible combinations)
+          -f            Use strict VAF correlation cutoffs. Recommended when your data may include
+                        related individuals (parents-child, siblings)
 
+          -nz           Use the mean of non-zero depths across the SNPs as a reference depth
+                        (default: Use the mean depth across all the SNPs)
 
-    Sejoon Lee, Soo Lee, Eunjung Lee, 2015
+          -s FLOAT      The read subsampling rate (default: 1.0)
+
+          -d INT        The target depth for read subsampling. NGSCheckMate calculates a subsampling rate based on this target depth.
+
+          -R INT        The length of the genomic region with read mapping (default: 3E9) used to compute subsampling rate.
+                        If your data is NOT human WGS and you use the -d option,
+                        it is highly recommended that you specify this value.
+
+          -L INT        The length of the flanking sequences of the SNPs (default: 21bp).
+                        It is not recommended that you change this value unless you create your own pattern file (.pt) with a different length.
+                        See Supporting Scripts for how to generate your own pattern file.
+
+          -p INT        The number of threads (default: 1)
             """
 
     parser = argparse.ArgumentParser(description=help, formatter_class=RawTextHelpFormatter)
@@ -816,8 +825,8 @@ if __name__ == '__main__':
     parser.add_argument('-pt','--pt',metavar='feature pattern file',required=True,dest='bed_file',action='store', help='pattern file')
     parser.add_argument('-s','--ss',metavar='subsampling_rate',dest='sub_rate',action='store', help='subsampling rate (default 1.0)')
     parser.add_argument('-d','--depth',metavar='desired_depth',dest='desired_depth',action='store', help='as an alternative to a user-defined subsampling rate, let the program compute the subsampling rate given a user-defined desired_depth and the data')
-    parser.add_argument('-R','--reference_length',metavar='reference_length',dest='reference_length',action='store', help="The reference length (default : 3E9) to be used for computing subsampling rate. If the data is NOT WGS from human, and if you aree using the -d option, it is highly recommended to specify the reference length. For instance, if your data is human RNA-seq, the total reference length could be about 3percent of the human genome, which can be set as 1E8.")
-    parser.add_argument('-L','--pattern_length',metavar='pattern_length',dest='pattern_length',action='store', help='The length of the flanking sequences being used to identify SNV sites. Default is 21bp. It is recommended not to change this value, unless you have created your own pattern file with a different pattern length.')
+    parser.add_argument('-R','--reference_length',metavar='reference_length',dest='reference_length',action='store', help="The reference length (default : 3E9) to be used for computing subsampling rate.")
+    parser.add_argument('-L','--pattern_length',metavar='pattern_length',dest='pattern_length',action='store', help='The length of the flanking sequences being used to identify SNV sites. Default is 21bp.\nIt is recommended not to change this value, unless you have created your own pattern file with a different pattern length.')
     parser.add_argument('-p','--maxthread',metavar='maxthread',dest='maxthread',action='store', help='number of threads to use (default : 1 )')
     parser.add_argument('-j','--nodeptherror',metavar='nodeptherror',dest='nodeptherror',action='store', help='in case estimated subsampling rate is larger than 1, do not stop but reset it to 1 and continue')
 
@@ -826,7 +835,7 @@ if __name__ == '__main__':
     parser.add_argument('-l','--list',metavar='input_file_list',required=True,dest='inputfilename',action='store',help='Inputfile name that contains fastq file names, -I filename')
     parser.add_argument('-nz','--nonzero',dest='nonzero_read',action='store_true',help='Use non-zero mean depth of target loci as reference correlation. (default: Use mean depth of all target loci)')
 
-    parser.add_argument('-t','--testsamplename',metavar='test_samplename',dest='testsamplename',action='store',help='file including test sample namses  with ":" delimeter (default : all combinations of samples), -t filename')
+    parser.add_argument('-t','--testsamplename',metavar='test_samplename',dest='testsamplename',action='store',help='file including test sample namses  with ":" delimeter (default : all combinations of samples), -t filename.\n-t option is for the previous NGSCheckMate version. No longer used.')
 
 
     args=parser.parse_args()

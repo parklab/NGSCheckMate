@@ -554,29 +554,21 @@ if __name__ == '__main__':
     nodeptherror = ""
 
     help = """
-    Ensuring Sample Identity v0.8
-    Usage : python ./ngscheckmate_fastq <options> -1 fastqfile1 [-2 fastqfile2]  patternfile
+    NGSCheckMate v1.0
+    Usage : python vaf_ncm.py -I INPUT_DIR -O OUTPUT_DIR -N PREFIX [options]
+            python vaf_ncm.py -I ./ncm_fastq_output -O ./vaf_test -N output -f 
+            python vaf_ncm.py -I ./ncm_fastq_output -O ./vaf_test -N output2 -f -nz
 
         Input arguments (required)
-          patternfile : a text file with sequences flanking representative snv sites, along with markers indicating the snv index and whether the sequence represents reference or alternative allele.
-          fastqfile1 : see below 'Options'.
+          -I DIR        Input directory that contains the output VAF files of ngscheckmate_fastq or ncm_fastq.py.
+          -O DIR        Output directory
 
         Options
-          -s, --ss <subsampling_rate> : subsampling rate (default 1.0)
-          -d, --depth <desired_depth> : as an alternative to a user-defined subsampling rate, let the program compute the subsampling rate given a user-defined desired_depth and the data.
-          -R, --reference_length <reference_length> : The reference length (default : 3E9) to be used for computing subsampling rate. If the data is NOT WGS from human, and if you're using the -d option, it is highly recommended to specify the reference length. For instance, if your data is human RNA-seq, the total reference length could be about 3% of the human genome, which can be set as 1E8.
-          -L, --pattern_length <pattern_length> : The length of the flanking sequences being used to identify SNV sites. Default is 21bp. It is recommended not to change this value, unless you have created your own pattern file with a different pattern length.
-          -p, --maxthread <number_of_threads> : number of threads to use (default : 1 )
-
-          -O, --output_dir <out_dir> : A directory of output files. <default : ./>
-          -N, --Name <result_name> : a prefix of name of result file. <default : output>
-          -I, --input_file <absolute_path_fastq_files_list> : List of Absolute paths of fastq files (single file per line, if second fastq file is exist, write fastq files using tab delimited. (required)
-                                                             ex) fastq_file_R1  fastq_file_R2   sample_ID
-          -f, --family-considered mode : Reference correlations of family considered models
-          -c, --answerset <answer_file> : Input answer file which have pair list of file names user want to examine (default : all possible combinations)
-
-
-    Sejoon Lee, Soo Lee, Eunjung Lee, 2015
+          -N PREFIX     Output file prefix (default : "output")
+          -f 		Use strict VAF correlation cutoffs. Recommended when your data may include   
+ 		        related individuals (parents-child, siblings)
+          -nz           Use the mean of non-zero depths across the SNPs as a reference depth
+ 		        (default: Use the mean depth across all the SNPs)
             """
 
     parser = argparse.ArgumentParser(description=help, formatter_class=RawTextHelpFormatter)
@@ -587,10 +579,10 @@ if __name__ == '__main__':
 #    group.add_argument('-v','--vcf',metavar='VCF_list',dest='vcf_files_list',action='store', help='VCF files from samtools mpileup and bcftools')
 #    group.add_argument('-d','--dir',metavar='VCF_dir',dest='vcf_files_dir',action='store', help='VCF files from samtools mpileup and bcftools')
 
-    parser.add_argument('-f','--family_cutoff',dest='family_cutoff',action='store_true', help='apply strict correlation threshold to remove family cases') 
-    parser.add_argument('-O','--outdir',metavar='output_dir',dest='outdir',action='store', help='directory name for temp and output files')
+    parser.add_argument('-I','--inputDir',metavar='input_dir_name',required=True,dest='inputdirname',action='store',help='Inputdir name that contains ncm(VAF) files, -I dirname')
+    parser.add_argument('-O','--outdir',metavar='output_dir',required=True,dest='outdir',action='store', help='directory name for temp and output files')
     parser.add_argument('-N','--outfilename',metavar='output_filename',dest='outfilename',action='store',default="output",help='OutputFileName ( default : output ), -N filename')
-    parser.add_argument('-I','--inputDir',metavar='input_dir_name',required=True,dest='inputdirname',action='store',help='Inputdir name that contains ncm(VAF) file names, -I dirname')
+    parser.add_argument('-f','--family_cutoff',dest='family_cutoff',action='store_true', help='apply strict correlation threshold to remove family cases') 
     parser.add_argument('-nz','--nonzero',dest='nonzero_read',action='store_true',help='Use non-zero mean depth of target loci as reference correlation. (default: Use mean depth of all target loci)')
 
 
