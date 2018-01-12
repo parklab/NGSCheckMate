@@ -132,7 +132,8 @@ This step can be parallelized depending on your computing system. For example, t
 
 ```
 # an example for generating sample.vcf from sample.bam mapped to hg19
-samtools mpileup -I -uf hg19.fasta -l SNP_GRCh37_hg19_woChr.bed sample.bam | bcftools view -cg - > ./sample.vcf
+samtools mpileup -I -uf hg19.fasta -l SNP_GRCh37_hg19_woChr.bed sample.bam | \
+  bcftools call -c - > ./sample.vcf
 ```
    
 * STEP2: Run NGSCheckMate on the set of VCF files as input.
