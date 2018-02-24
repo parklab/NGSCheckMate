@@ -80,7 +80,7 @@ def createDataSetFromDir(base_dir, bedFile):
             scores = dict()     # Scores of B-allel Frequencies
             #DBSNP ID collecting system
             for i in dbsnpf.readlines():
-                temp = i.split('\t')
+                temp = i.strip().split('\t')
                 if temp[0].find("chr")!= -1:
                     ID = str(temp[0][3:]) + "_" + str(temp[2])
                 else:   
@@ -263,7 +263,7 @@ def createDataSetFromList(base_list, bedFile):
         scores = dict()     # Scores of B-allel Frequencies
         #DBSNP ID collecting system
         for i in dbsnpf.readlines():
-            temp = i.split('\t')
+            temp = i.strip().split('\t')
             if temp[0].find("chr")!= -1:
                 ID = str(temp[0][3:]) + "_" + str(temp[2])
             else:   
@@ -445,7 +445,7 @@ def createDataSetFromDir_TEST(base_dir, bedFile,order):
             scores = dict()     # Scores of B-allel Frequencies
             #DBSNP ID collecting system
             for i in dbsnpf.readlines():
-                temp = i.split('\t')
+                temp = i.strip().split('\t')
                 ID = str(temp[0])+"_"+str(temp[2])
                 scores[ID] = 0
                 count = count + 1
@@ -506,7 +506,7 @@ def createDataSetFromList_TEST(base_list, bedFile,order):
         scores = dict()     # Scores of B-allel Frequencies
         #DBSNP ID collecting system
         for i in dbsnpf.readlines():
-            temp = i.split('\t')
+            temp = i.strip().split('\t')
             ID = str(temp[0])+"_"+str(temp[2])
             scores[ID] = 0
             count = count + 1
@@ -1423,7 +1423,7 @@ if __name__ == '__main__':
     for line in key_order.readlines():
         if line.startswith("#"):
             continue
-        temp = line.split('\t')
+        temp = line.strip().split('\t')
         if temp[0].find("chr")!= -1:
             features.append(str(temp[0][3:])+"_"+ str(temp[2]))
         else:   
