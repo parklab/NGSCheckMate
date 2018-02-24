@@ -131,9 +131,11 @@ You may need to analyze a large number of large BAM files. For example, you may 
 This step can be parallelized depending on your computing system. For example, the LSF-based system can perform this step in parallel using ‘bsub’ command. 
 
 ```
-# an example for generating sample.vcf from sample.bam mapped to hg19
-samtools mpileup -I -uf hg19.fasta -l SNP_GRCh37_hg19_woChr.bed sample.bam | \
-  bcftools call -c - > ./sample.vcf
+# an example for generating sample.vcf from sample.bam mapped to hg19 (after 0.1.19 version)
+samtools mpileup -I -uf hg19.fasta -l SNP_GRCh37_hg19_woChr.bed sample.bam | bcftools call -c - > ./sample.vcf
+  
+# an example for generating sample.vcf from sample.bam mapped to hg19 (0.1.19 version)
+samtools mpileup -I -uf hg19.fasta -l SNP_GRCh37_hg19_woChr.bed sample.bam | bcftools view -cg - > ./sample.vcf
 ```
    
 * STEP2: Run NGSCheckMate on the set of VCF files as input.
