@@ -73,11 +73,21 @@ sub readfastafile2hash {
  open $FA,$fastafile or die "can't open fasta file\n";
  while(my $read = <$FA>){
    chomp $read;
-   if($option==0) { if($read=~/^>/) { my $header = $'; chomp($seq=<$FA>); $hash{$header}="$seq\n"; }}
-   elsif($option==1) { if($read=~/^>/) { my ($header) = split/\s/,$'; chomp($seq=<$FA>); $hash{$header}="$seq\n"; }}
+   if($option==0) { 
+     if($read=~/^>/) { $header = $'; }
+     else { $hash{$header}.=$read; }
+   }
+   elsif($option==1) {
+     if($read=~/^>/) { ($header) = split/\s/,$'; }
+     else { $hash{$header}.=$read; }
+   }
    else { die "wrong option\n"; }
  }
  close $FA;
+
+ for my $s (keys %hash){
+   $hash{$s}.="\n";
+ }
 
  return %hash;
 }
