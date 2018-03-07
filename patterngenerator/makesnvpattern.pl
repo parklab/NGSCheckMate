@@ -12,3 +12,18 @@ system("${scriptdir}parse.pattern.bowtie.pl $outdir/$outprefix.bowtieout > $outd
 system("${scriptdir}filter_patters_based_on_ntm.pl $outdir/$outprefix.txt $outdir/$outprefix.ntm > $outdir/$outprefix.uniq.txt");
 system("${scriptdir}patternconverter $outdir/$outprefix.uniq.txt $outdir/$outprefix.pt");
 
+# test
+print("Checking pattern file...\n");
+system("${scriptdir}patterntestreader $outdir/$outprefix.pt $outdir/$outprefix.pt-txt");
+system("sort $outdir/$outprefix.pt-txt > $outdir/$outprefix.pt-txt.sorted");
+system("sort $outdir/$outprefix.uniq.txt > $outdir/$outprefix.uniq.txt.sorted");
+$diff=`diff $outdir/$outprefix.pt-txt.sorted $outdir/$outprefix.uniq.txt.sorted`;
+if($diff!~/\S/){
+  print("pattern file looks good!\n");
+  exit(0); 
+}
+else {
+  print("pattern file does not look good.\n");
+  exit(1);
+}
+
