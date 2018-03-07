@@ -1,0 +1,3 @@
+@HD	VN:1.0	SO:unsorted
+@SQ	SN:21	LN:12000000
+@PG	ID:Bowtie	VN:0.12.9	CL:"bowtie tests/GRCh37_21part tests/test.fastq -S"

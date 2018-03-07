@@ -1,0 +1,11 @@
+language: c python
+sudo: required
+compiler: gcc
+python:
+- '3.6'
+- '2.7'
+before_install:
+- sudo apt-get install bowtie
+script:
+- cd patterngenerator && make && cd ..
+- source tests/test.sh
