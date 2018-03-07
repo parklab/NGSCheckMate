@@ -7,5 +7,5 @@ python:
 before_install:
 - sudo apt-get install bowtie
 script:
-- cd patterngenerator && make && cd ..
+- source install_ncmfastq.sh
 - source tests/test.sh

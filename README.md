@@ -89,7 +89,12 @@ SAMTOOLS=<path for samtools>
 BCFTOOLS=<path for bcftools>
 ```
 
-
+#### Buid for fastq module / patterngenerator
+If you want to build your own fastq module or patterngenerator from source do the following.
+```
+cd $NCM_HOME
+source install_ncmfastq.sh
+```
 
 ## Usage
 #### 1) BAM/VCF mode
