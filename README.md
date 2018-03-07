@@ -1,6 +1,6 @@
 # [NGSCheckMate](https://github.com/parklab/NGSCheckMate/)
 
-[![DOI](https://zenodo.org/badge/49300513.svg)](https://zenodo.org/badge/latestdoi/49300513)
+[![DOI](https://zenodo.org/badge/49300513.svg)](https://zenodo.org/badge/latestdoi/49300513)  <img src="https://travis-ci.org/parklab/NGSCheckMate.svg?branch=master">
 
 <p align="center">
   <img src="https://parklab.github.io/NGSCheckMate/logo.svg"
