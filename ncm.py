@@ -1,4 +1,4 @@
-#!/usr/bin/env
+#!/usr/bin/env python
 import os
 import math
 import subprocess, time
