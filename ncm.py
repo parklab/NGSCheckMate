@@ -1,3 +1,4 @@
+#!/usr/bin/env
 import os
 import math
 import subprocess, time
