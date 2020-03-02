@@ -1177,15 +1177,9 @@ def run_mpileup():
     else:
         print "WARNNING : NCM_HOME is not defined yet. Therefore, program will try to search ncm.conf file from the current directory"
         INSTALL_DIR=""
-    with open(INSTALL_DIR + "ncm.conf",'r') as F:
-        for line in F.readlines():
-            temp = line.split('=')
-	    if temp[0].startswith("SAMTOOLS"):
-                SAMTOOLS = temp[1].strip()
-            elif temp[0].startswith("BCFTOOLS"):
-                BCFTOOLS = temp[1].strip()
-            elif temp[0].startswith("REF"):
-                REF = temp[1].strip()
+    SAMTOOLS = os.environ.get("SAMTOOLS", False) or "samtools"
+    BCFTOOLS = os.environ.get("BCFTOOLS", False) or "bcftools"
+    REF= os.environ.get("BCFTOOLS", False)
 #    REF="/NAS/nas33-2/mpileup/hg19.fasta"
     
     version =""
