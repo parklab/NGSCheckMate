@@ -56,7 +56,9 @@ def pearson_def(x, y):
         xdiff2 += xdiff * xdiff
         ydiff2 += ydiff * ydiff
 
-    return diffprod / math.sqrt(xdiff2 * ydiff2)
+    sqrt_xdiff2_ydiff2 = math.sqrt(xdiff2 * ydiff2)
+
+    return diffprod / sqrt_xdiff2_ydiff2 if sqrt_xdiff2_ydiff2 != 0.0 else 0.0
 
 # createDataSet
 # base_dir : directory of files, bedFile: name of the bedFile
