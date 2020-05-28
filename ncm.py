@@ -251,7 +251,7 @@ def createDataSetFromList(base_list, bedFile):
         link = line.strip()
         f = open(link, "r")
         dbsnpf= open(bedFile,"r")
-        file = link[link.rindex("/")+1:]
+        file = os.path.basename(link)
         depth = dict()
         depth[file] = 0
         real_count[file] = 0
