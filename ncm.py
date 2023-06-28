@@ -66,7 +66,7 @@ def createDataSetFromDir(base_dir, bedFile):
     	    if not file.endswith(".vcf"):
                 continue
 
-            link = root + '/' +  file
+            link = root + '/' + file
             f = open(link, "r")
             dbsnpf= open(bedFile,"r")
             depth = dict()
