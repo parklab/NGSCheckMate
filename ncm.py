@@ -56,7 +56,9 @@ def pearson_def(x, y):
         xdiff2 += xdiff * xdiff
         ydiff2 += ydiff * ydiff
 
-    return diffprod / math.sqrt(xdiff2 * ydiff2)
+    sqrt_xdiff2_ydiff2 = math.sqrt(xdiff2 * ydiff2)
+
+    return diffprod / sqrt_xdiff2_ydiff2 if sqrt_xdiff2_ydiff2 != 0.0 else 0.0
 
 # createDataSet
 # base_dir : directory of files, bedFile: name of the bedFile
@@ -251,7 +253,7 @@ def createDataSetFromList(base_list, bedFile):
         link = line.strip()
         f = open(link, "r")
         dbsnpf= open(bedFile,"r")
-        file = link[link.rindex("/")+1:]
+        file = os.path.basename(link)
         depth = dict()
         depth[file] = 0
         real_count[file] = 0
@@ -909,7 +911,7 @@ def classifying():
         training_flag =0
     ####0715 Append
 
-        output_matrix_f = open(outdir + "/output_corr_matrix.txt","w")
+        output_matrix_f = open(outdir + "/" + out_tag + "_output_corr_matrix.txt","w")
         output_matrix = dict()
         
         if out_tag!="stdout":
@@ -1118,17 +1120,20 @@ def generate_R_scripts():
     if len(feature_list)==0:
        r_file.close()
     else :
-       cmd = "output_corr_matrix <- read.delim(\"" + outdir +  "/output_corr_matrix.txt\")\n"
+       cmd = "output_corr_matrix <- read.delim(\"" + outdir +  "/" + out_tag + "_output_corr_matrix.txt\")\n"
        cmd = cmd + "data = output_corr_matrix\n"
        cmd = cmd + "d3 <- as.dist((1 - data[,-1]))\n"
        cmd = cmd + "clust3 <- hclust(d3, method = \"average\")\n"
        if len(feature_list) < 5:
            cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width=10, height=7)\n"
        else:
-           cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width="+str(math.log10(len(feature_list))*10) +", height=7)\n"
-       cmd = cmd + "op = par(bg = \"gray85\")\n"
-       cmd = cmd + "par(plt=c(0.05, 0.95, 0.2, 0.9))\n"
-       cmd = cmd + "plot(clust3, lwd = 2, lty = 1,cex=0.8, xlab=\"Samples\", sub = \"\",  ylab=\"Distance (1-Pearson correlation)\",hang = -1, axes = FALSE)\n"
+           cmd = cmd + "pdf(\"" +outdir+ "/" + pdf_tag + ".pdf\", width="+str(math.log10(7*len(feature_list))*10) +", height=7)\n"
+       cmd = cmd + "op = par(bg = \"white\")\n"
+       cmd = cmd + "par(plt=c(0.05, 0.95, 0.25, 0.9))\n"
+       if len(feature_list) < 3:
+           cmd = cmd + "plot(as.dendrogram(clust3), lwd = 2, lty = 1,cex=0.8, xlab=\"Samples\", sub = \"\",  ylab=\"Distance (1-Pearson correlation)\", axes = FALSE)\n"
+       else:
+           cmd = cmd + "plot(clust3, lwd = 2, lty = 1,cex=0.8, xlab=\"Samples\", sub = \"\",  ylab=\"Distance (1-Pearson correlation)\",hang = -1, axes = FALSE)\n"
        cmd = cmd + "axis(side = 2, at = seq(0, 1, 0.2), labels = FALSE, lwd = 2)\n"
        cmd = cmd + "mtext(seq(0, 1, 0.2), side = 2, at = seq(0, 1, 0.2), line = 1,   las = 2)\n"
        cmd = cmd + "dev.off()\n"
@@ -1147,8 +1152,7 @@ def remove_internal_files():
     if outdir.find("*"):
         sys.exit()
 
-
-    command = "rm -rf " + outdir + "/output_corr_matrix.txt"
+    command = "rm -rf " + outdir + "/" + out_tag + "_output_corr_matrix.txt"
     proc = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     return_code = proc.wait()
     command = "rm -rf " + outdir + "/r_script.r"
@@ -1362,7 +1366,7 @@ if __name__ == '__main__':
     testsamplename = ""
 
     help = """
-    Ensuring Sample Identity v1.0
+    Ensuring Sample Identity v1.0.1
     Usage:   NGSCheckmate
 
     Desc.:   Input = the absolute path list of vcf files (samtools mpileup and bcftools)
@@ -1373,7 +1377,7 @@ if __name__ == '__main__':
              ncm.py -B -d /data/bam/ -bed /data/SNP_hg19.bed -O /data/output -N Matched_list
              ncm.py -B -l /data/bam_list.txt -bed /data/SNP_hg19.bed -O /data/output/ -N Matched_list
 
-    Sejoon Lee, Soo Lee, Eunjung Lee, 2015
+    Sejoon Lee, Soo Lee, Eunjung Lee, 2023
     """
 
     parser = argparse.ArgumentParser(description=help, formatter_class=RawTextHelpFormatter)
