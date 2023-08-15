@@ -12,11 +12,8 @@ NGSCheckMate is a software package for identifying next generation sequencing (N
 
 NGSCheckMate paper is now published in [_Nucleic Acids Research_](https://academic.oup.com/nar/article-lookup/doi/10.1093/nar/gkx193).
 
-
 * pdf documentation is included in the package. [Documentation.pdf](Documentation.pdf)
  
-
-
 ## Table of contents
 * [Requirements](#requirements)
 * [Installation](#installation)
@@ -95,6 +92,14 @@ If you want to build your own fastq module or patterngenerator from source do th
 cd $NCM_HOME
 source install_ncmfastq.sh
 ```
+
+#### Containers
+The tool is available through software containers for ease of installation:
+* Docker: https://quay.io/repository/biocontainers/ngscheckmate?tab=tags&tag=latest
+* Singularity/Apptainer: https://depot.galaxyproject.org/singularity/ngscheckmate:1.0.0--py27r41hdfd78af_3
+* Conda: `bioconda::ngscheckmate=1.0.0`
+
+Additionally, there is a Nextflow subworkflow for use on bam files available as part of the nf-core project, https://github.com/nf-core/modules/blob/master/subworkflows/nf-core/bam_ngscheckmate/main.nf.
 
 ## Usage
 #### 1) BAM/VCF mode
