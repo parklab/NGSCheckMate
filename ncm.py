@@ -1183,7 +1183,7 @@ def run_mpileup():
         INSTALL_DIR=""
     with open(INSTALL_DIR + "ncm.conf",'r') as F:
         for line in F.readlines():
-            temp = line.split('=')
+            temp = line.split('=',1)
 	    if temp[0].startswith("SAMTOOLS"):
                 SAMTOOLS = temp[1].strip()
             elif temp[0].startswith("BCFTOOLS"):
