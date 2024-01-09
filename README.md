@@ -81,9 +81,9 @@ export NCM_HOME=<installation_dir>/NGSCheckMate
 #### 2) Configuration (required only for the BAM module)
 If your input is BAM/VCF files, add the following lines in your ncm.conf file in the package directory. If your input is FASTQ files, you can skip this step.
 ```
-REF=<path for the reference FASTA file >  
-SAMTOOLS=<path for samtools> 
-BCFTOOLS=<path for bcftools>
+export REF=<path/to/reference>
+export SAMTOOLS=<path/to/samtools>
+export BCFTOOLS=<path/to/bcftools>
 ```
 
 #### Buid for fastq module / patterngenerator
