@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <pthread.h>
 #include <limits.h>
 #include "stringhash2.h"
@@ -26,15 +27,15 @@ typedef struct read_fastq_args_struct
 
 
 
-int nthread;
-pthread_t *pth;
-int *working_thread;
+extern int nthread;
+extern pthread_t *pth;
+extern int *working_thread;
 
-int max_index;
-int read_length;
-long nReads;
-char nodeptherror;
-char* index_array;
+extern int max_index;
+extern int read_length;
+extern long nReads;
+extern char nodeptherror;
+extern char* index_array;
 
 hash* read_patternfile_construct_hash(char*);
 void store_each_pattern (char*, char, int, hash*);

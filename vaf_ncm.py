@@ -121,7 +121,7 @@ def createDataSetFromDir(base_dir, bedFile):
  #           sum_file[file] = sum                        
                      
             for key in features:
-                if glob_scores.has_key(file):
+                if file in glob_scores:
                     glob_scores[file].append(scores[key])
                 else: 
                     glob_scores[file] = [scores[key]]
@@ -233,7 +233,7 @@ def plotROC(predStrengths, classLabels):
     plt.title('ROC curves')
     ax.axis([0,1,0,1])
     plt.show()
-    print "the Area Under the Curve is: ",ySum*xStep
+    print ("the Area Under the Curve is: ",ySum*xStep)
 
 
 
@@ -323,7 +323,7 @@ def classifying():
                 p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
                 result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
                 if result[1] == 1:
-                    print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
+                    print (str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i])
                 predStrength.append(result[0])
     #            AUCs.append(calAUC(mat(predStrength),classLabel))
     #            plotROC(mat(predStrength),classLabel)
@@ -341,12 +341,12 @@ def classifying():
                 if result[1] ==1:
                     output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
                     if out_tag=="stdout":
-                        print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                        print (str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2))
                     else :
                         out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
                 else:
                     if out_tag=="stdout":
-                        print str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                        print (str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2))
                     else :
                         out_f.write(str(temp[i][0][:-4]) + '\tunmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
                 #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
@@ -565,10 +565,10 @@ if __name__ == '__main__':
 
         Options
           -N PREFIX     Output file prefix (default : "output")
-          -f 		Use strict VAF correlation cutoffs. Recommended when your data may include   
- 		        related individuals (parents-child, siblings)
+          -f            Use strict VAF correlation cutoffs. Recommended when your data may include   
+                        related individuals (parents-child, siblings)
           -nz           Use the mean of non-zero depths across the SNPs as a reference depth
- 		        (default: Use the mean depth across all the SNPs)
+                        (default: Use the mean depth across all the SNPs)
             """
 
     parser = argparse.ArgumentParser(description=help, formatter_class=RawTextHelpFormatter)

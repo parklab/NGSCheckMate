@@ -1,6 +1,18 @@
 #include "ngscheckmate.h"
 #include <getopt.h>
 
+extern void printusage(char* program);
+
+int nthread = 0;
+pthread_t *pth = NULL;
+int *working_thread = NULL;
+
+int max_index = 0;
+int read_length = 0;
+long nReads = 0L;
+char nodeptherror = '\0';
+char* index_array = NULL;
+
 int main(int argc, char* argv[])
 {
 

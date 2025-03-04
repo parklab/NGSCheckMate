@@ -118,7 +118,7 @@ def createDataSetFromDir(base_dir, bedFile):
  #           sum_file[file] = sum                        
                      
             for key in features:
-                if glob_scores.has_key(file):
+                if file in glob_scores:
                     glob_scores[file].append(scores[key])
                 else: 
                     glob_scores[file] = [scores[key]]
@@ -185,7 +185,7 @@ def createDataSetFromDir_test(base_dir, bedFile,order):
  #           sum_file[file] = sum                        
                      
             for key in features:
-                if glob_scores.has_key(file):
+                if file in glob_scores:
                     glob_scores[file].append(scores[key])
                 else: 
                     glob_scores[file] = [scores[key]]
@@ -298,7 +298,7 @@ def plotROC(predStrengths, classLabels):
     plt.title('ROC curves')
     ax.axis([0,1,0,1])
     plt.show()
-    print "the Area Under the Curve is: ",ySum*xStep
+    print("the Area Under the Curve is: ",ySum*xStep)
 
 
 def run_fastq_version():
@@ -306,7 +306,7 @@ def run_fastq_version():
     if "NCM_HOME" in os.environ.keys():
         INSTALL_DIR=os.environ['NCM_HOME'] + "/"
     else :
-        print "WARNNING : NCM_HOME is not defined yet. Therefore, program will try to search ngscheckmate_fastq file from the current directory"
+        print("WARNNING : NCM_HOME is not defined yet. Therefore, program will try to search ngscheckmate_fastq file from the current directory")
         INSTALL_DIR="./"
 
     command = INSTALL_DIR + "ngscheckmate_fastq "
@@ -326,9 +326,9 @@ def run_fastq_version():
     if PE == 1:
             command =  command  + "-1 "  + fastq1 + " -2 " + fastq2 +" " + bed_file +" > " + outdir + "/" + temp_out + ".ncm"
     if PE == 0:
-	        command = command + "-1 " + fastq1  +" " + bed_file +" > " + outdir + "/" + temp_out + ".ncm"
+                command = command + "-1 " + fastq1  +" " + bed_file +" > " + outdir + "/" + temp_out + ".ncm"
 
-    print command
+    print(command)
 
     proc = subprocess.Popen(command, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     return_code = proc.wait()
@@ -420,7 +420,7 @@ def classifying():
                 p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
                 result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
                 if result[1] == 1:
-                    print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
+                    print(str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i])
                 predStrength.append(result[0])
     #            AUCs.append(calAUC(mat(predStrength),classLabel))
     #            plotROC(mat(predStrength),classLabel)
@@ -439,13 +439,13 @@ def classifying():
                     output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
                     output_matrix[temp[i][1].strip()][temp[i][0].strip()] = samples[i]
                     if out_tag=="stdout":
-                        print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                        print(str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2))
                     else :
                         out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
                         out_matched.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')               
                 else:
                     if out_tag=="stdout":
-                        print str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                        print(str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2))
                     else :
                         out_f.write(str(temp[i][0][:-4]) + '\tunmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
                 #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
@@ -546,7 +546,7 @@ def classifying_test():
             p1V,p1S, p0V, p0S = trainNV(array(trainMatrix),array(trainCategory))
             result = classifyNV(samples[i],p0V,p0S, p1V, p1S)
             if result[1] == 1:
-                print str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i]
+                print(str(temp[i][0]) + '\tsample is matched to\t',str(temp[i][1]),'\t', samples[i])
             predStrength.append(result[0])
 #            AUCs.append(calAUC(mat(predStrength),classLabel))
 #            plotROC(mat(predStrength),classLabel)
@@ -560,13 +560,13 @@ def classifying_test():
                 output_matrix[temp[i][0].strip()][temp[i][1].strip()] = samples[i]
                 output_matrix[temp[i][1].strip()][temp[i][0].strip()] = samples[i]
                 if out_tag=="stdout":
-                    print str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                    print(str(temp[i][0][:-4]) + '\tmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2))
                 else :
                     out_f.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
                     out_matched.write(str(temp[i][0][:-4]) + '\tmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')               
             else:
                 if out_tag=="stdout":
-                    print str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2)
+                    print(str(temp[i][0][:-4]) + '\tunmatched\t',str(temp[i][1][:-4]),'\t', round(samples[i],4),'\t',round(depth,2))
                 else :
                     out_f.write(str(temp[i][0][:-4]) + '\tunmatched\t' + str(temp[i][1][:-4])  + '\t'+  str(round(samples[i],4)) + '\t' + str(round(depth,2)) + '\n')
             #print sum_file[temp[i][0]],sum_file[temp[i][1].strip()]
@@ -881,9 +881,9 @@ if __name__ == '__main__':
                         temp_out = temp[1]
                         run_fastq_version()
                 else:
-                        print "Input File Error: Each line should be contain one or two fastq files name with tab delimited"
-                        print line.strip()
-                        print "upper format is invalid"
+                        print("Input File Error: Each line should be contain one or two fastq files name with tab delimited")
+                        print(line.strip())
+                        print("upper format is invalid")
 
     # set directories
     base_dir = outdir
@@ -920,12 +920,12 @@ if __name__ == '__main__':
 
     if args.testsamplename != None:
         testsamplename = args.testsamplename
-        print "Generate Data Set from " + outdir + "\nusing this bed file : " + bedFile
+        print("Generate Data Set from " + outdir + "\nusing this bed file : " + bedFile)
         createDataSetFromDir_test(outdir,bedFile,"1")
         createDataSetFromDir_test(outdir,bedFile,"2")
         classifying_test()
     else:
-        print "Generate Data Set from " + outdir + "\nusing this bed file : " + bedFile
+        print("Generate Data Set from " + outdir + "\nusing this bed file : " + bedFile)
         createDataSetFromDir(outdir,bedFile)
         classifying()
 
